@@ -1,20 +1,20 @@
 {
-  "timestamp": "2026-09-10T02:54:44.010Z",
+  "timestamp": "2026-09-11T13:57:41.756Z",
   "backend": {
     "health": {
       "statusCode": 200,
-      "latency": 129,
+      "latency": 163,
       "data": {
         "success": true,
         "message": "NextAI Residential Gateway đang hoạt động ổn định.",
         "data": {
           "status": "ONLINE",
-          "uptime": "00:00:02.5163376",
+          "uptime": "00:00:02.2360396",
           "gatewayPort": 10000,
           "dashboardPort": 6033,
-          "totalPoolNodes": 12,
+          "totalPoolNodes": 13,
           "activeConnections": 0,
-          "totalBytesServed": 8762,
+          "totalBytesServed": 0,
           "totalTenants": 2
         }
       }
@@ -27,20 +27,19 @@
     "httpGet": {
       "success": true,
       "statusCode": 200,
-      "latency": 906,
-      "data": "{\n  \"origin\": \"3.10.170.234\"\n}"
+      "latency": 536,
+      "data": "{\n  \"origin\": \"14.251.13.20\"\n}"
     },
     "httpsConnect": {
-      "success": true,
-      "statusCode": 200,
-      "latency": 456,
-      "data": "{\"ip\":\"3.10.170.234\"}"
+      "success": false,
+      "error": "CONNECT: socket hang up",
+      "latency": 8
     },
     "socks5Tunnel": {
       "success": true,
-      "latency": 832,
-      "exitIp": "3.10.170.234",
-      "rawSnippet": "HTTP/1.1 200 OK\r\nConnection: keep-alive\r\nDate: Thu, 10 Sep 2026 02:54:52 GMT\r\nServer: gunicorn/19.9.0\r\nLast-Modified: Mo"
+      "latency": 814,
+      "exitIp": "8.138.217.152",
+      "rawSnippet": "HTTP/1.1 200 OK\r\nDate: Fri, 11 Sep 2026 13:57:49 GMT\r\nContent-Type: application/json\r\nContent-Length: 32\r\nConnection: cl"
     }
   },
   "sqlite": {
@@ -64,8 +63,8 @@
       "switchStatus": "OK",
       "result": {
         "success": true,
-        "latency": 904,
-        "ip": "3.10.170.234"
+        "latency": 2302,
+        "ip": "8.138.217.152"
       }
     },
     {
@@ -74,8 +73,8 @@
       "switchStatus": "OK",
       "result": {
         "success": true,
-        "latency": 225,
-        "ip": "3.10.170.234"
+        "latency": 239,
+        "ip": "8.138.217.152"
       }
     },
     {
@@ -84,19 +83,19 @@
       "switchStatus": "OK",
       "result": {
         "success": true,
-        "latency": 225,
-        "ip": "3.10.170.234"
+        "latency": 238,
+        "ip": "8.138.217.152"
       }
     }
   ],
   "overallStatus": "PASSED",
   "bandwidthAccounting": {
-    "bytesIn": 20336,
-    "bytesOut": 9971,
-    "totalBytes": 30307,
-    "downloadMb": 0.02,
-    "uploadMb": 0.01,
-    "activeSessions": 2,
+    "bytesIn": 1299,
+    "bytesOut": 380,
+    "totalBytes": 1679,
+    "downloadMb": 0,
+    "uploadMb": 0,
+    "activeSessions": 1,
     "activeProxy": {
       "id": "proxy_vn_hanoi_vnpt",
       "host": "14.251.13.20",

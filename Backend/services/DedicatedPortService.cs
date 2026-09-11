@@ -6,10 +6,28 @@ using VpnResidentialHub.Models;
 
 namespace VpnResidentialHub.Services;
 
+/// <summary>
+/// [VI] Giao diện dịch vụ cấp phát và quản trị cổng SOCKS5 riêng biệt (Dedicated Ports 10001-10500)
+/// [EN] Interface for allocating and managing dedicated client proxy ports (10001-10500)
+/// </summary>
 public interface IDedicatedPortService
 {
+    /// <summary>
+    /// [VI] Cấp phát một cổng riêng cố định cho khách hàng theo quốc gia/thành phố
+    /// [EN] Allocates a fixed dedicated port for tenant targeting country/city
+    /// </summary>
     int AllocateDedicatedPort(string tenantId, string? country, string? city);
+
+    /// <summary>
+    /// [VI] Giải phóng cổng riêng đã cấp phát
+    /// [EN] Releases and stops listener for a dedicated port
+    /// </summary>
     bool ReleaseDedicatedPort(int port);
+
+    /// <summary>
+    /// [VI] Lấy danh sách toàn bộ các cổng riêng đang hoạt động
+    /// [EN] Retrieves list of all currently active dedicated ports
+    /// </summary>
     IReadOnlyList<DedicatedPortInfo> GetActivePorts();
 }
 
@@ -151,7 +169,8 @@ public class DedicatedPortService : IDedicatedPortService
                 }
                 else if (atyp == 0x03)
                 {
-                    int len = stream.ReadByte();
+                    int len = await ReadByteAsync(stream, ct);
+                    if (len <= 0) return;
                     byte[] dBytes = new byte[len];
                     await stream.ReadExactlyAsync(dBytes, ct);
                     targetHost = Encoding.ASCII.GetString(dBytes);
@@ -173,5 +192,12 @@ public class DedicatedPortService : IDedicatedPortService
             }
             catch { }
         }
+    }
+
+    private static async ValueTask<int> ReadByteAsync(Stream stream, CancellationToken ct)
+    {
+        byte[] b = new byte[1];
+        int read = await stream.ReadAsync(b.AsMemory(0, 1), ct);
+        return read == 0 ? -1 : b[0];
     }
 }

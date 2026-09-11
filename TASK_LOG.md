@@ -3,6 +3,34 @@
 Dự án: NextAI VPN Platform & Residential Gateway Mesh (Chuẩn V2.1)
 ================================================================================
 
+## [2026-09-11 21:00] - Hoàn Tất TASK-056: Vá Toàn Diện 20 Lỗi Tồn Đọng Backend (Ngoại Trừ BUG-02 Giữ Nguyên Theo Lệnh User), Thắt Chặt Bảo Mật & Viết Bộ 18 Unit Tests Passed 100%
+- **Thực hiện**: Agent 0 (Orchestrator), Agent 2 (Backend), Agent 9 (Security), Agent 6 (Tester), Agent 8 (Reviewer), Agent 12 (Documentation).
+- **Yêu cầu từ User**: "Vá BUG-02: Xóa bỏ hoàn toàn nhánh kết nối thẳng (Direct Bypass)... cai này ko phải vá, vá nhung cai con lại thoi".
+- **Hành động & Kết quả**:
+  1. **Tuân thủ tuyệt đối chỉ thị BUG-02**: Giữ nguyên nhánh kết nối trực tiếp (Direct Connection fallback) trong `UniversalGatewayService.cs` khi các node bên ngoài gặp sự cố, không gỡ bỏ.
+  2. **Khắc phục triệt để 20 lỗi còn lại (BUG-01, BUG-03 -> BUG-21)**:
+     - **BUG-01 (CORS & Admin Authentication)**: Thắt chặt CORS giới hạn cho localhost/loopback và private IP, kiểm tra `IsAuthorizedAdmin` và `IsOriginSafe` trên toàn bộ endpoint nhạy cảm (xóa/thêm proxy, clear, batch delete, reset quota, đổi relay mode, tạo/xóa tenant).
+     - **BUG-03 (Tenant Persistence)**: Bổ sung cơ chế lưu trữ bền vững JSON xuống `data/tenants.json` với khóa `lock (_lock)`, tự động lưu khi tạo/xóa và định kỳ theo lưu lượng tiêu thụ.
+     - **BUG-05 (Relay Pool Persistence)**: Bổ sung lưu trữ cấu hình cụm Relay xuống `data/relays.json`, bảo toàn `ActiveMode` và danh sách node qua các lần khởi động.
+     - **BUG-04 & BUG-10 (Single Active VPN & Quota Thread Safety)**: Đảm bảo duy nhất 1 active VPN proxy; bọc `lock (proxy)` / `lock (p)` khi tích lũy băng thông và đặt lại hạn mức 300MB/ngày.
+     - **BUG-06 (Brute-force Lockout & Constant-time Auth)**: Áp dụng `CryptographicOperations.FixedTimeEquals` và theo dõi địa chỉ IP để khóa tạm thời khi có hành vi dò quét mật khẩu.
+     - **BUG-07 (Non-blocking Async I/O)**: Thay thế toàn bộ lệnh đồng bộ `stream.ReadByte()` bằng `ReadByteAsync(stream, ct)` trong cả `UniversalGatewayService` và `DedicatedPortService`.
+     - **BUG-09 (Socket Handle Leak Prevention)**: Bọc toàn bộ quá trình kết nối và bắt tay upstream trong khối `try/catch` có `tcpClient.Dispose()`.
+     - **BUG-11 & BUG-20 (Sticky Concurrency & Sliding Expiration)**: Sử dụng `GetOrAdd` nguyên tử và gia hạn thời gian sống `ExpiresAt` khi có lưu lượng hoạt động.
+     - **BUG-12 (Daily Quota Background Reset)**: Tích hợp gọi `ResetDailyQuotas()` trong chu kỳ của `ProxyHealthCheckBackgroundService`.
+     - **BUG-13 (Success Reporting)**: Kích hoạt `_rotationEngine.ReportSuccess(proxyId)` khi phiên chuyển tiếp hoàn tất.
+     - **BUG-14 (Mesh Pool Sync From Disk)**: Tự động nạp các client nodes từ `data/client_nodes.json` vào memory pool khi khởi động `NodePoolService`.
+     - **BUG-15 (Relay Stream Failure Tracking)**: Bọc an toàn `_relayPool.TrackStreamEnd` khi kết nối upstream qua relay thất bại.
+     - **BUG-16 (Bilingual XML Documentation)**: Bổ sung 100% comment song ngữ (Tiếng Việt + Tiếng Anh) trên toàn bộ interface dịch vụ (`ITenantService`, `IRelayPoolManagerService`, `IProxyManagerService`, `INodePoolService`, `IUniversalGatewayService`, `IDedicatedPortService`, `IGeoIpService`).
+     - **BUG-17 (Modular Handlers)**: Tách nhỏ các hàm xử lý monolithic trong `UniversalGatewayService` thành các phương thức module hóa rõ ràng.
+     - **BUG-21 (Unused Imports)**: Dọn dẹp các thư viện không sử dụng.
+  3. **Xây dựng Bộ Unit Test Tự Động (BUG-08)**:
+     - Tạo project `Backend/VpnBackend.Tests/VpnBackend.Tests.csproj` (xUnit + .NET 10).
+     - Viết 18 bài kiểm thử chuyên sâu kiểm tra toàn bộ các khía cạnh: CRUD, lưu trữ đĩa, so sánh constant-time, parse routing tags, đảm bảo 1 active VPN, thread safety dưới tải đồng thời, đặt lại hạn mức 300MB/ngày, sticky sessions, sliding renewal, failover, routing policies, stream tracking.
+     - Kết quả thực thi `dotnet test`: **18/18 Tests PASSED (100.0%)**.
+  4. **Xác minh E2E Toàn Diện (`run_comprehensive_e2e_test.js`)**:
+     - Đo kiểm toàn diện CSDL SQLite, REST API cổng 6033, Universal Gateway cổng 10000 (HTTP GET, SOCKS5 Tunnel, IP switching, real-time bandwidth metering): **100% PASSED**.
+
 ## [2026-09-11 16:05] - Hoàn Tất TASK-054: Cấu Hình .gitignore Chuẩn Mực, Đóng Gói Tuân Thủ GitHub 100MB & Commit/Push Toàn Bộ Repo Lên GitHub
 - **Thực hiện**: Agent 0 (Orchestrator), Agent 10 (DevOps), Agent 1 (Architect), Agent 9 (Security), Agent 12 (Documentation).
 - **Yêu cầu từ User**: "giờ commit len git https://github.com/netvietsoft/VPN".

@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net.Sockets;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
@@ -60,13 +62,56 @@ public class RelayNode
     public DateTime LastCheckedAt { get; set; } = DateTime.UtcNow;
 }
 
+/// <summary>
+/// [VI] Cấu trúc dữ liệu lưu trữ dàn Relay xuống đĩa
+/// [EN] Persistent storage structure for Relay configuration
+/// </summary>
+public class RelayStorageState
+{
+    public RelayRoutingMode ActiveMode { get; set; } = RelayRoutingMode.SemiRelay;
+    public List<RelayNode> Relays { get; set; } = new();
+}
+
+/// <summary>
+/// [VI] Giao diện dịch vụ quản trị dàn VPS Trung chuyển (Relay Pool Manager)
+/// [EN] Interface for managing intermediate Relay VPS nodes and routing policies
+/// </summary>
 public interface IRelayPoolManagerService
 {
+    /// <summary>
+    /// [VI] Chế độ định tuyến chuyển tiếp hiện tại của hệ thống
+    /// [EN] Current relay routing mode of the system
+    /// </summary>
     RelayRoutingMode ActiveMode { get; set; }
+
+    /// <summary>
+    /// [VI] Lấy danh sách toàn bộ các VPS Trung chuyển
+    /// [EN] Retrieves all relay VPS nodes
+    /// </summary>
     IReadOnlyList<RelayNode> GetAllRelays();
+
+    /// <summary>
+    /// [VI] Lấy thông tin relay theo mã Id
+    /// [EN] Retrieves relay node by Id
+    /// </summary>
     RelayNode? GetById(string id);
+
+    /// <summary>
+    /// [VI] Thêm mới một VPS Trung chuyển vào cụm
+    /// [EN] Adds a new relay node to the fleet
+    /// </summary>
     RelayNode AddRelay(RelayNode node);
+
+    /// <summary>
+    /// [VI] Cập nhật thông số trọng số, trạng thái kích hoạt và ngưỡng tải
+    /// [EN] Updates relay weight, enabled status, and stream limit
+    /// </summary>
     bool UpdateRelay(string id, int weight, bool isEnabled, int maxStreams);
+
+    /// <summary>
+    /// [VI] Xóa VPS Trung chuyển khỏi danh sách
+    /// [EN] Deletes a relay node from the fleet
+    /// </summary>
     bool DeleteRelay(string id);
     
     /// <summary>
@@ -82,10 +127,15 @@ public interface IRelayPoolManagerService
     RelayNode? ResolveRelayNode(string? targetCountry);
 
     /// <summary>
-    /// [VI] Ghi nhận bắt đầu / kết thúc luồng kết nối trên Relay Node
-    /// [EN] Tracks stream start and finish on a relay node
+    /// [VI] Ghi nhận bắt đầu luồng kết nối trên Relay Node
+    /// [EN] Tracks stream start on a relay node
     /// </summary>
     void TrackStreamStart(string relayId);
+
+    /// <summary>
+    /// [VI] Ghi nhận kết thúc luồng kết nối và cộng dồn lưu lượng trên Relay Node
+    /// [EN] Tracks stream end and aggregates transferred bytes on a relay node
+    /// </summary>
     void TrackStreamEnd(string relayId, long bytesTransferred);
 
     /// <summary>
@@ -96,21 +146,112 @@ public interface IRelayPoolManagerService
 }
 
 /// <summary>
-/// [VI] Dịch vụ quản lý cụm VPS Trung chuyển phân tán với bộ chuyển mạch linh hoạt
-/// [EN] Service managing distributed Relay VPS fleet with dynamic master switch & weighted load balancing
+/// [VI] Dịch vụ quản lý cụm VPS Trung chuyển phân tán với bộ chuyển mạch linh hoạt và lưu trữ bền vững
+/// [EN] Service managing distributed Relay VPS fleet with dynamic master switch, weighted load balancing and JSON persistence
 /// </summary>
 public class RelayPoolManagerService : IRelayPoolManagerService
 {
     private readonly ConcurrentDictionary<string, RelayNode> _relays = new();
     private readonly ILogger<RelayPoolManagerService> _logger;
     private readonly Random _random = new();
+    private readonly string _storagePath;
+    private readonly object _lock = new();
+    private RelayRoutingMode _activeMode = RelayRoutingMode.SemiRelay;
 
-    public RelayRoutingMode ActiveMode { get; set; } = RelayRoutingMode.SemiRelay;
+    private static readonly JsonSerializerOptions _jsonOptions = new()
+    {
+        WriteIndented = true,
+        IncludeFields = true
+    };
+
+    public RelayRoutingMode ActiveMode
+    {
+        get => _activeMode;
+        set
+        {
+            if (_activeMode != value)
+            {
+                _activeMode = value;
+                Save();
+            }
+        }
+    }
 
     public RelayPoolManagerService(ILogger<RelayPoolManagerService> logger)
     {
         _logger = logger;
-        SeedDefaultRelays();
+        string baseDir = AppContext.BaseDirectory;
+        string dataDir = Path.Combine(baseDir, "data");
+        if (!Directory.Exists(dataDir))
+        {
+            Directory.CreateDirectory(dataDir);
+        }
+        _storagePath = Path.Combine(dataDir, "relays.json");
+        Load();
+    }
+
+    private void Load()
+    {
+        lock (_lock)
+        {
+            if (File.Exists(_storagePath))
+            {
+                try
+                {
+                    string json = File.ReadAllText(_storagePath);
+                    var state = JsonSerializer.Deserialize<RelayStorageState>(json, _jsonOptions);
+                    if (state != null && state.Relays != null && state.Relays.Count > 0)
+                    {
+                        _activeMode = state.ActiveMode;
+                        _relays.Clear();
+                        foreach (var item in state.Relays)
+                        {
+                            _relays[item.Id] = item;
+                        }
+                        _logger.LogInformation("[RelayPool] Đã nạp {Count} relay nodes từ file {Path}. Chế độ: {Mode}",
+                            _relays.Count, _storagePath, _activeMode);
+                        return;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogWarning(ex, "[RelayPool] Lỗi đọc file relays.json, sử dụng cấu hình mặc định.");
+                }
+            }
+
+            SeedDefaultRelays();
+            Save();
+        }
+    }
+
+    private void Save()
+    {
+        lock (_lock)
+        {
+            try
+            {
+                var state = new RelayStorageState
+                {
+                    ActiveMode = _activeMode,
+                    Relays = _relays.Values.ToList()
+                };
+                string json = JsonSerializer.Serialize(state, _jsonOptions);
+                File.WriteAllText(_storagePath, json);
+
+                // Đồng bộ vào workspace source data nếu có
+                var sourcePath = Path.Combine(Directory.GetCurrentDirectory(), "data", "relays.json");
+                if (!string.Equals(Path.GetFullPath(sourcePath), Path.GetFullPath(_storagePath), StringComparison.OrdinalIgnoreCase))
+                {
+                    var sDir = Path.GetDirectoryName(sourcePath);
+                    if (!string.IsNullOrEmpty(sDir) && !Directory.Exists(sDir)) Directory.CreateDirectory(sDir);
+                    File.WriteAllText(sourcePath, json);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "[RelayPool] Lỗi khi lưu cấu hình relay xuống đĩa.");
+            }
+        }
     }
 
     private void SeedDefaultRelays()
@@ -195,6 +336,7 @@ public class RelayPoolManagerService : IRelayPoolManagerService
         node.CreatedAt = DateTime.UtcNow;
         node.LastCheckedAt = DateTime.UtcNow;
         _relays[node.Id] = node;
+        Save();
         return node;
     }
 
@@ -205,12 +347,21 @@ public class RelayPoolManagerService : IRelayPoolManagerService
             r.Weight = Math.Clamp(weight, 1, 100);
             r.IsEnabled = isEnabled;
             r.MaxStreams = Math.Max(100, maxStreams);
+            Save();
             return true;
         }
         return false;
     }
 
-    public bool DeleteRelay(string id) => _relays.TryRemove(id, out _);
+    public bool DeleteRelay(string id)
+    {
+        bool removed = _relays.TryRemove(id, out _);
+        if (removed)
+        {
+            Save();
+        }
+        return removed;
+    }
 
     public bool ShouldUseRelay(bool isVipUser, string? targetCountry)
     {

@@ -24,12 +24,42 @@ builder.Services.AddHostedService(sp => sp.GetRequiredService<ProxyHealthCheckBa
 builder.Services.AddSingleton<IUniversalGatewayService, UniversalGatewayService>();
 builder.Services.AddSingleton<IDedicatedPortService, DedicatedPortService>();
 
-// Kích hoạt CORS mở để các hệ thống web/antidetect bên ngoài dễ dàng gọi
+// [VI] Kích hoạt CORS bảo mật: Giới hạn cho localhost/loopback và IP nội bộ (BUG-01)
+// [EN] Configure secure CORS: Restrict to localhost/loopback and internal network origins (BUG-01)
 builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(policy =>
     {
-        policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
+        policy.SetIsOriginAllowed(origin =>
+        {
+            if (string.IsNullOrEmpty(origin)) return true;
+            try
+            {
+                var uri = new Uri(origin);
+                // Cho phép loopback / localhost
+                if (uri.Host.Equals("localhost", StringComparison.OrdinalIgnoreCase) ||
+                    uri.Host.Equals("127.0.0.1") ||
+                    uri.Host.Equals("::1"))
+                {
+                    return true;
+                }
+                // Cho phép dải IP nội bộ LAN (Private IP)
+                if (System.Net.IPAddress.TryParse(uri.Host, out var ip))
+                {
+                    var bytes = ip.GetAddressBytes();
+                    if (bytes.Length == 4)
+                    {
+                        if (bytes[0] == 10) return true;
+                        if (bytes[0] == 192 && bytes[1] == 168) return true;
+                        if (bytes[0] == 172 && bytes[1] >= 16 && bytes[1] <= 31) return true;
+                    }
+                }
+            }
+            catch { }
+            return false;
+        })
+        .AllowAnyMethod()
+        .AllowAnyHeader();
     });
 });
 
@@ -61,6 +91,90 @@ var gatewayService = app.Services.GetRequiredService<IUniversalGatewayService>()
 gatewayService.Start(10000, cts.Token);
 
 var startTime = DateTime.UtcNow;
+
+#region Authentication & Security Helpers (BUG-01)
+
+/// <summary>
+/// [VI] Kiểm tra nguồn gốc HTTP (Origin) an toàn để chống tấn công CSRF từ website bên ngoài
+/// [EN] Validates if HTTP request Origin is safe to prevent cross-site CSRF
+/// </summary>
+bool IsOriginSafe(HttpContext ctx)
+{
+    if (ctx.Request.Headers.TryGetValue("Origin", out var originVal) && !string.IsNullOrEmpty(originVal))
+    {
+        try
+        {
+            var uri = new Uri(originVal.ToString());
+            if (!uri.Host.Equals("localhost", StringComparison.OrdinalIgnoreCase) &&
+                !uri.Host.Equals("127.0.0.1") &&
+                !uri.Host.Equals("::1"))
+            {
+                return false;
+            }
+        }
+        catch
+        {
+            return false;
+        }
+    }
+    return true;
+}
+
+/// <summary>
+/// [VI] Kiểm tra quyền quản trị Admin cho các endpoint nhạy cảm (BUG-01).
+///      Mặc định cho phép kết nối Loopback (127.0.0.1, ::1) khi Origin an toàn.
+///      Nếu gọi từ xa, yêu cầu header 'X-Admin-Key' hoặc 'Authorization: Bearer [token]'.
+/// [EN] Validates administrative access for sensitive mutating endpoints (BUG-01).
+///      Allows loopback requests (127.0.0.1, ::1) by default when Origin is safe.
+///      Remote requests require 'X-Admin-Key' or 'Authorization: Bearer [token]'.
+/// </summary>
+bool IsAuthorizedAdmin(HttpContext ctx)
+{
+    if (!IsOriginSafe(ctx)) return false;
+
+    // Cho phép kết nối Loopback (Localhost)
+    var remoteIp = ctx.Connection.RemoteIpAddress;
+    if (remoteIp != null && System.Net.IPAddress.IsLoopback(remoteIp))
+    {
+        return true;
+    }
+
+    // Lấy secret từ config hoặc env (mặc định "nextai_admin_secret_2026")
+    string expectedKey = builder.Configuration["AdminSecretKey"] 
+        ?? Environment.GetEnvironmentVariable("NEXTAI_ADMIN_KEY") 
+        ?? "nextai_admin_secret_2026";
+
+    // Kiểm tra X-Admin-Key header
+    if (ctx.Request.Headers.TryGetValue("X-Admin-Key", out var headerKey) && !string.IsNullOrEmpty(headerKey))
+    {
+        if (System.Security.Cryptography.CryptographicOperations.FixedTimeEquals(
+            System.Text.Encoding.UTF8.GetBytes(headerKey.ToString()),
+            System.Text.Encoding.UTF8.GetBytes(expectedKey)))
+        {
+            return true;
+        }
+    }
+
+    // Kiểm tra Authorization: Bearer <token>
+    if (ctx.Request.Headers.TryGetValue("Authorization", out var authHeader) && !string.IsNullOrEmpty(authHeader))
+    {
+        string authStr = authHeader.ToString();
+        if (authStr.StartsWith("Bearer ", StringComparison.OrdinalIgnoreCase))
+        {
+            string token = authStr.Substring(7).Trim();
+            if (System.Security.Cryptography.CryptographicOperations.FixedTimeEquals(
+                System.Text.Encoding.UTF8.GetBytes(token),
+                System.Text.Encoding.UTF8.GetBytes(expectedKey)))
+            {
+                return true;
+            }
+        }
+    }
+
+    return false;
+}
+
+#endregion
 
 #region REST API Endpoints
 
@@ -197,9 +311,15 @@ app.MapGet("/api/v1/tenants", ([FromServices] ITenantService tenantService) =>
 });
 
 app.MapPost("/api/v1/tenants", (
+    HttpContext ctx,
     [FromBody] CreateTenantRequest req,
     [FromServices] ITenantService tenantService) =>
 {
+    if (!IsAuthorizedAdmin(ctx))
+    {
+        return Results.Json(new ApiResponse<object> { Success = false, Message = "Yêu cầu quyền quản trị (Unauthorized)." }, statusCode: StatusCodes.Status401Unauthorized);
+    }
+
     if (string.IsNullOrWhiteSpace(req.Name))
     {
         return Results.BadRequest(new ApiResponse<object>
@@ -215,6 +335,24 @@ app.MapPost("/api/v1/tenants", (
         Success = true,
         Message = $"Đã tạo tài khoản cho thuê '{tenant.Name}' thành công.",
         Data = tenant
+    });
+});
+
+app.MapDelete("/api/v1/tenants/{id}", (
+    string id,
+    HttpContext ctx,
+    [FromServices] ITenantService tenantService) =>
+{
+    if (!IsAuthorizedAdmin(ctx))
+    {
+        return Results.Json(new ApiResponse<object> { Success = false, Message = "Yêu cầu quyền quản trị (Unauthorized)." }, statusCode: StatusCodes.Status401Unauthorized);
+    }
+
+    bool deleted = tenantService.DeleteTenant(id);
+    return Results.Ok(new ApiResponse<object>
+    {
+        Success = deleted,
+        Message = deleted ? $"Đã xóa khách hàng '{id}' thành công." : $"Không tìm thấy khách hàng '{id}'."
     });
 });
 
@@ -534,9 +672,15 @@ app.MapGet("/api/v1/proxies/summary", ([FromServices] IProxyManagerService proxy
 });
 
 app.MapPost("/api/v1/proxies/bulk", async (
+    HttpContext ctx,
     [FromBody] BulkImportRequest req,
     [FromServices] IProxyManagerService proxyManager) =>
 {
+    if (!IsAuthorizedAdmin(ctx))
+    {
+        return Results.Json(new ApiResponse<object> { Success = false, Message = "Yêu cầu quyền quản trị (Unauthorized)." }, statusCode: StatusCodes.Status401Unauthorized);
+    }
+
     if (string.IsNullOrWhiteSpace(req.Text))
     {
         return Results.BadRequest(new ApiResponse<object>
@@ -555,8 +699,13 @@ app.MapPost("/api/v1/proxies/bulk", async (
     });
 });
 
-app.MapPost("/api/v1/proxies/clear", ([FromServices] IProxyManagerService proxyManager) =>
+app.MapPost("/api/v1/proxies/clear", (HttpContext ctx, [FromServices] IProxyManagerService proxyManager) =>
 {
+    if (!IsAuthorizedAdmin(ctx))
+    {
+        return Results.Json(new ApiResponse<object> { Success = false, Message = "Yêu cầu quyền quản trị (Unauthorized)." }, statusCode: StatusCodes.Status401Unauthorized);
+    }
+
     proxyManager.ClearAll();
     return Results.Ok(new ApiResponse<object>
     {
@@ -565,8 +714,13 @@ app.MapPost("/api/v1/proxies/clear", ([FromServices] IProxyManagerService proxyM
     });
 });
 
-app.MapPost("/api/v1/proxies/delete-offline", ([FromServices] IProxyManagerService proxyManager) =>
+app.MapPost("/api/v1/proxies/delete-offline", (HttpContext ctx, [FromServices] IProxyManagerService proxyManager) =>
 {
+    if (!IsAuthorizedAdmin(ctx))
+    {
+        return Results.Json(new ApiResponse<object> { Success = false, Message = "Yêu cầu quyền quản trị (Unauthorized)." }, statusCode: StatusCodes.Status401Unauthorized);
+    }
+
     int deleted = proxyManager.DeleteOffline();
     return Results.Ok(new ApiResponse<object>
     {
@@ -577,9 +731,15 @@ app.MapPost("/api/v1/proxies/delete-offline", ([FromServices] IProxyManagerServi
 });
 
 app.MapPost("/api/v1/proxies/batch-delete", (
+    HttpContext ctx,
     [FromBody] BatchIdsRequest req,
     [FromServices] IProxyManagerService proxyManager) =>
 {
+    if (!IsAuthorizedAdmin(ctx))
+    {
+        return Results.Json(new ApiResponse<object> { Success = false, Message = "Yêu cầu quyền quản trị (Unauthorized)." }, statusCode: StatusCodes.Status401Unauthorized);
+    }
+
     if (req.Ids == null || req.Ids.Count == 0)
     {
         return Results.BadRequest(new ApiResponse<object>
@@ -652,8 +812,13 @@ app.MapGet("/api/v1/proxies/sticky-sessions", ([FromServices] ISmartProxyRotatio
     });
 });
 
-app.MapDelete("/api/v1/proxies/{id}", (string id, [FromServices] IProxyManagerService proxyManager) =>
+app.MapDelete("/api/v1/proxies/{id}", (string id, HttpContext ctx, [FromServices] IProxyManagerService proxyManager) =>
 {
+    if (!IsAuthorizedAdmin(ctx))
+    {
+        return Results.Json(new ApiResponse<object> { Success = false, Message = "Yêu cầu quyền quản trị (Unauthorized)." }, statusCode: StatusCodes.Status401Unauthorized);
+    }
+
     bool deleted = proxyManager.Delete(id);
     return Results.Ok(new ApiResponse<object>
     {
@@ -720,8 +885,13 @@ app.MapGet("/api/v1/relays", ([FromServices] IRelayPoolManagerService relayPool)
     });
 });
 
-app.MapPost("/api/v1/relays/mode", ([FromBody] JsonElement body, [FromServices] IRelayPoolManagerService relayPool) =>
+app.MapPost("/api/v1/relays/mode", (HttpContext ctx, [FromBody] JsonElement body, [FromServices] IRelayPoolManagerService relayPool) =>
 {
+    if (!IsAuthorizedAdmin(ctx))
+    {
+        return Results.Json(new ApiResponse<object> { Success = false, Message = "Yêu cầu quyền quản trị (Unauthorized)." }, statusCode: StatusCodes.Status401Unauthorized);
+    }
+
     if (body.TryGetProperty("mode", out var modeProp))
     {
         string modeStr = modeProp.GetString() ?? "";
@@ -739,8 +909,13 @@ app.MapPost("/api/v1/relays/mode", ([FromBody] JsonElement body, [FromServices] 
     return Results.BadRequest(new ApiResponse<object> { Success = false, Message = "Chế độ không hợp lệ. Cho phép: FullRelay, SemiRelay, DirectBypass" });
 });
 
-app.MapPost("/api/v1/relays/{id}/update", (string id, [FromBody] JsonElement body, [FromServices] IRelayPoolManagerService relayPool) =>
+app.MapPost("/api/v1/relays/{id}/update", (string id, HttpContext ctx, [FromBody] JsonElement body, [FromServices] IRelayPoolManagerService relayPool) =>
 {
+    if (!IsAuthorizedAdmin(ctx))
+    {
+        return Results.Json(new ApiResponse<object> { Success = false, Message = "Yêu cầu quyền quản trị (Unauthorized)." }, statusCode: StatusCodes.Status401Unauthorized);
+    }
+
     int weight = body.TryGetProperty("weight", out var w) ? w.GetInt32() : 100;
     bool isEnabled = !body.TryGetProperty("isEnabled", out var e) || e.GetBoolean();
     int maxStreams = body.TryGetProperty("maxStreams", out var m) ? m.GetInt32() : 5000;
@@ -750,6 +925,42 @@ app.MapPost("/api/v1/relays/{id}/update", (string id, [FromBody] JsonElement bod
     {
         Success = updated,
         Message = updated ? "Đã cập nhật thông số Relay VPS." : "Không tìm thấy Relay VPS."
+    });
+});
+
+app.MapPost("/api/v1/relays", (HttpContext ctx, [FromBody] RelayNode node, [FromServices] IRelayPoolManagerService relayPool) =>
+{
+    if (!IsAuthorizedAdmin(ctx))
+    {
+        return Results.Json(new ApiResponse<object> { Success = false, Message = "Yêu cầu quyền quản trị (Unauthorized)." }, statusCode: StatusCodes.Status401Unauthorized);
+    }
+
+    if (string.IsNullOrWhiteSpace(node.Ip) || node.Port <= 0)
+    {
+        return Results.BadRequest(new ApiResponse<object> { Success = false, Message = "IP và Port của Relay không hợp lệ!" });
+    }
+
+    var added = relayPool.AddRelay(node);
+    return Results.Ok(new ApiResponse<RelayNode>
+    {
+        Success = true,
+        Message = "Đã thêm VPS Trung chuyển mới thành công.",
+        Data = added
+    });
+});
+
+app.MapDelete("/api/v1/relays/{id}", (string id, HttpContext ctx, [FromServices] IRelayPoolManagerService relayPool) =>
+{
+    if (!IsAuthorizedAdmin(ctx))
+    {
+        return Results.Json(new ApiResponse<object> { Success = false, Message = "Yêu cầu quyền quản trị (Unauthorized)." }, statusCode: StatusCodes.Status401Unauthorized);
+    }
+
+    bool deleted = relayPool.DeleteRelay(id);
+    return Results.Ok(new ApiResponse<object>
+    {
+        Success = deleted,
+        Message = deleted ? "Đã xóa VPS Trung chuyển thành công." : "Không tìm thấy VPS Trung chuyển."
     });
 });
 
@@ -770,8 +981,13 @@ app.MapGet("/api/v1/proxies/quotas", ([FromServices] IProxyManagerService proxyM
     return Results.Ok(proxyManager.GetQuotaOverview());
 });
 
-app.MapPost("/api/v1/proxies/quotas/reset", ([FromServices] IProxyManagerService proxyManager) =>
+app.MapPost("/api/v1/proxies/quotas/reset", (HttpContext ctx, [FromServices] IProxyManagerService proxyManager) =>
 {
+    if (!IsAuthorizedAdmin(ctx))
+    {
+        return Results.Json(new ApiResponse<object> { Success = false, Message = "Yêu cầu quyền quản trị (Unauthorized)." }, statusCode: StatusCodes.Status401Unauthorized);
+    }
+
     int resetCount = proxyManager.ResetDailyQuotas();
     return Results.Ok(new ApiResponse<object>
     {

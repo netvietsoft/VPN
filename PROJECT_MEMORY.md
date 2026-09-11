@@ -298,3 +298,25 @@ Dự án: NextAI VPN Platform & Residential Gateway Mesh (Chuẩn V2.1)
   + Thiết lập `core.sshCommand` trỏ vào khóa định danh chuyên biệt `id_ed25519_vpn`.
 - **Trạng thái Git**: 100% mã nguồn (4,141 files) đã được commit sạch và đẩy thành công (`main -> origin/main`).
 
+## 30. Khắc Phục Toàn Diện 20 Lỗi Tồn Đọng Backend & Bảo Tồn Nhánh Direct Bypass Theo Chỉ Thị (TASK-056)
+- **Quyết định về BUG-02**: Người dùng ra chỉ thị dứt khoát KHÔNG xóa bỏ nhánh kết nối thẳng (Direct Bypass fallback). Khi hệ thống node ngoài hoặc relay gặp sự cố, gateway tiếp tục duy trì fallback để không làm đứt gãy kết nối của client.
+- **20 Lỗi đã khắc phục triệt để**:
+  + **CORS & Admin Authentication (BUG-01)**: Giới hạn CORS cho localhost/loopback + dải IP nội bộ; áp dụng `IsAuthorizedAdmin` và `IsOriginSafe` chống CSRF trên toàn bộ endpoint nhạy cảm (thêm/xóa proxy, reset quota, đổi relay mode, tạo/xóa tenant).
+  + **Lưu trữ bền vững JSON (BUG-03, BUG-05)**: Lưu trữ cấu hình Tenant (`data/tenants.json`) và Relay Pool (`data/relays.json`) xuống đĩa với khóa an toàn đa luồng `lock (_lock)`.
+  + **Đảm bảo 1 Active VPN & Thread-safe Quotas (BUG-04, BUG-10)**: Bảo đảm duy nhất 1 proxy được kích hoạt làm VPN cho Desktop Client; bọc `lock` khi tích lũy băng thông và reset quota.
+  + **Bảo vệ xác thực (BUG-06)**: So sánh mật khẩu constant-time bằng `CryptographicOperations.FixedTimeEquals` và khóa tạm thời IP khi có hành vi dò quét mật khẩu brute-force.
+  + **Non-blocking Async I/O (BUG-07)**: Thay thế toàn bộ `stream.ReadByte()` đồng bộ bằng `ReadByteAsync(stream, ct)` trong `UniversalGatewayService` và `DedicatedPortService`.
+  + **Ngăn rò rỉ Socket (BUG-09)**: Bọc kết nối và bắt tay upstream trong `try/catch` có `tcpClient.Dispose()`.
+  + **Sticky Session & Sliding Renewal (BUG-11, BUG-20)**: Sử dụng `GetOrAdd` nguyên tử và tự động gia hạn thời gian sống `ExpiresAt` khi có lưu lượng hoạt động.
+  + **Chu kỳ Reset Quota Nền (BUG-12)**: Tự động gọi `ResetDailyQuotas()` trong chu kỳ 10 phút của `ProxyHealthCheckBackgroundService`.
+  + **Báo cáo thành công (BUG-13)**: Gọi `_rotationEngine.ReportSuccess(proxyId)` khi phiên chuyển tiếp hoàn tất.
+  + **Đồng bộ Mesh Pool từ Đĩa (BUG-14)**: Nạp các node khách hàng từ `data/client_nodes.json` khi khởi động `NodePoolService`.
+  + **Thu dọn Stream Relay Lỗi (BUG-15)**: Đảm bảo giải phóng `_relayPool.TrackStreamEnd` khi upstream connect thất bại.
+  + **Tài liệu XML Song Ngữ (BUG-16)**: 100% comment song ngữ (Tiếng Việt + Tiếng Anh) trên toàn bộ interface dịch vụ Backend.
+  + **Module Hóa Gateway Handlers (BUG-17)**: Phân tách các hàm xử lý monolithic thành các hàm module chuyên biệt.
+- **Bộ Unit Test Tự Động (BUG-08)**:
+  + Tạo project `Backend/VpnBackend.Tests/VpnBackend.Tests.csproj` (xUnit + .NET 10).
+  + 18 bài unit test kiểm tra toàn bộ các khía cạnh logic của 4 service lõi (`TenantService`, `ProxyManagerService`, `SmartProxyRotationEngine`, `RelayPoolManagerService`).
+  + Kết quả chạy `dotnet test`: **18/18 Tests PASSED (100.0%)**.
+- **Đo kiểm Toàn Diện E2E**: Chạy kịch bản `run_comprehensive_e2e_test.js` kiểm tra SQLite, REST API cổng 6033, Gateway cổng 10000, và đo băng thông thời gian thực đạt **100% PASSED**.
+

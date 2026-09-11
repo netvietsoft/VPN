@@ -1,0 +1,34 @@
+[
+  {
+    "Id": "tenant_agency",
+    "Name": "Global Marketing Agency",
+    "ApiKey": "agency_key_112233445566778899",
+    "Username": "agency_vip",
+    "Password": "agency_pass_secure",
+    "QuotaGb": 50,
+    "MaxConcurrentConnections": 100,
+    "IsActive": true,
+    "IsVip": false,
+    "ExpiresAt": "2026-12-11T13:57:43.1443152Z",
+    "CreatedAt": "2026-09-11T13:57:43.1443151Z",
+    "UsedGb": 0,
+    "RemainingGb": 50,
+    "UsedBytes": 0
+  },
+  {
+    "Id": "tenant_kiki",
+    "Name": "KikiLogin Antidetect Ecosystem",
+    "ApiKey": "kiki_live_key_998877665544332211",
+    "Username": "kikilogin",
+    "Password": "kiki_resident_pass_2026",
+    "QuotaGb": 100,
+    "MaxConcurrentConnections": 200,
+    "IsActive": true,
+    "IsVip": false,
+    "ExpiresAt": "2027-09-11T13:57:43.1442324Z",
+    "CreatedAt": "2026-09-11T13:57:43.1440005Z",
+    "UsedGb": 0,
+    "RemainingGb": 100,
+    "UsedBytes": 0
+  }
+]

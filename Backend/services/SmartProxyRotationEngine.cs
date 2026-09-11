@@ -106,6 +106,13 @@ public class SmartProxyRotationEngine : ISmartProxyRotationEngine
                 if (boundProxy != null && boundProxy.Status.Equals("LIVE", StringComparison.OrdinalIgnoreCase) && !boundProxy.IsExhaustedToday)
                 {
                     existingSession.LastActiveAt = DateTime.UtcNow;
+                    // [VI] BUG-20: Gia hạn thời gian sống (Sliding Expiration) khi phiên còn gửi traffic
+                    // [EN] BUG-20: Sliding renewal on active traffic so dedicated/sticky sessions don't expire mid-activity
+                    int renewalMins = sessionMinutes.GetValueOrDefault(10);
+                    if (renewalMins > 0)
+                    {
+                        existingSession.ExpiresAt = DateTime.UtcNow.AddMinutes(renewalMins);
+                    }
                     _proxyConnectionCounts.AddOrUpdate(boundProxy.Id, 1, (_, c) => c + 1);
                     return boundProxy;
                 }
@@ -233,7 +240,20 @@ public class SmartProxyRotationEngine : ISmartProxyRotationEngine
                 ActiveConnections = 1
             };
 
-            _stickySessions[sessionKey] = newEntry;
+            var actualEntry = _stickySessions.GetOrAdd(sessionKey, newEntry);
+            if (!ReferenceEquals(actualEntry, newEntry))
+            {
+                // [VI] Luồng song song đã chọn proxy khác trước, tái sử dụng proxy của luồng thắng cuộc
+                // [EN] Another thread won the race, reuse the proxy assigned by the winner thread
+                var winnerProxy = _proxyManager.GetById(actualEntry.ProxyId);
+                if (winnerProxy != null && winnerProxy.Status.Equals("LIVE", StringComparison.OrdinalIgnoreCase) && !winnerProxy.IsExhaustedToday)
+                {
+                    actualEntry.LastActiveAt = DateTime.UtcNow;
+                    _proxyConnectionCounts.AddOrUpdate(winnerProxy.Id, 1, (_, c) => c + 1);
+                    return winnerProxy;
+                }
+            }
+
             _logger.LogInformation("[RotationEngine] Đã gắn Sticky Session '{Key}' vào Proxy {Host}:{Port} ({Country}) - TTL: {Min} phút",
                 sessionKey, selected.Host, selected.Port, selected.Country, ttlMinutes);
         }

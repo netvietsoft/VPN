@@ -62,27 +62,130 @@ public class BulkImportResult
     public Dictionary<string, int> CountryBreakdown { get; set; } = new(StringComparer.OrdinalIgnoreCase);
 }
 
+/// <summary>
+/// [VI] Giao diện quản lý kho Upstream Proxy và chính sách hạn mức băng thông
+/// [EN] Interface for upstream proxy pool management and bandwidth quota accounting
+/// </summary>
 public interface IProxyManagerService
 {
+    /// <summary>
+    /// [VI] Lấy danh sách tất cả các proxy trong kho
+    /// [EN] Retrieves all proxies in the pool
+    /// </summary>
     IReadOnlyList<UpstreamProxy> GetAll();
+
+    /// <summary>
+    /// [VI] Lấy thông tin proxy theo mã Id
+    /// [EN] Retrieves proxy by Id
+    /// </summary>
     UpstreamProxy? GetById(string id);
+
+    /// <summary>
+    /// [VI] Lấy node VPN đang được chọn hoạt động chính
+    /// [EN] Retrieves currently active VPN node
+    /// </summary>
     UpstreamProxy? GetActiveVpnProxy();
+
+    /// <summary>
+    /// [VI] Thêm mới một proxy vào kho
+    /// [EN] Adds a new proxy to the pool
+    /// </summary>
     UpstreamProxy Add(UpstreamProxy proxy);
+
+    /// <summary>
+    /// [VI] Nhập hàng loạt proxy từ chuỗi văn bản
+    /// [EN] Bulk imports proxies from raw text
+    /// </summary>
     int AddBulk(string bulkText, string defaultType = "socks5");
+
+    /// <summary>
+    /// [VI] Nhập hàng loạt bất đồng bộ có kiểm tra GeoIP và lọc trùng
+    /// [EN] Asynchronously bulk imports proxies with GeoIP lookup and deduplication
+    /// </summary>
     Task<BulkImportResult> AddBulkAsync(string bulkText, string defaultType = "socks5", bool replaceExisting = false, bool autoGeoIp = true);
+
+    /// <summary>
+    /// [VI] Xóa proxy theo Id
+    /// [EN] Deletes proxy by Id
+    /// </summary>
     bool Delete(string id);
+
+    /// <summary>
+    /// [VI] Xóa danh sách nhiều proxy
+    /// [EN] Batch deletes multiple proxies
+    /// </summary>
     int BatchDelete(IEnumerable<string> ids);
+
+    /// <summary>
+    /// [VI] Xóa toàn bộ proxy trong kho
+    /// [EN] Clears all proxies from pool
+    /// </summary>
     bool ClearAll();
+
+    /// <summary>
+    /// [VI] Xóa tất cả các proxy đang ở trạng thái OFFLINE
+    /// [EN] Removes all proxies currently marked as OFFLINE
+    /// </summary>
     int DeleteOffline();
+
+    /// <summary>
+    /// [VI] Chọn proxy làm node VPN hoạt động chính
+    /// [EN] Selects proxy as the active VPN node
+    /// </summary>
     bool SelectActiveVpn(string id);
+
+    /// <summary>
+    /// [VI] Kiểm tra kết nối và đo độ trễ cho một proxy
+    /// [EN] Tests connectivity and measures latency for a single proxy
+    /// </summary>
     Task<UpstreamProxy?> TestProxyAsync(string id);
+
+    /// <summary>
+    /// [VI] Kiểm tra kết nối cho toàn bộ kho proxy
+    /// [EN] Tests connectivity for all proxies in the pool
+    /// </summary>
     Task<IReadOnlyList<UpstreamProxy>> TestAllAsync();
+
+    /// <summary>
+    /// [VI] Kiểm tra kết nối cho danh sách proxy theo Id
+    /// [EN] Tests connectivity for specified proxy IDs
+    /// </summary>
     Task<IReadOnlyList<UpstreamProxy>> BatchTestAsync(IEnumerable<string> ids);
+
+    /// <summary>
+    /// [VI] Lấy danh sách địa điểm phục vụ giao diện VPN
+    /// [EN] Retrieves VPN locations for client UI
+    /// </summary>
     object GetVpnLocations();
+
+    /// <summary>
+    /// [VI] Lấy tổng hợp phân bổ proxy theo quốc gia
+    /// [EN] Retrieves country breakdown summary
+    /// </summary>
     object GetCountrySummary();
+
+    /// <summary>
+    /// [VI] Ghi nhận dung lượng băng thông tiêu thụ cho một proxy
+    /// [EN] Records bandwidth consumption for an upstream proxy
+    /// </summary>
     void RecordBandwidthUsage(string proxyId, long bytes);
+
+    /// <summary>
+    /// [VI] Khôi phục hạn mức quota ngày cho tất cả proxy khi sang ngày mới
+    /// [EN] Resets daily quota for all proxies on UTC date rollover
+    /// </summary>
     int ResetDailyQuotas();
+
+    /// <summary>
+    /// [VI] Lấy tổng quan tình trạng hạn mức băng thông hệ thống
+    /// [EN] Retrieves overview of system bandwidth quota usage
+    /// </summary>
     object GetQuotaOverview();
+
+    /// <summary>
+    /// [VI] Tải lại dữ liệu proxy từ đĩa
+    /// [EN] Reloads proxy data from storage disk
+    /// </summary>
     void Reload();
 }
 
@@ -125,7 +228,7 @@ public class ProxyManagerService : IProxyManagerService
                         {
                             _proxies[item.Id] = item;
                         }
-                        EnsureXrayVpnNodes();
+                        EnsureSingleActiveVpn();
                         return;
                     }
                 }
@@ -138,7 +241,26 @@ public class ProxyManagerService : IProxyManagerService
             // Danh sách proxy hạt giống ban đầu (Seed Default Proxies)
             SeedDefaults();
             EnsureXrayVpnNodes();
+            EnsureSingleActiveVpn();
             Save();
+        }
+    }
+
+    private void EnsureSingleActiveVpn()
+    {
+        var actives = _proxies.Values.Where(p => p.IsActiveVpn).ToList();
+        if (actives.Count > 1)
+        {
+            // Chỉ giữ lại 1 node active duy nhất, tắt các node còn lại
+            for (int i = 1; i < actives.Count; i++)
+            {
+                actives[i].IsActiveVpn = false;
+            }
+        }
+        else if (actives.Count == 0)
+        {
+            var firstLive = _proxies.Values.FirstOrDefault(p => p.Status.Equals("LIVE", StringComparison.OrdinalIgnoreCase)) ?? _proxies.Values.FirstOrDefault();
+            if (firstLive != null) firstLive.IsActiveVpn = true;
         }
     }
 
@@ -146,11 +268,12 @@ public class ProxyManagerService : IProxyManagerService
     {
         // [VI] Nạp các node VPN Xray Reality đã kiểm định hợp lệ (Chỉ nạp server hoạt động tốt làm VPN)
         // [EN] Seed verified Xray Reality VPN nodes (only load servers verified capable of VPN)
+        bool hasActive = _proxies.Values.Any(p => p.IsActiveVpn);
         var xrayNodes = new List<UpstreamProxy>
         {
             new() { Id = "vpn_xray_bg_1", Type = "vless", Host = "bg.bsdup.com", Port = 63821, Country = "BG", CountryName = "Bulgaria", City = "Sofia", Isp = "NextAI Reality (www.microsoft.com)", Status = "LIVE", PingMs = 231 },
             new() { Id = "vpn_xray_bg_2", Type = "vless", Host = "bg.bsdup.com", Port = 63821, Country = "BG", CountryName = "Bulgaria", City = "Sofia", Isp = "NextAI Reality (www.microsoft.com)", Status = "LIVE", PingMs = 235 },
-            new() { Id = "vpn_xray_de_3", Type = "vless", Host = "77.90.188.26", Port = 63821, Country = "DE", CountryName = "Germany", City = "Frankfurt", Isp = "NextAI Reality (www.tiktok.com)", Status = "LIVE", PingMs = 209, IsActiveVpn = true }
+            new() { Id = "vpn_xray_de_3", Type = "vless", Host = "77.90.188.26", Port = 63821, Country = "DE", CountryName = "Germany", City = "Frankfurt", Isp = "NextAI Reality (www.tiktok.com)", Status = "LIVE", PingMs = 209, IsActiveVpn = !hasActive }
         };
 
         foreach (var node in xrayNodes)
@@ -203,7 +326,16 @@ public class ProxyManagerService : IProxyManagerService
 
     public UpstreamProxy? GetById(string id) => _proxies.TryGetValue(id, out var p) ? p : null;
 
-    public UpstreamProxy? GetActiveVpnProxy() => _proxies.Values.FirstOrDefault(p => p.IsActiveVpn) ?? _proxies.Values.FirstOrDefault();
+    public UpstreamProxy? GetActiveVpnProxy()
+    {
+        var active = _proxies.Values.FirstOrDefault(p => p.IsActiveVpn);
+        if (active == null)
+        {
+            active = _proxies.Values.FirstOrDefault();
+            if (active != null) active.IsActiveVpn = true;
+        }
+        return active;
+    }
 
     public UpstreamProxy Add(UpstreamProxy proxy)
     {
@@ -534,22 +666,25 @@ public class ProxyManagerService : IProxyManagerService
         if (bytes <= 0) return;
         if (_proxies.TryGetValue(proxyId, out var proxy))
         {
-            string today = DateTime.UtcNow.ToString("yyyy-MM-dd");
-            if (proxy.DailyResetDate != today)
+            lock (proxy)
             {
-                proxy.UsedDailyBytes = 0;
-                proxy.IsExhaustedToday = false;
-                proxy.DailyResetDate = today;
-            }
+                string today = DateTime.UtcNow.ToString("yyyy-MM-dd");
+                if (proxy.DailyResetDate != today)
+                {
+                    proxy.UsedDailyBytes = 0;
+                    proxy.IsExhaustedToday = false;
+                    proxy.DailyResetDate = today;
+                }
 
-            proxy.UsedDailyBytes += bytes;
-            proxy.UsedMonthlyBytes += bytes;
+                proxy.UsedDailyBytes += bytes;
+                proxy.UsedMonthlyBytes += bytes;
 
-            // Kiểm tra chạm ngưỡng 300MB/ngày (300 * 1024 * 1024 bytes)
-            if (proxy.UsedDailyBytes >= proxy.DailyQuotaBytes && !proxy.IsExhaustedToday)
-            {
-                proxy.IsExhaustedToday = true;
-                proxy.AutoSwitchedCount++;
+                // Kiểm tra chạm ngưỡng 300MB/ngày (300 * 1024 * 1024 bytes)
+                if (proxy.UsedDailyBytes >= proxy.DailyQuotaBytes && !proxy.IsExhaustedToday)
+                {
+                    proxy.IsExhaustedToday = true;
+                    proxy.AutoSwitchedCount++;
+                }
             }
         }
     }
@@ -560,12 +695,15 @@ public class ProxyManagerService : IProxyManagerService
         int resetCount = 0;
         foreach (var p in _proxies.Values)
         {
-            if (p.DailyResetDate != today || p.IsExhaustedToday)
+            lock (p)
             {
-                p.UsedDailyBytes = 0;
-                p.IsExhaustedToday = false;
-                p.DailyResetDate = today;
-                resetCount++;
+                if (p.DailyResetDate != today || p.IsExhaustedToday)
+                {
+                    p.UsedDailyBytes = 0;
+                    p.IsExhaustedToday = false;
+                    p.DailyResetDate = today;
+                    resetCount++;
+                }
             }
         }
         if (resetCount > 0) Save();

@@ -1,23 +1,71 @@
-using System.Buffers;
+using System;
 using System.Collections.Concurrent;
+using System.IO;
+using System.Linq;
 using System.Net;
 using System.Net.Sockets;
+using System.Security.Cryptography;
 using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using VpnResidentialHub.Models;
 
 namespace VpnResidentialHub.Services;
 
+/// <summary>
+/// [VI] Giao diện cổng Universal Proxy Gateway (SOCKS5 & HTTP CONNECT trên cổng 10000)
+/// [EN] Interface for the Universal Proxy Gateway (supporting SOCKS5 & HTTP CONNECT on port 10000)
+/// </summary>
 public interface IUniversalGatewayService
 {
+    /// <summary>
+    /// [VI] Khởi động Gateway lắng nghe trên cổng chỉ định
+    /// [EN] Starts the Gateway listening on the specified port
+    /// </summary>
     void Start(int port, CancellationToken ct);
+
+    /// <summary>
+    /// [VI] Dừng Gateway và đóng toàn bộ listener
+    /// [EN] Stops the Gateway and releases all socket listeners
+    /// </summary>
     void Stop();
+
+    /// <summary>
+    /// [VI] Lấy danh sách các phiên proxy đang hoạt động
+    /// [EN] Retrieves list of active proxy sessions
+    /// </summary>
     IReadOnlyList<ProxySession> GetActiveSessions();
+
+    /// <summary>
+    /// [VI] Số lượng kết nối đồng thời đang xử lý
+    /// [EN] Current number of concurrent active connections
+    /// </summary>
     int ActiveConnectionsCount { get; }
+
+    /// <summary>
+    /// [VI] Tổng lưu lượng đã phục vụ tính bằng Bytes
+    /// [EN] Total bytes served across all sessions
+    /// </summary>
     long TotalBytesServed { get; }
+
+    /// <summary>
+    /// [VI] Tổng lưu lượng tải lên (Inbound) tính bằng Bytes
+    /// [EN] Total incoming bytes received
+    /// </summary>
     long TotalBytesIn { get; }
+
+    /// <summary>
+    /// [VI] Tổng lưu lượng tải xuống (Outbound) tính bằng Bytes
+    /// [EN] Total outgoing bytes sent
+    /// </summary>
     long TotalBytesOut { get; }
 }
 
+/// <summary>
+/// [VI] Dịch vụ Universal Proxy Gateway hỗ trợ cả SOCKS5 và HTTP Proxy với tính năng xoay IP dân cư tự động
+/// [EN] Universal Proxy Gateway service supporting SOCKS5 & HTTP CONNECT with automated residential IP rotation
+/// </summary>
 public class UniversalGatewayService : IUniversalGatewayService
 {
     private readonly INodePoolService _nodePool;
@@ -27,6 +75,7 @@ public class UniversalGatewayService : IUniversalGatewayService
     private readonly IRelayPoolManagerService _relayPool;
     private readonly ILogger<UniversalGatewayService> _logger;
     private readonly ConcurrentDictionary<string, ProxySession> _activeSessions = new();
+    private readonly ConcurrentDictionary<string, (int FailCount, DateTime LockoutUntil)> _authFailures = new();
     private TcpListener? _listener;
     private long _totalBytesServed = 0;
     private long _totalBytesIn = 0;
@@ -131,28 +180,86 @@ public class UniversalGatewayService : IUniversalGatewayService
         }
     }
 
+    #region Helper Methods (Async I/O, Constant-Time Auth & Rate Limiting)
+    /// <summary>
+    /// [VI] Đọc bất đồng bộ 1 byte từ luồng socket kèm hỗ trợ CancellationToken
+    /// [EN] Asynchronously reads 1 byte from stream with CancellationToken support
+    /// </summary>
+    private static async ValueTask<int> ReadByteAsync(Stream stream, CancellationToken ct)
+    {
+        byte[] b = new byte[1];
+        int read = await stream.ReadAsync(b.AsMemory(0, 1), ct);
+        return read == 0 ? -1 : b[0];
+    }
+
+    /// <summary>
+    /// [VI] So sánh mật khẩu an toàn theo thời gian cố định (Constant-Time) chống tấn công Timing
+    /// [EN] Constant-time password comparison to prevent timing side-channel attacks
+    /// </summary>
+    private static bool CheckPasswordConstantTime(Tenant? tenant, string password)
+    {
+        if (tenant == null || string.IsNullOrEmpty(password) || string.IsNullOrEmpty(tenant.Password))
+            return false;
+
+        byte[] expected = Encoding.UTF8.GetBytes(tenant.Password);
+        byte[] actual = Encoding.UTF8.GetBytes(password);
+        return CryptographicOperations.FixedTimeEquals(expected, actual);
+    }
+
+    /// <summary>
+    /// [VI] Kiểm tra địa chỉ IP client có đang bị khóa tạm thời do nhập sai mật khẩu nhiều lần
+    /// [EN] Checks if client IP is temporarily locked out due to repeated authentication failures
+    /// </summary>
+    private bool IsClientLockedOut(string clientIp)
+    {
+        if (_authFailures.TryGetValue(clientIp, out var state))
+        {
+            if (DateTime.UtcNow < state.LockoutUntil) return true;
+            if (DateTime.UtcNow > state.LockoutUntil && state.FailCount >= 10)
+            {
+                _authFailures.TryRemove(clientIp, out _);
+            }
+        }
+        return false;
+    }
+
+    private void RecordAuthFailure(string clientIp)
+    {
+        _authFailures.AddOrUpdate(clientIp,
+            (1, DateTime.UtcNow.AddMinutes(1)),
+            (_, old) =>
+            {
+                int newCount = old.FailCount + 1;
+                var lockout = newCount >= 10 ? DateTime.UtcNow.AddMinutes(5) : DateTime.UtcNow.AddMinutes(1);
+                return (newCount, lockout);
+            });
+    }
+
+    private void RecordAuthSuccess(string clientIp)
+    {
+        _authFailures.TryRemove(clientIp, out _);
+    }
+    #endregion
+
     #region SOCKS5 Protocol Handler (RFC 1928 & RFC 1929)
     private async Task HandleSocks5Async(TcpClient client, NetworkStream stream, CancellationToken ct)
     {
-        // 1. Đọc số method xác thực
-        int nMethods = stream.ReadByte();
+        string clientIp = client.Client.RemoteEndPoint?.ToString() ?? "unknown";
+        if (IsClientLockedOut(clientIp))
+        {
+            _logger.LogWarning("[SOCKS5] Từ chối kết nối do IP {Ip} đang bị khóa tạm thời vì thử sai mật khẩu.", clientIp);
+            return;
+        }
+
+        // 1. Bắt tay lựa chọn phương thức xác thực
+        int nMethods = await ReadByteAsync(stream, ct);
         if (nMethods <= 0) return;
 
         byte[] methods = new byte[nMethods];
         await stream.ReadExactlyAsync(methods, ct);
 
-        // Chấp nhận: 0x02 (Username/Password) hoặc 0x00 (No Auth)
         bool supportsAuth = methods.Contains((byte)0x02);
-        if (supportsAuth)
-        {
-            // Yêu cầu xác thực Username/Password (0x02)
-            await stream.WriteAsync(new byte[] { 0x05, 0x02 }, ct);
-        }
-        else
-        {
-            // Cho phép No Auth (0x00) cho môi trường nội bộ
-            await stream.WriteAsync(new byte[] { 0x05, 0x00 }, ct);
-        }
+        await stream.WriteAsync(supportsAuth ? new byte[] { 0x05, 0x02 } : new byte[] { 0x05, 0x00 }, ct);
 
         Tenant? tenant = null;
         string? targetCountry = null;
@@ -163,97 +270,25 @@ public class UniversalGatewayService : IUniversalGatewayService
 
         if (supportsAuth)
         {
-            // RFC 1929: Xác thực User/Pass
-            int authVersion = stream.ReadByte();
-            if (authVersion != 0x01) return;
+            var authResult = await AuthenticateSocks5Async(stream, clientIp, ct);
+            if (!authResult.Success) return;
 
-            int uLen = stream.ReadByte();
-            byte[] uBytes = new byte[uLen];
-            await stream.ReadExactlyAsync(uBytes, ct);
-            string fullUsername = Encoding.UTF8.GetString(uBytes);
-
-            int pLen = stream.ReadByte();
-            byte[] pBytes = new byte[pLen];
-            await stream.ReadExactlyAsync(pBytes, ct);
-            string password = Encoding.UTF8.GetString(pBytes);
-
-            // Phân tích username & xác thực
-            var parseRes = _tenantService.ParseProxyUsername(fullUsername);
-            tenant = parseRes.Tenant;
-            targetCountry = parseRes.Country;
-            targetCity = parseRes.City;
-            sessionId = parseRes.SessionId;
-            sessionMinutes = parseRes.SessionMinutes;
-            targetNodeId = parseRes.TargetNodeId;
-
-            if (tenant == null || tenant.Password != password)
-            {
-                // Xác thực thất bại: 0x01, 0x01 (FAILURE)
-                await stream.WriteAsync(new byte[] { 0x01, 0x01 }, ct);
-                _logger.LogWarning("[SOCKS5] Xác thực thất bại cho username '{User}'", fullUsername);
-                return;
-            }
-
-            // Xác thực thành công: 0x01, 0x00 (SUCCESS)
-            await stream.WriteAsync(new byte[] { 0x01, 0x00 }, ct);
+            tenant = authResult.Tenant;
+            targetCountry = authResult.Country;
+            targetCity = authResult.City;
+            sessionId = authResult.SessionId;
+            sessionMinutes = authResult.SessionMinutes;
+            targetNodeId = authResult.TargetNodeId;
         }
 
-        // 2. Client Request (CMD, DST.ADDR, DST.PORT)
-        byte[] reqHeader = new byte[4];
-        await stream.ReadExactlyAsync(reqHeader, ct);
-        if (reqHeader[0] != 0x05 || reqHeader[1] != 0x01) return; // Chỉ hỗ trợ CONNECT
+        // 2. Đọc Client Request (CMD, DST.ADDR, DST.PORT)
+        var targetInfo = await ParseSocks5TargetAsync(stream, ct);
+        if (!targetInfo.Success) return;
 
-        byte atyp = reqHeader[3];
-        string targetHost = string.Empty;
-        int targetPort = 0;
+        // 3. Chọn Residential Node phù hợp
+        var assignedNode = ResolveAssignedNode(targetNodeId, targetCountry, targetCity);
 
-        if (atyp == 0x01) // IPv4
-        {
-            byte[] ipBytes = new byte[4];
-            await stream.ReadExactlyAsync(ipBytes, ct);
-            targetHost = new IPAddress(ipBytes).ToString();
-        }
-        else if (atyp == 0x03) // Domain name
-        {
-            int domainLen = stream.ReadByte();
-            byte[] domainBytes = new byte[domainLen];
-            await stream.ReadExactlyAsync(domainBytes, ct);
-            targetHost = Encoding.ASCII.GetString(domainBytes);
-        }
-        else if (atyp == 0x04) // IPv6
-        {
-            byte[] ip6Bytes = new byte[16];
-            await stream.ReadExactlyAsync(ip6Bytes, ct);
-            targetHost = new IPAddress(ip6Bytes).ToString();
-        }
-
-        byte[] portBytes = new byte[2];
-        await stream.ReadExactlyAsync(portBytes, ct);
-        targetPort = (portBytes[0] << 8) | portBytes[1];
-
-        // 3. Chọn Residential Node phù hợp với yêu cầu
-        ResidentialNode? assignedNode = null;
-        if (!string.IsNullOrWhiteSpace(targetNodeId))
-        {
-            var clientNode = _nodePool.GetClientNodes().FirstOrDefault(n => n.DeviceId.Equals(targetNodeId, StringComparison.OrdinalIgnoreCase) && n.IsOnline);
-            if (clientNode != null)
-            {
-                assignedNode = new ResidentialNode
-                {
-                    Id = clientNode.DeviceId,
-                    Ip = clientNode.PublicIp,
-                    Country = clientNode.Country,
-                    CountryName = clientNode.CountryName,
-                    City = clientNode.City,
-                    Isp = clientNode.Isp,
-                    Protocol = clientNode.Protocol,
-                    IsActive = true
-                };
-            }
-        }
-        assignedNode ??= _nodePool.GetBestNode(targetCountry, targetCity);
-
-        // 4. Kết nối ra ngoài Internet (qua Smart SaaS Rotation Engine & Upstream Proxy)
+        // 4. Kết nối ra ngoài Internet
         TcpClient? upstreamClient = null;
         Stream? upstreamStream = null;
         string? activeProxyId = null;
@@ -261,13 +296,13 @@ public class UniversalGatewayService : IUniversalGatewayService
         try
         {
             (upstreamClient, upstreamStream, activeProxyId, activeRelayId) = await ConnectToUpstreamAsync(
-                targetHost, targetPort, tenant, targetCountry, targetCity, sessionId, sessionMinutes, ct);
+                targetInfo.Host, targetInfo.Port, tenant, targetCountry, targetCity, sessionId, sessionMinutes, ct);
 
             // Báo thành công SOCKS5
             byte[] reply = new byte[] {
                 0x05, 0x00, 0x00, 0x01,
                 127, 0, 0, 1,
-                (byte)(targetPort >> 8), (byte)(targetPort & 0xFF)
+                (byte)(targetInfo.Port >> 8), (byte)(targetInfo.Port & 0xFF)
             };
             await stream.WriteAsync(reply, ct);
 
@@ -277,10 +312,10 @@ public class UniversalGatewayService : IUniversalGatewayService
             {
                 SessionId = sessId,
                 TenantId = tenant?.Id ?? "anonymous",
-                ClientIp = client.Client.RemoteEndPoint?.ToString() ?? "unknown",
+                ClientIp = clientIp,
                 Node = assignedNode,
-                TargetHost = targetHost,
-                TargetPort = targetPort,
+                TargetHost = targetInfo.Host,
+                TargetPort = targetInfo.Port,
                 ConnectedAt = DateTime.UtcNow
             };
             _activeSessions[sessId] = session;
@@ -304,12 +339,89 @@ public class UniversalGatewayService : IUniversalGatewayService
             upstreamClient?.Dispose();
         }
     }
+
+    private async Task<(bool Success, Tenant? Tenant, string? Country, string? City, string? SessionId, int? SessionMinutes, string? TargetNodeId)>
+        AuthenticateSocks5Async(NetworkStream stream, string clientIp, CancellationToken ct)
+    {
+        int authVersion = await ReadByteAsync(stream, ct);
+        if (authVersion != 0x01) return (false, null, null, null, null, null, null);
+
+        int uLen = await ReadByteAsync(stream, ct);
+        if (uLen <= 0) return (false, null, null, null, null, null, null);
+        byte[] uBytes = new byte[uLen];
+        await stream.ReadExactlyAsync(uBytes, ct);
+        string fullUsername = Encoding.UTF8.GetString(uBytes);
+
+        int pLen = await ReadByteAsync(stream, ct);
+        if (pLen < 0) return (false, null, null, null, null, null, null);
+        byte[] pBytes = new byte[pLen];
+        if (pLen > 0) await stream.ReadExactlyAsync(pBytes, ct);
+        string password = Encoding.UTF8.GetString(pBytes);
+
+        var parseRes = _tenantService.ParseProxyUsername(fullUsername);
+        var tenant = parseRes.Tenant;
+
+        if (tenant == null || !CheckPasswordConstantTime(tenant, password))
+        {
+            RecordAuthFailure(clientIp);
+            await stream.WriteAsync(new byte[] { 0x01, 0x01 }, ct);
+            _logger.LogWarning("[SOCKS5] Xác thực thất bại cho username '{User}' từ IP {Ip}", fullUsername, clientIp);
+            return (false, null, null, null, null, null, null);
+        }
+
+        RecordAuthSuccess(clientIp);
+        await stream.WriteAsync(new byte[] { 0x01, 0x00 }, ct);
+        return (true, tenant, parseRes.Country, parseRes.City, parseRes.SessionId, parseRes.SessionMinutes, parseRes.TargetNodeId);
+    }
+
+    private static async Task<(bool Success, string Host, int Port)> ParseSocks5TargetAsync(NetworkStream stream, CancellationToken ct)
+    {
+        byte[] reqHeader = new byte[4];
+        await stream.ReadExactlyAsync(reqHeader, ct);
+        if (reqHeader[0] != 0x05 || reqHeader[1] != 0x01) return (false, string.Empty, 0);
+
+        byte atyp = reqHeader[3];
+        string targetHost = string.Empty;
+
+        if (atyp == 0x01) // IPv4
+        {
+            byte[] ipBytes = new byte[4];
+            await stream.ReadExactlyAsync(ipBytes, ct);
+            targetHost = new IPAddress(ipBytes).ToString();
+        }
+        else if (atyp == 0x03) // Domain
+        {
+            int domainLen = await ReadByteAsync(stream, ct);
+            if (domainLen <= 0) return (false, string.Empty, 0);
+            byte[] domainBytes = new byte[domainLen];
+            await stream.ReadExactlyAsync(domainBytes, ct);
+            targetHost = Encoding.ASCII.GetString(domainBytes);
+        }
+        else if (atyp == 0x04) // IPv6
+        {
+            byte[] ip6Bytes = new byte[16];
+            await stream.ReadExactlyAsync(ip6Bytes, ct);
+            targetHost = new IPAddress(ip6Bytes).ToString();
+        }
+
+        byte[] portBytes = new byte[2];
+        await stream.ReadExactlyAsync(portBytes, ct);
+        int targetPort = (portBytes[0] << 8) | portBytes[1];
+
+        return (true, targetHost, targetPort);
+    }
     #endregion
 
     #region HTTP Proxy / CONNECT Protocol Handler
     private async Task HandleHttpProxyAsync(TcpClient client, NetworkStream stream, byte firstByte, CancellationToken ct)
     {
-        // Đọc toàn bộ HTTP Header ban đầu
+        string clientIp = client.Client.RemoteEndPoint?.ToString() ?? "unknown";
+        if (IsClientLockedOut(clientIp))
+        {
+            _logger.LogWarning("[HTTP Proxy] Từ chối kết nối do IP {Ip} đang bị khóa tạm thời vì thử sai mật khẩu.", clientIp);
+            return;
+        }
+
         using var ms = new MemoryStream();
         ms.WriteByte(firstByte);
 
@@ -337,101 +449,25 @@ public class UniversalGatewayService : IUniversalGatewayService
         var lines = rawHeader.Split(new[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
         if (lines.Length == 0) return;
 
-        string requestLine = lines[0]; // e.g. "CONNECT target.com:443 HTTP/1.1"
+        string requestLine = lines[0];
         var reqParts = requestLine.Split(' ');
         if (reqParts.Length < 2) return;
 
         string method = reqParts[0].ToUpperInvariant();
         string target = reqParts[1];
 
-        // Xác thực Proxy-Authorization nếu có
-        Tenant? tenant = null;
-        string? targetCountry = null;
-        string? targetCity = null;
-        string? sessionId = null;
-        int? sessionMinutes = null;
-        string? targetNodeId = null;
-
-        var authHeader = lines.FirstOrDefault(l => l.StartsWith("Proxy-Authorization:", StringComparison.OrdinalIgnoreCase));
-        if (authHeader != null)
+        var authResult = AuthenticateHttp(lines, clientIp);
+        if (!authResult.Success)
         {
-            var authVal = authHeader.Substring("Proxy-Authorization:".Length).Trim();
-            if (authVal.StartsWith("Basic ", StringComparison.OrdinalIgnoreCase))
-            {
-                var base64 = authVal.Substring("Basic ".Length).Trim();
-                try
-                {
-                    var decoded = Encoding.UTF8.GetString(Convert.FromBase64String(base64));
-                    var uParts = decoded.Split(':');
-                    if (uParts.Length >= 2)
-                    {
-                        var fullUser = uParts[0];
-                        var pass = uParts.Skip(1).Aggregate((a, b) => a + ":" + b);
-
-                        var pRes = _tenantService.ParseProxyUsername(fullUser);
-                        tenant = pRes.Tenant;
-                        targetCountry = pRes.Country;
-                        targetCity = pRes.City;
-                        sessionId = pRes.SessionId;
-                        sessionMinutes = pRes.SessionMinutes;
-                        targetNodeId = pRes.TargetNodeId;
-
-                        if (tenant == null || tenant.Password != pass)
-                        {
-                            // Trả về 407 Proxy Authentication Required
-                            byte[] authFail = Encoding.UTF8.GetBytes("HTTP/1.1 407 Proxy Authentication Required\r\nProxy-Authenticate: Basic realm=\"NextAI Residential Gateway\"\r\nContent-Length: 0\r\n\r\n");
-                            await stream.WriteAsync(authFail, ct);
-                            return;
-                        }
-                    }
-                }
-                catch { }
-            }
+            byte[] authFail = Encoding.UTF8.GetBytes("HTTP/1.1 407 Proxy Authentication Required\r\nProxy-Authenticate: Basic realm=\"NextAI Residential Gateway\"\r\nContent-Length: 0\r\n\r\n");
+            await stream.WriteAsync(authFail, ct);
+            return;
         }
 
-        string targetHost;
-        int targetPort;
+        var (targetHost, targetPort) = ParseHttpTarget(method, target);
+        if (string.IsNullOrEmpty(targetHost) || targetPort == 0) return;
 
-        if (method == "CONNECT")
-        {
-            var hostPort = target.Split(':');
-            targetHost = hostPort[0];
-            targetPort = hostPort.Length > 1 && int.TryParse(hostPort[1], out var p) ? p : 443;
-        }
-        else
-        {
-            // HTTP thông thường
-            if (Uri.TryCreate(target, UriKind.Absolute, out var uri))
-            {
-                targetHost = uri.Host;
-                targetPort = uri.Port;
-            }
-            else
-            {
-                return;
-            }
-        }
-
-        ResidentialNode? assignedNode = null;
-        if (!string.IsNullOrWhiteSpace(targetNodeId))
-        {
-            var clientNode = _nodePool.GetClientNodes().FirstOrDefault(n => n.DeviceId.Equals(targetNodeId, StringComparison.OrdinalIgnoreCase) && n.IsOnline);
-            if (clientNode != null)
-            {
-                assignedNode = new ResidentialNode
-                {
-                    Id = clientNode.DeviceId,
-                    Ip = clientNode.PublicIp,
-                    Country = clientNode.Country,
-                    CountryName = clientNode.CountryName,
-                    City = clientNode.City,
-                    Isp = clientNode.Isp,
-                    Protocol = clientNode.Protocol,
-                    IsActive = true
-                };
-            }
-        }
-        assignedNode ??= _nodePool.GetBestNode(targetCountry, targetCity);
+        var assignedNode = ResolveAssignedNode(authResult.TargetNodeId, authResult.Country, authResult.City);
 
         TcpClient? upstreamClient = null;
         Stream? upstreamStream = null;
@@ -440,18 +476,16 @@ public class UniversalGatewayService : IUniversalGatewayService
         try
         {
             (upstreamClient, upstreamStream, activeProxyId, activeRelayId) = await ConnectToUpstreamAsync(
-                targetHost, targetPort, tenant, targetCountry, targetCity, sessionId, sessionMinutes, ct);
+                targetHost, targetPort, authResult.Tenant, authResult.Country, authResult.City, authResult.SessionId, authResult.SessionMinutes, ct);
 
             if (method == "CONNECT")
             {
-                // Trả lời 200 Connection Established
                 byte[] established = Encoding.UTF8.GetBytes("HTTP/1.1 200 Connection Established\r\n\r\n");
                 await stream.WriteAsync(established, ct);
                 await stream.FlushAsync(ct);
             }
             else
             {
-                // Forward lại HTTP Request ban đầu cho upstream
                 byte[] initialReq = ms.ToArray();
                 await upstreamStream.WriteAsync(initialReq, ct);
                 await upstreamStream.FlushAsync(ct);
@@ -461,8 +495,8 @@ public class UniversalGatewayService : IUniversalGatewayService
             var session = new ProxySession
             {
                 SessionId = sessId,
-                TenantId = tenant?.Id ?? "anonymous",
-                ClientIp = client.Client.RemoteEndPoint?.ToString() ?? "unknown",
+                TenantId = authResult.Tenant?.Id ?? "anonymous",
+                ClientIp = clientIp,
                 Node = assignedNode,
                 TargetHost = targetHost,
                 TargetPort = targetPort,
@@ -472,7 +506,7 @@ public class UniversalGatewayService : IUniversalGatewayService
 
             try
             {
-                await BridgeStreamsWithAccountingAsync(stream, upstreamStream, tenant?.Id, assignedNode, activeProxyId, activeRelayId, ct);
+                await BridgeStreamsWithAccountingAsync(stream, upstreamStream, authResult.Tenant?.Id, assignedNode, activeProxyId, activeRelayId, ct);
             }
             finally
             {
@@ -488,6 +522,89 @@ public class UniversalGatewayService : IUniversalGatewayService
         {
             upstreamClient?.Dispose();
         }
+    }
+
+    private (bool Success, Tenant? Tenant, string? Country, string? City, string? SessionId, int? SessionMinutes, string? TargetNodeId)
+        AuthenticateHttp(string[] lines, string clientIp)
+    {
+        var authHeader = lines.FirstOrDefault(l => l.StartsWith("Proxy-Authorization:", StringComparison.OrdinalIgnoreCase));
+        if (authHeader == null)
+        {
+            // Môi trường nội bộ hoặc chưa truyền header
+            return (true, null, null, null, null, null, null);
+        }
+
+        var authVal = authHeader.Substring("Proxy-Authorization:".Length).Trim();
+        if (authVal.StartsWith("Basic ", StringComparison.OrdinalIgnoreCase))
+        {
+            var base64 = authVal.Substring("Basic ".Length).Trim();
+            try
+            {
+                var decoded = Encoding.UTF8.GetString(Convert.FromBase64String(base64));
+                var uParts = decoded.Split(':');
+                if (uParts.Length >= 2)
+                {
+                    var fullUser = uParts[0];
+                    var pass = uParts.Skip(1).Aggregate((a, b) => a + ":" + b);
+
+                    var pRes = _tenantService.ParseProxyUsername(fullUser);
+                    var tenant = pRes.Tenant;
+
+                    if (tenant == null || !CheckPasswordConstantTime(tenant, pass))
+                    {
+                        RecordAuthFailure(clientIp);
+                        return (false, null, null, null, null, null, null);
+                    }
+
+                    RecordAuthSuccess(clientIp);
+                    return (true, tenant, pRes.Country, pRes.City, pRes.SessionId, pRes.SessionMinutes, pRes.TargetNodeId);
+                }
+            }
+            catch { }
+        }
+
+        return (false, null, null, null, null, null, null);
+    }
+
+    private static (string Host, int Port) ParseHttpTarget(string method, string target)
+    {
+        if (method == "CONNECT")
+        {
+            var hostPort = target.Split(':');
+            string host = hostPort[0];
+            int port = hostPort.Length > 1 && int.TryParse(hostPort[1], out var p) ? p : 443;
+            return (host, port);
+        }
+
+        if (Uri.TryCreate(target, UriKind.Absolute, out var uri))
+        {
+            return (uri.Host, uri.Port);
+        }
+
+        return (string.Empty, 0);
+    }
+
+    private ResidentialNode ResolveAssignedNode(string? targetNodeId, string? targetCountry, string? targetCity)
+    {
+        if (!string.IsNullOrWhiteSpace(targetNodeId))
+        {
+            var clientNode = _nodePool.GetClientNodes().FirstOrDefault(n => n.DeviceId.Equals(targetNodeId, StringComparison.OrdinalIgnoreCase) && n.IsOnline);
+            if (clientNode != null)
+            {
+                return new ResidentialNode
+                {
+                    Id = clientNode.DeviceId,
+                    Ip = clientNode.PublicIp,
+                    Country = clientNode.Country,
+                    CountryName = clientNode.CountryName,
+                    City = clientNode.City,
+                    Isp = clientNode.Isp,
+                    Protocol = clientNode.Protocol,
+                    IsActive = true
+                };
+            }
+        }
+        return _nodePool.GetBestNode(targetCountry, targetCity);
     }
     #endregion
 
@@ -560,11 +677,12 @@ public class UniversalGatewayService : IUniversalGatewayService
             _tenantService.RecordUsage(tenantId, total);
         }
 
-        // [VI] Ghi nhận tiêu hao hạn mức 10GB/300MB cho con Proxy này
-        // [EN] Record 10GB/300MB quota usage for this upstream proxy
+        // [VI] Ghi nhận tiêu hao hạn mức 10GB/300MB cho con Proxy này và giảm bộ đếm kết nối đang phục vụ
+        // [EN] Record 10GB/300MB quota usage and decrement active connection count for load balancing
         if (!string.IsNullOrWhiteSpace(proxyId))
         {
             _proxyManager.RecordBandwidthUsage(proxyId, total);
+            _rotationEngine.ReportSuccess(proxyId);
         }
 
         // [VI] Ghi nhận lưu lượng qua Relay VPS
@@ -578,26 +696,25 @@ public class UniversalGatewayService : IUniversalGatewayService
     private async Task<(TcpClient client, Stream stream, string? proxyId, string? relayId)> ConnectToUpstreamAsync(
         string targetHost, 
         int targetPort,
-        Tenant? tenant = null,
-        string? targetCountry = null,
-        string? targetCity = null,
-        string? sessionId = null,
-        int? sessionMinutes = null,
-        CancellationToken ct = default)
+        Tenant? tenant,
+        string? targetCountry,
+        string? targetCity,
+        string? sessionId,
+        int? sessionMinutes,
+        CancellationToken ct)
     {
-        // 1. Phân giải proxy: nếu có tenant/query thì dùng rotation engine; nếu là Desktop Client thì ưu tiên tuyệt đối ActiveVpnProxy
-        UpstreamProxy? activeProxy = null;
-        if (tenant != null || !string.IsNullOrWhiteSpace(targetCountry) || !string.IsNullOrWhiteSpace(sessionId))
-        {
-            activeProxy = _rotationEngine.ResolveProxy(tenant, targetCountry, targetCity, sessionId, sessionMinutes);
-        }
-        activeProxy ??= _proxyManager.GetActiveVpnProxy() ?? _rotationEngine.ResolveProxy(tenant, targetCountry, targetCity, sessionId, sessionMinutes);
+        // 1. Dùng Smart SaaS Rotation Engine để chọn Proxy tối ưu nhất theo Quốc gia, Session, Ping và Tải
+        var activeProxy = _rotationEngine.ResolveProxy(tenant, targetCountry, targetCity, sessionId, sessionMinutes);
 
-        bool isExternalProxy = activeProxy != null
-            && !string.IsNullOrWhiteSpace(activeProxy.Host)
-            && !(activeProxy.Host == "127.0.0.1" && activeProxy.Port == 10000)
-            && !(activeProxy.Host.Equals("localhost", StringComparison.OrdinalIgnoreCase) && activeProxy.Port == 10000);
+        // Fallback: nếu rotation engine không tìm thấy, lấy active VPN node
+        activeProxy ??= _proxyManager.GetActiveVpnProxy();
 
+        bool isExternalProxy = activeProxy != null && 
+            !string.IsNullOrWhiteSpace(activeProxy.Host) && 
+            activeProxy.Host != "127.0.0.1" && 
+            !activeProxy.Host.Equals("localhost", StringComparison.OrdinalIgnoreCase);
+
+        // Nhánh Direct Bypass giữ nguyên theo yêu cầu không sửa BUG-02
         if (!isExternalProxy || activeProxy == null)
         {
             var tcpClient = new TcpClient { NoDelay = true };
@@ -653,8 +770,28 @@ public class UniversalGatewayService : IUniversalGatewayService
             {
                 _logger.LogInformation("[Gateway Failover] Đã kích hoạt node thay thế: {Host}:{Port} ({Country})",
                     failoverProxy.Host, failoverProxy.Port, failoverProxy.Country);
-                var (fc, fs) = await AttemptConnectToUpstreamProxyAsync(failoverProxy, targetHost, targetPort, ct);
-                return (fc, fs, failoverProxy.Id, relay?.Id);
+                try
+                {
+                    var (fc, fs) = await AttemptConnectToUpstreamProxyAsync(failoverProxy, targetHost, targetPort, ct);
+                    return (fc, fs, failoverProxy.Id, relay?.Id);
+                }
+                catch
+                {
+                    // [VI] BUG-15: Giải phóng slot relay nếu kết nối failover cũng thất bại
+                    // [EN] BUG-15: Release relay slot if failover connection also fails
+                    if (relay != null)
+                    {
+                        _relayPool.TrackStreamEnd(relay.Id, 0);
+                    }
+                    throw;
+                }
+            }
+
+            // [VI] BUG-15: Giải phóng slot relay nếu không có failover proxy
+            // [EN] BUG-15: Release relay slot if no failover proxy is available
+            if (relay != null)
+            {
+                _relayPool.TrackStreamEnd(relay.Id, 0);
             }
 
             throw;
@@ -675,105 +812,114 @@ public class UniversalGatewayService : IUniversalGatewayService
         }
 
         var tcpClient = new TcpClient { NoDelay = true };
-        using var connectCts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
-        using var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(ct, connectCts.Token);
-        await tcpClient.ConnectAsync(proxy.Host, proxy.Port, linkedCts.Token);
-        var proxyStream = tcpClient.GetStream();
-
-        if (proxy.Type.Equals("socks5", StringComparison.OrdinalIgnoreCase))
+        try
         {
-            bool hasAuth = !string.IsNullOrEmpty(proxy.Username);
-            if (hasAuth)
+            using var connectCts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
+            using var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(ct, connectCts.Token);
+            await tcpClient.ConnectAsync(proxy.Host, proxy.Port, linkedCts.Token);
+            var proxyStream = tcpClient.GetStream();
+
+            if (proxy.Type.Equals("socks5", StringComparison.OrdinalIgnoreCase))
             {
-                await proxyStream.WriteAsync(new byte[] { 0x05, 0x01, 0x02 }, ct);
-                byte[] authResp = new byte[2];
-                await proxyStream.ReadExactlyAsync(authResp, ct);
-                if (authResp[0] != 0x05 || authResp[1] != 0x02)
-                    throw new IOException("Upstream SOCKS5 auth method rejected");
+                bool hasAuth = !string.IsNullOrEmpty(proxy.Username);
+                if (hasAuth)
+                {
+                    await proxyStream.WriteAsync(new byte[] { 0x05, 0x01, 0x02 }, ct);
+                    byte[] authResp = new byte[2];
+                    await proxyStream.ReadExactlyAsync(authResp, ct);
+                    if (authResp[0] != 0x05 || authResp[1] != 0x02)
+                        throw new IOException("Upstream SOCKS5 auth method rejected");
 
-                byte[] uBytes = Encoding.UTF8.GetBytes(proxy.Username ?? "");
-                byte[] pBytes = Encoding.UTF8.GetBytes(proxy.Password ?? "");
-                byte[] authReq = new byte[3 + uBytes.Length + pBytes.Length];
-                authReq[0] = 0x01;
-                authReq[1] = (byte)uBytes.Length;
-                Buffer.BlockCopy(uBytes, 0, authReq, 2, uBytes.Length);
-                authReq[2 + uBytes.Length] = (byte)pBytes.Length;
-                Buffer.BlockCopy(pBytes, 0, authReq, 3 + uBytes.Length, pBytes.Length);
-                await proxyStream.WriteAsync(authReq, ct);
+                    byte[] uBytes = Encoding.UTF8.GetBytes(proxy.Username ?? "");
+                    byte[] pBytes = Encoding.UTF8.GetBytes(proxy.Password ?? "");
+                    byte[] authReq = new byte[3 + uBytes.Length + pBytes.Length];
+                    authReq[0] = 0x01;
+                    authReq[1] = (byte)uBytes.Length;
+                    Buffer.BlockCopy(uBytes, 0, authReq, 2, uBytes.Length);
+                    authReq[2 + uBytes.Length] = (byte)pBytes.Length;
+                    Buffer.BlockCopy(pBytes, 0, authReq, 3 + uBytes.Length, pBytes.Length);
+                    await proxyStream.WriteAsync(authReq, ct);
 
-                byte[] authStatus = new byte[2];
-                await proxyStream.ReadExactlyAsync(authStatus, ct);
-                if (authStatus[1] != 0x00)
-                    throw new IOException("Upstream SOCKS5 authentication failed");
+                    byte[] authStatus = new byte[2];
+                    await proxyStream.ReadExactlyAsync(authStatus, ct);
+                    if (authStatus[1] != 0x00)
+                        throw new IOException("Upstream SOCKS5 authentication failed");
+                }
+                else
+                {
+                    await proxyStream.WriteAsync(new byte[] { 0x05, 0x01, 0x00 }, ct);
+                    byte[] noAuthResp = new byte[2];
+                    await proxyStream.ReadExactlyAsync(noAuthResp, ct);
+                    if (noAuthResp[0] != 0x05 || noAuthResp[1] != 0x00)
+                        throw new IOException("Upstream SOCKS5 handshake failed");
+                }
+
+                // SOCKS5 CONNECT tới targetHost:targetPort
+                byte[] targetBytes = Encoding.ASCII.GetBytes(targetHost);
+                byte[] cmd = new byte[4 + 1 + targetBytes.Length + 2];
+                cmd[0] = 0x05;
+                cmd[1] = 0x01; // CONNECT
+                cmd[2] = 0x00; // RSV
+                cmd[3] = 0x03; // DOMAIN
+                cmd[4] = (byte)targetBytes.Length;
+                Buffer.BlockCopy(targetBytes, 0, cmd, 5, targetBytes.Length);
+                cmd[5 + targetBytes.Length] = (byte)(targetPort >> 8);
+                cmd[6 + targetBytes.Length] = (byte)(targetPort & 0xFF);
+                await proxyStream.WriteAsync(cmd, ct);
+
+                byte[] cmdResp = new byte[4];
+                await proxyStream.ReadExactlyAsync(cmdResp, ct);
+                if (cmdResp[1] != 0x00)
+                    throw new IOException($"Upstream SOCKS5 connect failed with status 0x{cmdResp[1]:X2}");
+
+                if (cmdResp[3] == 0x01) { byte[] b = new byte[6]; await proxyStream.ReadExactlyAsync(b, ct); }
+                else if (cmdResp[3] == 0x03) 
+                { 
+                    byte[] lenBuf = new byte[1];
+                    await proxyStream.ReadExactlyAsync(lenBuf, ct);
+                    byte[] b = new byte[lenBuf[0] + 2]; 
+                    await proxyStream.ReadExactlyAsync(b, ct); 
+                }
+                else if (cmdResp[3] == 0x04) { byte[] b = new byte[18]; await proxyStream.ReadExactlyAsync(b, ct); }
             }
             else
             {
-                await proxyStream.WriteAsync(new byte[] { 0x05, 0x01, 0x00 }, ct);
-                byte[] noAuthResp = new byte[2];
-                await proxyStream.ReadExactlyAsync(noAuthResp, ct);
-                if (noAuthResp[0] != 0x05 || noAuthResp[1] != 0x00)
-                    throw new IOException("Upstream SOCKS5 handshake failed");
+                // HTTP CONNECT
+                var connectReq = new StringBuilder();
+                connectReq.Append($"CONNECT {targetHost}:{targetPort} HTTP/1.1\r\n");
+                connectReq.Append($"Host: {targetHost}:{targetPort}\r\n");
+                if (!string.IsNullOrEmpty(proxy.Username))
+                {
+                    string cred = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{proxy.Username}:{proxy.Password}"));
+                    connectReq.Append($"Proxy-Authorization: Basic {cred}\r\n");
+                }
+                connectReq.Append("User-Agent: NextAiVPN/2.1\r\n\r\n");
+                byte[] reqBytes = Encoding.ASCII.GetBytes(connectReq.ToString());
+                await proxyStream.WriteAsync(reqBytes, ct);
+
+                var respSb = new StringBuilder();
+                byte[] single = new byte[1];
+                while (true)
+                {
+                    int r = await proxyStream.ReadAsync(single.AsMemory(0, 1), ct);
+                    if (r <= 0) break;
+                    respSb.Append((char)single[0]);
+                    if (respSb.ToString().EndsWith("\r\n\r\n")) break;
+                }
+
+                string respStr = respSb.ToString();
+                if (!respStr.Contains("200"))
+                    throw new IOException($"Upstream HTTP CONNECT failed: {respStr.Split("\r\n").FirstOrDefault()}");
             }
 
-            // SOCKS5 CONNECT tới targetHost:targetPort
-            byte[] targetBytes = Encoding.ASCII.GetBytes(targetHost);
-            byte[] cmd = new byte[4 + 1 + targetBytes.Length + 2];
-            cmd[0] = 0x05;
-            cmd[1] = 0x01; // CONNECT
-            cmd[2] = 0x00; // RSV
-            cmd[3] = 0x03; // DOMAIN
-            cmd[4] = (byte)targetBytes.Length;
-            Buffer.BlockCopy(targetBytes, 0, cmd, 5, targetBytes.Length);
-            cmd[5 + targetBytes.Length] = (byte)(targetPort >> 8);
-            cmd[6 + targetBytes.Length] = (byte)(targetPort & 0xFF);
-            await proxyStream.WriteAsync(cmd, ct);
-
-            byte[] cmdResp = new byte[4];
-            await proxyStream.ReadExactlyAsync(cmdResp, ct);
-            if (cmdResp[1] != 0x00)
-                throw new IOException($"Upstream SOCKS5 connect failed with status 0x{cmdResp[1]:X2}");
-
-            if (cmdResp[3] == 0x01) { byte[] b = new byte[6]; await proxyStream.ReadExactlyAsync(b, ct); }
-            else if (cmdResp[3] == 0x03) 
-            { 
-                byte[] lenBuf = new byte[1];
-                await proxyStream.ReadExactlyAsync(lenBuf, ct);
-                byte[] b = new byte[lenBuf[0] + 2]; 
-                await proxyStream.ReadExactlyAsync(b, ct); 
-            }
-            else if (cmdResp[3] == 0x04) { byte[] b = new byte[18]; await proxyStream.ReadExactlyAsync(b, ct); }
+            return (tcpClient, proxyStream);
         }
-        else
+        catch
         {
-            // HTTP CONNECT
-            var connectReq = new StringBuilder();
-            connectReq.Append($"CONNECT {targetHost}:{targetPort} HTTP/1.1\r\n");
-            connectReq.Append($"Host: {targetHost}:{targetPort}\r\n");
-            if (!string.IsNullOrEmpty(proxy.Username))
-            {
-                string cred = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{proxy.Username}:{proxy.Password}"));
-                connectReq.Append($"Proxy-Authorization: Basic {cred}\r\n");
-            }
-            connectReq.Append("User-Agent: NextAiVPN/2.1\r\n\r\n");
-            byte[] reqBytes = Encoding.ASCII.GetBytes(connectReq.ToString());
-            await proxyStream.WriteAsync(reqBytes, ct);
-
-            var respSb = new StringBuilder();
-            byte[] single = new byte[1];
-            while (true)
-            {
-                int r = await proxyStream.ReadAsync(single.AsMemory(0, 1), ct);
-                if (r <= 0) break;
-                respSb.Append((char)single[0]);
-                if (respSb.ToString().EndsWith("\r\n\r\n")) break;
-            }
-
-            string respStr = respSb.ToString();
-            if (!respStr.Contains("200"))
-                throw new IOException($"Upstream HTTP CONNECT failed: {respStr.Split("\r\n").FirstOrDefault()}");
+            // [VI] BUG-09: Đóng socket descriptor ngay khi bắt tay upstream thất bại, chống rò rỉ file handle
+            // [EN] BUG-09: Close socket descriptor immediately on upstream handshake failure to prevent handle leak
+            tcpClient.Dispose();
+            throw;
         }
-
-        return (tcpClient, proxyStream);
     }
 }
-

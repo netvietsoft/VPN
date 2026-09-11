@@ -88,7 +88,13 @@ public class ProxyHealthCheckBackgroundService : BackgroundService
             IsRunning = true;
             var sw = Stopwatch.StartNew();
             var all = _proxyManager.GetAll();
-            _logger.LogInformation("[HealthCheckService] Bắt đầu kiểm tra sức khỏe cho {Count} proxy...", all.Count);
+            // [VI] Tự động kiểm tra và reset hạn mức ngày (Daily Quota) khi sang ngày mới
+            // [EN] Automatically reset daily quotas when UTC date rolls over
+            int resetCount = _proxyManager.ResetDailyQuotas();
+            if (resetCount > 0)
+            {
+                _logger.LogInformation("[HealthCheckService] Đã tự động reset hạn mức 300MB/ngày cho {Count} proxy.", resetCount);
+            }
 
             await _proxyManager.TestAllAsync();
 

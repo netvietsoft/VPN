@@ -36,9 +36,22 @@ public class GeoLocationInfo
     public string Status { get; set; } = "success";
 }
 
+/// <summary>
+/// [VI] Giao diện dịch vụ tra cứu thông tin địa lý GeoIP từ địa chỉ IP
+/// [EN] Interface for IP-based geolocation and ISP resolution service
+/// </summary>
 public interface IGeoIpService
 {
+    /// <summary>
+    /// [VI] Tra cứu thông tin vị trí địa lý cho một địa chỉ IP đơn lẻ
+    /// [EN] Resolves geolocation metadata for a single IP address
+    /// </summary>
     Task<GeoLocationInfo> ResolveIpAsync(string ip);
+
+    /// <summary>
+    /// [VI] Tra cứu hàng loạt thông tin vị trí địa lý cho danh sách IP
+    /// [EN] Resolves geolocation metadata in batch for multiple IP addresses
+    /// </summary>
     Task<Dictionary<string, GeoLocationInfo>> ResolveBatchIpsAsync(IEnumerable<string> ips);
 }
 

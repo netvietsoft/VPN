@@ -3,18 +3,58 @@ using VpnResidentialHub.Models;
 
 namespace VpnResidentialHub.Services;
 
+/// <summary>
+/// [VI] Giao diện quản lý kho tài nguyên IP Dân cư (Mesh Residential Node Pool)
+/// [EN] Interface for managing the residential IP pool and client contributor devices
+/// </summary>
 public interface INodePoolService
 {
+    /// <summary>
+    /// [VI] Lấy danh sách toàn bộ các node IP dân cư
+    /// [EN] Retrieves all residential nodes
+    /// </summary>
     IReadOnlyList<ResidentialNode> GetAllNodes();
+
+    /// <summary>
+    /// [VI] Lấy node tối ưu nhất theo quốc gia và thành phố
+    /// [EN] Selects best available residential node matching country and city
+    /// </summary>
     ResidentialNode GetBestNode(string? country = null, string? city = null);
+
+    /// <summary>
+    /// [VI] Xoay sang IP mới cho một profile trình duyệt
+    /// [EN] Rotates to a fresh IP for a specific browser profile
+    /// </summary>
     ResidentialNode RotateNode(string profileId, string? country = null, string? city = null);
+
+    /// <summary>
+    /// [VI] Đăng ký một node upstream mới vào kho
+    /// [EN] Registers a new upstream node to the pool
+    /// </summary>
     void RegisterUpstreamNode(ResidentialNode node);
+
+    /// <summary>
+    /// [VI] Tổng số node đang hoạt động
+    /// [EN] Total count of active online nodes
+    /// </summary>
     int TotalActiveNodes { get; }
 
-    // [VI] Thu thập & Quản lý IP cư dân từ thiết bị cài NextAI VPN
-    // [EN] Collect & Manage residential IPs from devices with NextAI VPN
+    /// <summary>
+    /// [VI] Đăng ký thiết bị người dùng cài đặt NextAI VPN đóng góp IP
+    /// [EN] Registers a client device contributing residential IP
+    /// </summary>
     Task<ClientDeviceNode> RegisterClientNodeAsync(RegisterClientNodeRequest req, string detectedRemoteIp);
+
+    /// <summary>
+    /// [VI] Ghi nhận nhịp tim duy trì kết nối của thiết bị
+    /// [EN] Records keep-alive heartbeat from client device
+    /// </summary>
     bool RecordClientHeartbeat(ClientNodeHeartbeatRequest req);
+
+    /// <summary>
+    /// [VI] Lấy danh sách các thiết bị khách hàng đã đăng ký
+    /// [EN] Retrieves list of registered client devices
+    /// </summary>
     IReadOnlyList<ClientDeviceNode> GetClientNodes();
 }
 
@@ -444,6 +484,21 @@ public class NodePoolService : INodePoolService
                     foreach (var item in list)
                     {
                         _clientNodes[item.DeviceId] = item;
+                        // [VI] BUG-14: Đồng bộ ngược vào _nodes routing pool để sẵn sàng định tuyến ngay sau khi khởi động
+                        // [EN] BUG-14: Sync back into _nodes routing pool for immediate routing availability after startup
+                        _nodes.Add(new ResidentialNode
+                        {
+                            Id = "node_" + item.DeviceId,
+                            Ip = item.PublicIp,
+                            Country = item.Country,
+                            CountryName = item.CountryName,
+                            City = item.City,
+                            Isp = item.Isp,
+                            Protocol = item.Protocol,
+                            FraudScore = 0,
+                            IsActive = item.IsOnline,
+                            LastRotatedAt = item.LastHeartbeatAt
+                        });
                     }
                 }
             }
