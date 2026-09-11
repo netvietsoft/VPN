@@ -287,7 +287,14 @@ Dự án: NextAI VPN Platform & Residential Gateway Mesh (Chuẩn V2.1)
 - **Quy Trình Kiểm Thử Tự Động AutoTestAgent (Agent 6 - TESTER)**:
   + Cập nhật `AutoTestAgent.cs` để quét kiểm thử lần lượt 8 Tab giao diện, chụp ảnh snapshot và kiểm toán Decoupling Law (`ProxyEnable = 0`).
   + Toàn bộ 10/10 bước kiểm thử thành công, xuất báo cáo đầy đủ tại `Report/16_Auto_Design_Gated_Parity_Verification_Report.md`.
-- **Đóng Gói & Phát Hành .NET 10 Release**:
-  + Biên dịch sạch .NET 10 (0 lỗi).
-  + Đóng gói lại `NextAiVPN_Setup.exe` (dung lượng 82.4 MB) và đồng bộ trực tiếp vào `%LocalAppData%\Programs\NextAiTechnology\NextAiVPN`.
+## 29. Cấu Hình Git & Triển Khai Mã Nguồn Lên GitHub (TASK-054)
+- **Kho lưu trữ GitHub**: `https://github.com/netvietsoft/VPN` (nhánh chính `main`).
+- **Cấu hình `.gitignore`**:
+  + Loại trừ toàn bộ thư mục biên dịch .NET 10 (`**/bin/`, `**/obj/`, `**/publish/`), Visual Studio cache (`.vs/`), nhật ký runtime (`*.log`, `corehost.log`, `app_run.log`, `crash.log`).
+  + Loại trừ các tệp đóng gói cài đặt lớn vượt hạn mức 100MB của GitHub: `NextAiVPN_Setup.exe` (144.7 MB) và `installer/NextAiVPN_Installer.msi` (112.6 MB).
+  + Bảo tồn tệp nhúng `apps/installer/NextAiVPN.Setup/payload.zip` (81.69 MB < 100MB) và cung cấp script `scripts/package_installer.ps1` để tự động build bộ cài Single-File.
+- **Xác thực SSH Deploy Key**:
+  + Tạo khóa SSH chuyên biệt `~/.ssh/id_ed25519_vpn` gắn quyền Write trực tiếp vào kho lưu trữ `netvietsoft/VPN`.
+  + Thiết lập `core.sshCommand` trỏ vào khóa định danh chuyên biệt `id_ed25519_vpn`.
+- **Trạng thái Git**: 100% mã nguồn (4,141 files) đã được commit sạch và đẩy thành công (`main -> origin/main`).
 
