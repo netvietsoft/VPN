@@ -31,6 +31,10 @@ start http://127.0.0.1:6033/cms_admin.html
 
 echo.
 echo [*] Dang khoi dong NextAiVPN Desktop Client (.NET 10 + WPF)...
+if not exist "%ROOT_DIR%apps\desktop\NextAiVPN.Desktop\bin\Release\net10.0-windows\NextAiVPN.Desktop.exe" (
+    echo [*] Phat hien chua co binary Desktop Client. Dang tu dong build .NET 10 Release...
+    dotnet build "%ROOT_DIR%apps\desktop\NextAiVPN.Desktop\NextAiVPN.Desktop.csproj" -c Release
+)
 cd /d "%ROOT_DIR%apps\desktop\NextAiVPN.Desktop\bin\Release\net10.0-windows"
 start "" "NextAiVPN.Desktop.exe"
 
