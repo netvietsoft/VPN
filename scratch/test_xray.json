@@ -1,0 +1,47 @@
+{
+    "outbounds":  [
+                      {
+                          "protocol":  "vless",
+                          "streamSettings":  {
+                                                 "realitySettings":  {
+                                                                         "publicKey":  "koKaMgyyxUFwSa28okVxBsicQqXgkSi_sa-KblM2MUM",
+                                                                         "shortId":  "bbb43890f4d92fd5",
+                                                                         "fingerprint":  "chrome",
+                                                                         "show":  false,
+                                                                         "serverName":  "www.tiktok.com",
+                                                                         "spiderX":  ""
+                                                                     },
+                                                 "security":  "reality",
+                                                 "network":  "tcp"
+                                             },
+                          "settings":  {
+                                           "vnext":  [
+                                                         {
+                                                             "port":  63821,
+                                                             "users":  [
+                                                                           {
+                                                                               "flow":  "",
+                                                                               "id":  "1f2e3d4c-5b6a-7890-abcd-ef1234567890",
+                                                                               "encryption":  "none"
+                                                                           }
+                                                                       ],
+                                                             "address":  "77.90.188.26"
+                                                         }
+                                                     ]
+                                       }
+                      }
+                  ],
+    "inbounds":  [
+                     {
+                         "port":  20808,
+                         "protocol":  "socks",
+                         "settings":  {
+                                          "auth":  "noauth"
+                                      },
+                         "listen":  "127.0.0.1"
+                     }
+                 ],
+    "log":  {
+                "loglevel":  "warning"
+            }
+}

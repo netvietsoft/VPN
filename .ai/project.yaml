@@ -1,0 +1,33 @@
+name: nextai-vpn-platform
+version: "2.1.0"
+standard: "Development_Workspace_Standard_V2.1_Design_Gated"
+organization: nextaitechnology
+package_name: com.nextaitechnology.vpn
+description: NextAI Multi-Agent VPN Ecosystem & Residential Proxy Gateway Mesh
+
+components:
+  backend:
+    path: Backend/
+    port_api_cms: 6033
+    port_gateway: 10000
+    runtime: dotnet10
+  desktop_app:
+    path: apps/desktop/
+    framework: wpf-dotnet10
+    fluent_ui: Wpf.Ui
+    screens_count: 113
+    flags_count: 234
+    fonts_count: 11
+    assets_count: 215
+  android_app:
+    path: apps/android/
+    framework: kotlin-compose
+    package: com.nextaitechnology.vpn
+  core_service:
+    path: Core_Service/
+    technology: wfp-wireguard-openvpn
+
+ports:
+  cms_and_api: 6033
+  universal_proxy: 10000
+  dedicated_proxy_range: "10001-10500"

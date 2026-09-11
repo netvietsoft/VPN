@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<UserControl x:Class="NextAiVPN.NotifyBalloonClearActivity" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:nextaivpn="clr-namespace:NextAiVPN;assembly=NextAiVPN">
+  <StackPanel>
+    <Border BorderBrush="#FF808080" BorderThickness="0.5">
+      <Grid Width="320" Height="160" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="#FFFFFFFF">
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="0.075*" />
+          <ColumnDefinition Width="0.85*" />
+          <ColumnDefinition Width="0.075*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+          <RowDefinition Height="0.30*" />
+          <RowDefinition Height="0.28*" />
+          <RowDefinition Height="0.47*" />
+        </Grid.RowDefinitions>
+        <TextBlock Grid.Row="0" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Bottom" FontSize="20" Text="Clear Usage Activity" />
+        <TextBlock Grid.Row="1" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Bottom" FontSize="14" Text="Help your app's performance by clearing usage activity data." TextWrapping="Wrap" />
+        <StackPanel Grid.Row="2" Grid.Column="1" HorizontalAlignment="Center" Orientation="Horizontal">
+          <Button Width="132" Height="32" Margin="2,0,2,0" VerticalAlignment="Center" Style="{DynamicResource ClearLogsButtonStyle}" Click="Button_Click_1" />
+          <Button Width="132" Height="32" Margin="2,0,2,0" VerticalAlignment="Center" Style="{DynamicResource DeleteLogsCancelButtonStyle}" Click="Button_Click" />
+        </StackPanel>
+      </Grid>
+    </Border>
+  </StackPanel>
+</UserControl>

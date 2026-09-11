@@ -1,0 +1,21 @@
+[
+  {
+    "DeviceId": "win_da26056e4dfe",
+    "DeviceName": "DESKTOP-OQHRVKK",
+    "PublicIp": "222.252.16.194",
+    "Port": 0,
+    "Protocol": "mesh-node",
+    "Country": "VN",
+    "CountryName": "Vietnam",
+    "City": "Hanoi",
+    "Isp": "Residential ISP",
+    "OsVersion": "Microsoft Windows 11",
+    "AppVersion": "8.0.0.0",
+    "DeviceType": "Desktop",
+    "FraudScore": 0,
+    "IsOnline": true,
+    "FirstSeenAt": "2026-09-09T04:02:39.6414481Z",
+    "LastHeartbeatAt": "2026-09-11T08:38:55.3120461Z",
+    "TotalBytesServed": 0
+  }
+]

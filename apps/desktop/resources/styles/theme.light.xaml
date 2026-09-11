@@ -1,0 +1,1158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:local="clr-namespace:NextAiVPN">
+  <ResourceDictionary.MergedDictionaries>
+    <ResourceDictionary Source="ColorBrush.xaml" />
+    <ResourceDictionary Source="ScrollBarStyle.xaml" />
+    <ResourceDictionary Source="Fonts.xaml" />
+  </ResourceDictionary.MergedDictionaries>
+  <Style x:Key="{x:Type Window}" TargetType="{x:Type Window}">
+    <Setter Property="Background" Value="{DynamicResource White}" />
+  </Style>
+  <Style x:Key="MainWindowWindowStyle" TargetType="{x:Type Window}">
+    <Setter Property="Background" Value="{DynamicResource Color1D1D20}" />
+  </Style>
+  <Style x:Key="{x:Type Menu}" TargetType="{x:Type Menu}">
+    <Setter Property="Background" Value="{DynamicResource White}" />
+  </Style>
+  <Style x:Key="{x:Type UserControl}" TargetType="{x:Type UserControl}">
+    <Setter Property="Background" Value="{DynamicResource White}" />
+  </Style>
+  <Style x:Key="RoundedContentButtonBaseStyle" TargetType="{x:Type Button}">
+    <Setter Property="FontFamily" Value="{DynamicResource MuseoSans700FontFamily}" />
+    <Setter Property="FrameworkElement.FocusVisualStyle" Value="{x:Null}" />
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="{x:Type Button}">
+          <Border Padding="5" Background="{TemplateBinding Control.Background}" BorderBrush="{DynamicResource Transparent}" BorderThickness="0" CornerRadius="{Binding Tag, RelativeSource={RelativeSource TemplatedParent}}">
+            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+          </Border>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+    <Style.Triggers>
+      <Trigger Property="UIElement.IsMouseOver" Value="True">
+        <Setter Property="Background" Value="{DynamicResource ColorDA662C}" />
+      </Trigger>
+    </Style.Triggers>
+  </Style>
+  <Style x:Key="BtnSignInButtonStyle" BasedOn="{StaticResource RoundedContentButtonBaseStyle}" TargetType="{x:Type Button}">
+    <Setter Property="Background" Value="{DynamicResource ColorFF864A}" />
+    <Setter Property="Foreground" Value="{DynamicResource White}" />
+    <Setter Property="FontSize" Value="27" />
+    <Setter Property="FrameworkElement.Tag" Value="33" />
+  </Style>
+  <Style x:Key="BeforeConnectTextBlockStyle" TargetType="{x:Type TextBlock}">
+    <Setter Property="Foreground" Value="{DynamicResource Color848487}" />
+  </Style>
+  <Style x:Key="BeforeConnectHeaderTextBlockStyle" TargetType="{x:Type TextBlock}">
+    <Setter Property="Foreground" Value="{DynamicResource Black}" />
+  </Style>
+  <Style x:Key="MainWindowTextBlockStyle" TargetType="{x:Type TextBlock}">
+    <Setter Property="Foreground" Value="{DynamicResource Color787879}" />
+  </Style>
+  <Style x:Key="SignUpTextBlockStyle" TargetType="{x:Type TextBlock}">
+    <Setter Property="Foreground" Value="{DynamicResource ColorFF864A}" />
+    <Setter Property="FontSize" Value="21" />
+    <Setter Property="Margin" Value="5" />
+    <Setter Property="FontFamily" Value="{DynamicResource MuseoSans500FontFamily}" />
+  </Style>
+  <Style x:Key="TosAndPrivacyTextBlockStyle" TargetType="{x:Type TextBlock}">
+    <Setter Property="FontSize" Value="15" />
+    <Setter Property="Margin" Value="5" />
+    <Setter Property="FontFamily" Value="{DynamicResource MuseoSans500FontFamily}" />
+    <Setter Property="Foreground" Value="{DynamicResource Color6D6E70}" />
+  </Style>
+  <Style x:Key="SeparatorTextBlockStyle" TargetType="{x:Type TextBlock}">
+    <Setter Property="Foreground" Value="{DynamicResource Color6D6E70}" />
+  </Style>
+  <Style x:Key="ProtocolInfoTextBlockStyle" TargetType="{x:Type TextBlock}">
+    <Setter Property="FontFamily" Value="{DynamicResource MuseoSans500FontFamily}" />
+    <Setter Property="FontSize" Value="13" />
+    <Setter Property="FontWeight" Value="Normal" />
+    <Setter Property="Foreground" Value="{DynamicResource Color2A2A2C}" />
+    <Setter Property="UIElement.Opacity" Value="1.0" />
+  </Style>
+  <Style x:Key="GeneralExpendedTextBlockStyle" TargetType="{x:Type TextBlock}">
+    <Setter Property="Foreground" Value="{DynamicResource Color2A2A2C}" />
+  </Style>
+  <Style x:Key="UpdateBackgroundBorderStyle" TargetType="{x:Type Border}">
+    <Setter Property="Background" Value="{DynamicResource ColorF2F2F6}" />
+  </Style>
+  <Style x:Key="UpdateActionButtonStyle" TargetType="{x:Type Button}">
+    <Setter Property="Foreground" Value="{DynamicResource White}" />
+    <Setter Property="Background" Value="{DynamicResource ColorFF864A}" />
+    <Setter Property="FontSize" Value="16" />
+    <Setter Property="FontFamily" Value="{DynamicResource MuseoSans700FontFamily}" />
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="{x:Type Button}">
+          <Border Name="btnBorder" Background="{TemplateBinding Control.Background}" BorderThickness="2" CornerRadius="18">
+            <TextBlock Name="btnText" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="{DynamicResource MuseoSans700FontFamily}" FontSize="16" Text="{TemplateBinding ContentControl.Content}" />
+          </Border>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+    <Style.Triggers>
+      <Trigger Property="UIElement.IsMouseOver" Value="True">
+        <Setter Property="Background" Value="{DynamicResource ColorDA662C}" />
+      </Trigger>
+    </Style.Triggers>
+  </Style>
+  <Style x:Key="BtnConnectButtonStyle" TargetType="{x:Type Button}">
+    <Setter Property="Background" Value="{DynamicResource BrushEmerald600}" />
+    <Setter Property="Foreground" Value="{DynamicResource White}" />
+    <Setter Property="FontFamily" Value="{DynamicResource MuseoSans700FontFamily}" />
+    <Setter Property="FontSize" Value="25" />
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="{x:Type Button}">
+          <Border Padding="5" Background="{TemplateBinding Control.Background}" BorderBrush="{DynamicResource BrushBorderEmerald}" BorderThickness="2" CornerRadius="30">
+            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+          </Border>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+    <Style.Triggers>
+      <Trigger Property="UIElement.IsMouseOver" Value="True">
+        <Setter Property="Background" Value="{DynamicResource BrushEmerald700}" />
+      </Trigger>
+    </Style.Triggers>
+  </Style>
+  <Style x:Key="ConnectButtonSpinnerImageStyle" TargetType="{x:Type Image}">
+    <Setter Property="Source" Value="/Assets/spinner_white.png" />
+  </Style>
+  <Style x:Key="LocationNameTextBlockStyle" TargetType="{x:Type TextBlock}">
+    <Setter Property="Foreground" Value="{DynamicResource Color2A2A2C}" />
+  </Style>
+  <Style x:Key="CountryNameTextBlockStyle" TargetType="{x:Type TextBlock}">
+    <Setter Property="Foreground" Value="{DynamicResource Color2A2A2C}" />
+  </Style>
+  <Style x:Key="ConnectedImprovementsInfoValuesTextBlockStyle" TargetType="{x:Type TextBlock}">
+    <Setter Property="FontSize" Value="12" />
+    <Setter Property="Foreground" Value="{DynamicResource Color2A2A2C}" />
+    <Setter Property="FontWeight" Value="Bold" />
+    <Setter Property="FontFamily" Value="{DynamicResource MuseoSans700FontFamily}" />
+  </Style>
+  <Style x:Key="ExpandedSideMenuHeadersLabelStyle" TargetType="{x:Type Label}">
+    <Setter Property="Foreground" Value="{DynamicResource Color959596}" />
+  </Style>
+  <Style x:Key="ExpandedSideMenuTextTextBlockStyle" TargetType="{x:Type TextBlock}">
+    <Setter Property="Foreground" Value="{DynamicResource Color2A2A2C}" />
+  </Style>
+  <Style x:Key="DefaultTextBlockForegroundStyle" TargetType="{x:Type TextBlock}">
+    <Setter Property="Foreground" Value="{DynamicResource Color2A2A2C}" />
+  </Style>
+  <Style x:Key="RadioButtonStyle" TargetType="{x:Type RadioButton}">
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="{x:Type RadioButton}">
+          <BulletDecorator Background="{DynamicResource Transparent}">
+            <BulletDecorator.Bullet>
+              <Grid Width="16" Height="16">
+                <Border Name="RadioOuter" Background="{DynamicResource Transparent}" BorderBrush="{DynamicResource Color959596}" BorderThickness="2" CornerRadius="10" />
+                <Border Name="RadioMark" Margin="4" Background="{DynamicResource ColorBFBFBF}" CornerRadius="20" Visibility="Hidden" />
+              </Grid>
+            </BulletDecorator.Bullet>
+            <TextBlock Margin="16,0,0,0" FontFamily="{DynamicResource MuseoSans700FontFamily}" FontSize="16" FontWeight="Normal" Foreground="{DynamicResource Color2A2A2C}">
+              <ContentPresenter />
+            </TextBlock>
+          </BulletDecorator>
+          <ControlTemplate.Triggers>
+            <Trigger Property="ToggleButton.IsChecked" Value="true">
+              <Setter TargetName="RadioMark" Property="Visibility" Value="Visible" />
+              <Setter TargetName="RadioMark" Value="{DynamicResource ColorFF864A}" Property="Border.Background" />
+              <Setter TargetName="RadioOuter" Value="{DynamicResource ColorFF864A}" Property="Border.BorderBrush" />
+            </Trigger>
+            <Trigger Property="UIElement.IsMouseOver" Value="True">
+              <Setter TargetName="RadioOuter" Value="{DynamicResource ColorFF864A}" Property="Border.BorderBrush" />
+            </Trigger>
+          </ControlTemplate.Triggers>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
+  <Style x:Key="CheckBoxStyle" TargetType="{x:Type CheckBox}">
+    <Setter Property="Foreground" Value="{DynamicResource Black}" />
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="{x:Type CheckBox}">
+          <BulletDecorator Background="{DynamicResource Transparent}">
+            <BulletDecorator.Bullet>
+              <Grid Width="16" Height="16">
+                <Border Name="Outer" Background="{DynamicResource Transparent}" BorderBrush="{DynamicResource Color959596}" BorderThickness="2" CornerRadius="2" />
+                <Image Name="check" Source="/Assets/checkbox.png" Visibility="Hidden" />
+              </Grid>
+            </BulletDecorator.Bullet>
+            <TextBlock Name="checkboxlabel" Margin="14,0,0,0" FontFamily="{DynamicResource MuseoSans500FontFamily}" FontSize="12" FontWeight="Normal" Foreground="{DynamicResource Color2A2A2C}">
+              <ContentPresenter />
+            </TextBlock>
+          </BulletDecorator>
+          <ControlTemplate.Triggers>
+            <Trigger Property="ToggleButton.IsChecked" Value="true">
+              <Setter TargetName="Outer" Value="{DynamicResource ColorFF864A}" Property="Border.BorderBrush" />
+              <Setter TargetName="check" Property="Visibility" Value="Visible" />
+            </Trigger>
+            <Trigger Property="IsEnabled" Value="false">
+              <Setter TargetName="checkboxlabel" Property="UIElement.Opacity" Value="0.5" />
+              <Setter TargetName="Outer" Property="UIElement.Opacity" Value="0.5" />
+            </Trigger>
+            <Trigger Property="UIElement.IsMouseOver" Value="True">
+              <Setter TargetName="Outer" Value="{DynamicResource ColorFF864A}" Property="Border.BorderBrush" />
+            </Trigger>
+          </ControlTemplate.Triggers>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
+  <Style x:Key="CheckBoxStyle2" TargetType="{x:Type CheckBox}">
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="{x:Type CheckBox}">
+          <BulletDecorator Background="{DynamicResource Transparent}">
+            <BulletDecorator.Bullet>
+              <Grid Width="16" Height="16">
+                <Border Name="Outer" Background="{DynamicResource Transparent}" BorderBrush="{DynamicResource Color959596}" BorderThickness="2" CornerRadius="2" />
+                <Image Name="check" Source="/Assets/checkbox.png" Visibility="Hidden" />
+              </Grid>
+            </BulletDecorator.Bullet>
+          </BulletDecorator>
+          <ControlTemplate.Triggers>
+            <Trigger Property="ToggleButton.IsChecked" Value="true">
+              <Setter TargetName="Outer" Value="{DynamicResource ColorFF864A}" Property="Border.BorderBrush" />
+              <Setter TargetName="check" Property="Visibility" Value="Visible" />
+            </Trigger>
+            <Trigger Property="IsEnabled" Value="false">
+              <Setter TargetName="Outer" Property="UIElement.Opacity" Value="0.5" />
+            </Trigger>
+            <Trigger Property="UIElement.IsMouseOver" Value="True">
+              <Setter TargetName="Outer" Value="{DynamicResource ColorFF864A}" Property="Border.BorderBrush" />
+            </Trigger>
+          </ControlTemplate.Triggers>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
+  <Style x:Key="{x:Type ListBoxItem}" TargetType="{x:Type ListBoxItem}">
+    <Setter Property="Background" Value="{DynamicResource White}" />
+    <Setter Property="Foreground" Value="{DynamicResource Color848487}" />
+  </Style>
+  <Style x:Key="LocationListBoxItemsTextForegroundTextBlockStyle" TargetType="{x:Type TextBlock}">
+    <Setter Property="Foreground" Value="{DynamicResource Color2A2A2C}" />
+    <Setter Property="FontFamily" Value="{DynamicResource MuseoSans700FontFamily}" />
+    <Setter Property="FontWeight" Value="Bold" />
+  </Style>
+  <Style x:Key="LocationCityListBoxItemsTextForegroundTextBlockStyle" TargetType="{x:Type TextBlock}">
+    <Setter Property="Foreground" Value="{DynamicResource Color3A3B40}" />
+    <Setter Property="FontFamily" Value="{DynamicResource MuseoSans500FontFamily}" />
+  </Style>
+  <Style x:Key="FavoriteLocationListboxStyle" TargetType="{x:Type ListBox}">
+    <Setter Property="Background" Value="{DynamicResource White}" />
+  </Style>
+  <Style x:Key="AddNewFavoriteForegroundTextBlockStyle" TargetType="{x:Type TextBlock}">
+    <Setter Property="Foreground" Value="{DynamicResource Color848487}" />
+  </Style>
+  <Style x:Key="LocationHeaderDefaultForegroundTextBlockStyle" TargetType="{x:Type TextBlock}">
+    <Setter Property="Foreground" Value="{DynamicResource Color2A2A2C}" />
+  </Style>
+  <Style x:Key="SelectedLocationBorderStyle" TargetType="{x:Type Border}">
+    <Setter Property="Background" Value="{DynamicResource Transparent}" />
+    <Style.Triggers>
+      <Trigger Property="UIElement.IsMouseOver" Value="True">
+        <Setter Property="Background" Value="{DynamicResource ColorF2F2F6}" />
+      </Trigger>
+    </Style.Triggers>
+  </Style>
+  <Style x:Key="SearchPlaceholderTextBoxStyle" TargetType="{x:Type TextBox}">
+    <Setter Property="Background" Value="{DynamicResource Transparent}" />
+    <Setter Property="Foreground" Value="{DynamicResource Color787879}" />
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="{x:Type TextBox}">
+          <Grid>
+            <TextBox Name="InnerTextBox" Padding="{TemplateBinding Control.Padding}" Background="{TemplateBinding Control.Background}" BorderBrush="{TemplateBinding Control.BorderBrush}" BorderThickness="{TemplateBinding Control.BorderThickness}" Foreground="{TemplateBinding Control.Foreground}" Text="{Binding Text, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource TemplatedParent}}" />
+            <TextBlock Name="WatermarkTextBlock" Padding="5,0,0,0" Foreground="{DynamicResource Gray}" IsHitTestVisible="False" Text="Search" Visibility="Collapsed" />
+          </Grid>
+          <ControlTemplate.Triggers>
+            <Trigger SourceName="InnerTextBox" Property="UIElement.IsKeyboardFocused" Value="True">
+              <Setter TargetName="WatermarkTextBlock" Property="Visibility" Value="Collapsed" />
+            </Trigger>
+            <Trigger SourceName="InnerTextBox" Property="Text" Value="">
+              <Setter TargetName="WatermarkTextBlock" Property="Visibility" Value="Visible" />
+            </Trigger>
+          </ControlTemplate.Triggers>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
+  <Style x:Key="DefaultLabelHeaderForegroundStyle" TargetType="{x:Type Label}">
+    <Setter Property="Foreground" Value="{DynamicResource Color2A2A2C}" />
+  </Style>
+  <Style x:Key="NoLogInformationForegroundTextBlockStyle" TargetType="{x:Type TextBlock}">
+    <Setter Property="Foreground" Value="{DynamicResource ColorBFBFBF}" />
+  </Style>
+  <Style x:Key="LogDetailBorderBackgroundStyle" TargetType="{x:Type Border}">
+    <Setter Property="Background" Value="{DynamicResource ColorF4F4F5}" />
+  </Style>
+  <Style x:Key="LogListboxBackgroundStyle" TargetType="{x:Type ListBox}">
+    <Setter Property="Background" Value="{DynamicResource ColorF4F4F5}" />
+  </Style>
+  <Style x:Key="SplitTunnelingListboxBackgroundStyle" TargetType="{x:Type ListBox}">
+    <Setter Property="Background" Value="{DynamicResource Transparent}" />
+  </Style>
+  <Style x:Key="LogDetailStaticticLabelBorderedForegroundStyle" TargetType="{x:Type Label}">
+    <Setter Property="Foreground" Value="{DynamicResource Color2A2A2C}" />
+    <Setter Property="UIElement.Opacity" Value="0.4" />
+  </Style>
+  <Style x:Key="FeedbackDefaultBackgroundUserControlStyle" TargetType="{x:Type UserControl}">
+    <Setter Property="Foreground" Value="{DynamicResource White}" />
+  </Style>
+  <Style x:Key="FeedbackDefaultTextblockHeaderForegroundStyle" TargetType="{x:Type TextBlock}">
+    <Setter Property="Foreground" Value="{DynamicResource Color2A2A2C}" />
+  </Style>
+  <Style x:Key="FeedbackDefaultTextblockForegroundStyle" TargetType="{x:Type TextBlock}">
+    <Setter Property="Foreground" Value="{DynamicResource Color787879}" />
+  </Style>
+  <Style x:Key="FeedbackTextblockForegroundStyle" TargetType="{x:Type TextBlock}">
+    <Setter Property="Foreground" Value="{DynamicResource ColorBrush575758}" />
+  </Style>
+  <Style x:Key="BtnSendFeedbackButtonStyle" BasedOn="{StaticResource RoundedContentButtonBaseStyle}" TargetType="{x:Type Button}">
+    <Setter Property="Background" Value="{DynamicResource ColorBrushEA6900}" />
+    <Setter Property="Foreground" Value="{DynamicResource White}" />
+    <Setter Property="FontSize" Value="14" />
+    <Setter Property="FrameworkElement.Tag" Value="18" />
+  </Style>
+  <Style x:Key="TextBoxBackgroundStyle" TargetType="{x:Type TextBox}">
+    <Setter Property="Background" Value="{DynamicResource White}" />
+    <Setter Property="Foreground" Value="{DynamicResource Color575758}" />
+  </Style>
+  <Style x:Key="FeedbackBorderBackgroundStyle" TargetType="{x:Type Border}">
+    <Setter Property="Background" Value="{DynamicResource White}" />
+  </Style>
+  <Style x:Key="InstallMessageTextblockHeaderForegroundStyle" TargetType="{x:Type TextBlock}">
+    <Setter Property="Foreground" Value="{DynamicResource Color2A2A2C}" />
+  </Style>
+  <Style x:Key="InstallMessageTextblockForegroundStyle" TargetType="{x:Type TextBlock}">
+    <Setter Property="Foreground" Value="{DynamicResource Color787879}" />
+  </Style>
+  <Style x:Key="PrimaryRoundedButtonStyle" TargetType="{x:Type Button}">
+    <Setter Property="Background" Value="{DynamicResource ColorFF864A}" />
+    <Setter Property="Foreground" Value="{DynamicResource White}" />
+    <Setter Property="FontSize" Value="14" />
+    <Setter Property="FontFamily" Value="{DynamicResource MuseoSans700FontFamily}" />
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="{x:Type Button}">
+          <Border Padding="5" Background="{TemplateBinding Control.Background}" BorderBrush="{DynamicResource Transparent}" BorderThickness="0" CornerRadius="25">
+            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+          </Border>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+    <Style.Triggers>
+      <Trigger Property="UIElement.IsMouseOver" Value="True">
+        <Setter Property="Background" Value="{DynamicResource ColorDA662C}" />
+      </Trigger>
+    </Style.Triggers>
+  </Style>
+  <Style x:Key="NewUserControlGridForegroundStyle" TargetType="{x:Type Grid}">
+    <Setter Property="Background" Value="{DynamicResource White}" />
+  </Style>
+  <Style x:Key="NewUserWindowForegroundStyle" TargetType="{x:Type Window}">
+    <Setter Property="Background" Value="{DynamicResource White}" />
+  </Style>
+  <Style x:Key="NewUserControlTextblockHeaderForegroundStyle" TargetType="{x:Type TextBlock}">
+    <Setter Property="Foreground" Value="{DynamicResource Color2A2A2C}" />
+  </Style>
+  <Style x:Key="NewUserControlTextblockForegroundStyle" TargetType="{x:Type TextBlock}">
+    <Setter Property="Foreground" Value="{DynamicResource Color787879}" />
+  </Style>
+  <Style x:Key="NewUserControlIconImageStyle" TargetType="{x:Type Image}">
+    <Setter Property="Source" Value="/Assets/NewUserControlIcon.png" />
+  </Style>
+  <Style x:Key="ContextMenuStyle" TargetType="{x:Type ContextMenu}">
+    <Setter Property="FrameworkElement.OverridesDefaultStyle" Value="True" />
+    <Setter Property="UIElement.SnapsToDevicePixels" Value="True" />
+    <Setter Property="Background" Value="{DynamicResource White}" />
+    <Setter Property="Foreground" Value="{DynamicResource Black}" />
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="{x:Type ContextMenu}">
+          <Border Background="{DynamicResource ColorCD222120}" BorderBrush="{DynamicResource DarkGray}" BorderThickness="2" CornerRadius="7, 7, 8, 8" Opacity="0.96">
+            <StackPanel Margin="5,4,5,4" ClipToBounds="True" IsItemsHost="True" Orientation="Vertical" />
+          </Border>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
+  <Style x:Key="CaptionButtonStyle" TargetType="{x:Type Button}">
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="{x:Type Button}">
+          <Grid Name="LayoutRoot" Width="44" Height="30" Background="{DynamicResource Transparent}">
+            <TextBlock Name="txt" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="{DynamicResource SegoeMdl2AssetsFontFamily}" FontSize="10" Foreground="{DynamicResource Black}" RenderOptions.ClearTypeHint="Auto" Text="{TemplateBinding ContentControl.Content}" TextOptions.TextFormattingMode="Display" TextOptions.TextRenderingMode="Aliased" />
+          </Grid>
+          <ControlTemplate.Triggers>
+            <Trigger Property="UIElement.IsMouseOver" Value="True">
+              <Setter TargetName="LayoutRoot" Value="{DynamicResource ColorF3F3F3}" Property="Panel.Background" />
+              <Setter TargetName="txt" Value="{DynamicResource Black}" Property="TextBlock.Foreground" />
+            </Trigger>
+          </ControlTemplate.Triggers>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
+  <Style x:Key="MinimizeButtonStyle" BasedOn="{StaticResource CaptionButtonStyle}" TargetType="{x:Type Button}">
+    <Setter Property="Content" Value="" />
+  </Style>
+  <Style x:Key="MaximizeButtonStyle" BasedOn="{StaticResource CaptionButtonStyle}" TargetType="{x:Type Button}">
+    <Setter Property="Content" Value="" />
+  </Style>
+  <Style x:Key="RestoreButtonStyle" BasedOn="{StaticResource CaptionButtonStyle}" TargetType="{x:Type Button}">
+    <Setter Property="Content" Value="" />
+  </Style>
+  <Style x:Key="CloseButtonStyle" BasedOn="{StaticResource CaptionButtonStyle}" TargetType="{x:Type Button}">
+    <Setter Property="Content" Value="" />
+  </Style>
+  <Style x:Key="GridWindowHeaderStyle" TargetType="{x:Type Grid}">
+    <Setter Property="Background" Value="{DynamicResource White}" />
+  </Style>
+  <Style x:Key="IconWindowHeaderImageStyle" TargetType="{x:Type Image}">
+    <Setter Property="Source" Value="/Assets/NextAiVPN/nextaivpn_windowlogo.png" />
+  </Style>
+  <Style x:Key="TextBlockForegroundWindowHeaderStyle" TargetType="{x:Type TextBlock}">
+    <Setter Property="Foreground" Value="{DynamicResource Black}" />
+    <Setter Property="FontFamily" Value="{DynamicResource MuseoSans500FontFamily}" />
+  </Style>
+  <Style x:Key="SettingsContextMenuTextBlockStyle" TargetType="{x:Type TextBlock}">
+    <Setter Property="FontFamily" Value="{DynamicResource MuseoSans500FontFamily}" />
+    <Setter Property="FontSize" Value="12" />
+    <Setter Property="FontWeight" Value="Regular" />
+    <Setter Property="Foreground" Value="{DynamicResource Color2A2A2C}" />
+  </Style>
+  <Style x:Key="IconSearchLoopHeaderImageStyle" TargetType="{x:Type Image}">
+    <Setter Property="Source" Value="/Assets/searchLoop.png" />
+  </Style>
+  <Style x:Key="IconTrashBinFullHeaderImageStyle" TargetType="{x:Type Image}">
+    <Setter Property="Source" Value="/Assets/trashLogs.png" />
+  </Style>
+  <Style x:Key="MainPanelGridBackgroundStyle" TargetType="{x:Type Grid}">
+    <Setter Property="Background" Value="{DynamicResource Color1D1D20}" />
+  </Style>
+  <Style x:Key="DeleteLogsMessageWindowTextBlockForegroundStyle" TargetType="{x:Type TextBlock}">
+    <Setter Property="Foreground" Value="{DynamicResource Color94959E}" />
+    <Setter Property="FontFamily" Value="{DynamicResource MuseoSans500FontFamily}" />
+  </Style>
+  <Style x:Key="DeleteLogsMessageWindowTextBlockHeaderForegroundStyle" TargetType="{x:Type TextBlock}">
+    <Setter Property="Foreground" Value="{DynamicResource Black}" />
+    <Setter Property="FontFamily" Value="{DynamicResource MuseoSans500FontFamily}" />
+  </Style>
+  <Style x:Key="DeleteLogsMessageWindowBackgroundStyle" TargetType="{x:Type Window}">
+    <Setter Property="Background" Value="{DynamicResource White}" />
+  </Style>
+  <Style x:Key="SubscriptionExpiredBackgroundUserControlStyle" TargetType="{x:Type UserControl}">
+    <Setter Property="Background" Value="{DynamicResource Color1D1D20}" />
+  </Style>
+  <Style x:Key="SubscriptionExpiredIconImageStyle" TargetType="{x:Type Image}">
+    <Setter Property="Source" Value="/Assets/DarkMode/Information.png" />
+  </Style>
+  <Style x:Key="NoNetworkBackgroundUserControlStyle" TargetType="{x:Type UserControl}">
+    <Setter Property="Background" Value="{DynamicResource Color959596}" />
+  </Style>
+  <Style x:Key="MainWindowSeparatorRectangleStyle" TargetType="{x:Type Rectangle}">
+    <Setter Property="Fill" Value="{DynamicResource Transparent}" />
+  </Style>
+  <Style x:Key="ReconnectingMainPanelBackgroundImageStyle" TargetType="{x:Type Image}">
+    <Setter Property="Source" Value="/Assets/reconnecting.png" />
+  </Style>
+  <Style x:Key="NoNetworkImageBackgroundStyle" TargetType="{x:Type Image}">
+    <Setter Property="Source" Value="/Assets/NoNetwork.png" />
+  </Style>
+  <Style x:Key="StatisticDataDownloadImageStyle" TargetType="{x:Type Image}">
+    <Setter Property="Source" Value="/Assets/NextAiVPN/dataDownload.png" />
+    <Setter Property="UIElement.Opacity" Value="0.6" />
+  </Style>
+  <Style x:Key="StatisticDataUploadImageStyle" TargetType="{x:Type Image}">
+    <Setter Property="Source" Value="/Assets/NextAiVPN/dataUpload.png" />
+    <Setter Property="UIElement.Opacity" Value="0.6" />
+  </Style>
+  <Style x:Key="StatisticConnectionProtocolImageStyle" TargetType="{x:Type Image}">
+    <Setter Property="Source" Value="/Assets/NextAiVPN/connectionProtocol.png" />
+    <Setter Property="UIElement.Opacity" Value="0.6" />
+  </Style>
+  <Style x:Key="ExpandedSideMenuBackGroundUserControlStyle" TargetType="{x:Type UserControl}">
+    <Setter Property="Background" Value="{DynamicResource White}" />
+  </Style>
+  <Style x:Key="ExpandedSideMenuMainBorderStyle" TargetType="{x:Type Border}">
+    <Setter Property="BorderBrush" Value="{DynamicResource LightGray}" />
+    <Setter Property="BorderThickness" Value="0,0,0.5,0" />
+  </Style>
+  <Style x:Key="MainPanelBorderStyle" TargetType="{x:Type Border}">
+    <Setter Property="BorderBrush" Value="{DynamicResource LightGray}" />
+    <Setter Property="BorderThickness" Value="0.5,0,0,0" />
+  </Style>
+  <Style x:Key="GeneralSideMenuImageStyle" TargetType="{x:Type Image}">
+    <Setter Property="Source" Value="/Assets/SettingsSideMenuNotActive.png" />
+  </Style>
+  <Style x:Key="ProtocolSideMenuImageStyle" TargetType="{x:Type Image}">
+    <Setter Property="Source" Value="/Assets/protocolSideMenuGrey.png" />
+  </Style>
+  <Style x:Key="LogsSideMenuImageStyle" TargetType="{x:Type Image}">
+    <Setter Property="Source" Value="/Assets/LogsSideMenuNotActive.png" />
+  </Style>
+  <Style x:Key="LocationSideMenuImageStyle" TargetType="{x:Type Image}">
+    <Setter Property="Source" Value="/Assets/LocationsSideMenuNotActive.png" />
+  </Style>
+  <Style x:Key="LinksTextBlockStyle" TargetType="{x:Type TextBlock}">
+    <Setter Property="FontSize" Value="12" />
+    <Setter Property="Margin" Value="5" />
+    <Setter Property="FontFamily" Value="{DynamicResource MuseoSans500FontFamily}" />
+    <Setter Property="Foreground" Value="{DynamicResource ColorFF864A}" />
+    <Style.Triggers>
+      <Trigger Property="UIElement.IsMouseOver" Value="True">
+        <Setter Property="FrameworkElement.Cursor" Value="Hand" />
+        <Setter Property="TextDecorations" Value="Underline" />
+      </Trigger>
+    </Style.Triggers>
+  </Style>
+  <Style x:Key="GhostButtonSignOutStyle" TargetType="{x:Type Button}">
+    <Setter Property="Foreground" Value="{DynamicResource ColorC92B33}" />
+    <Setter Property="Background" Value="{DynamicResource Transparent}" />
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate>
+          <Border Name="btnBorder" Background="{TemplateBinding Control.Background}" BorderThickness="0" CornerRadius="24">
+            <TextBlock Name="btnText" Margin="16,12" HorizontalAlignment="Center" FontFamily="{DynamicResource MuseoSans700FontFamily}" FontSize="16" FontWeight="Bold" Opacity="0.85" Text="Sign Out" />
+          </Border>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+    <Style.Triggers>
+      <Trigger Property="UIElement.IsMouseOver" Value="True">
+        <Setter Property="Foreground" Value="{DynamicResource ColorC92B33}" />
+        <Setter Property="Background" Value="{DynamicResource ColorFCF1EC}" />
+      </Trigger>
+    </Style.Triggers>
+  </Style>
+  <Style x:Key="XCloseButtonWindowImageStyle" TargetType="{x:Type Image}">
+    <Setter Property="Source" Value="/Assets/btnCrossDefault_windows.png" />
+    <Setter Property="Width" Value="25" />
+    <Setter Property="Height" Value="25" />
+    <Style.Triggers>
+      <Trigger Property="UIElement.IsMouseOver" Value="True">
+        <Setter Property="Source" Value="/Assets/btnCrossHover_windows.png" />
+      </Trigger>
+    </Style.Triggers>
+  </Style>
+  <Style x:Key="{x:Type Hyperlink}" TargetType="{x:Type Hyperlink}">
+    <Setter Property="Foreground" Value="{DynamicResource ColorFF864A}" />
+    <Style.Triggers>
+      <Trigger Property="ContentElement.IsMouseOver" Value="True">
+        <Setter Property="Inline.TextDecorations" Value="Underline" />
+      </Trigger>
+    </Style.Triggers>
+  </Style>
+  <Style x:Key="NotificationBackgroundGridStyle" TargetType="{x:Type Grid}">
+    <Setter Property="Background" Value="{DynamicResource White}" />
+  </Style>
+  <Style x:Key="NotificationTextForegroundTextBlockStyle" TargetType="{x:Type TextBlock}">
+    <Setter Property="Foreground" Value="{DynamicResource Color959596}" />
+  </Style>
+  <Style x:Key="NotificationTextHeaderForegroundTextBlockStyle" TargetType="{x:Type TextBlock}">
+    <Setter Property="Foreground" Value="{DynamicResource Black}" />
+  </Style>
+  <Style x:Key="ImageConnectedLogoStyle" TargetType="{x:Type Image}">
+    <Setter Property="Source" Value="/Assets/DarkMode/success_green.png" />
+  </Style>
+  <Style x:Key="WindowHeaderBorderStyle" TargetType="{x:Type Border}">
+    <Setter Property="BorderThickness" Value="0,0,0,1" />
+    <Setter Property="BorderBrush" Value="{DynamicResource ColorF4F4F5}" />
+  </Style>
+  <Style x:Key="SendFeedbackButtonStyle" TargetType="{x:Type Button}">
+    <Setter Property="Width" Value="148" />
+    <Setter Property="Background" Value="{DynamicResource ColorFFAB33}" />
+    <Setter Property="Height" Value="40" />
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate>
+          <Border Name="btnBorder" Width="{TemplateBinding FrameworkElement.Width}" Height="{TemplateBinding FrameworkElement.Height}" Background="{TemplateBinding Control.Background}" BorderThickness="0" CornerRadius="24">
+            <Grid>
+              <Image Name="Emoji" Width="24" Height="24" Panel.ZIndex="99" RenderOptions.BitmapScalingMode="HighQuality" Visibility="Collapsed" />
+              <Grid Name="FeedbackGridGrid" Margin="25,0,0,0" Visibility="Visible">
+                <Image Name="SendFeedbackImage" Width="17" Height="17" Margin="-106,0,0,0" RenderOptions.BitmapScalingMode="HighQuality" Source="/Assets/SendFeedbackIcon.png" />
+                <TextBlock Margin="20,10,0,0" FontFamily="{DynamicResource MuseoSans500FontFamily}" FontSize="16" FontWeight="Bold" Foreground="{DynamicResource White}" Text="Feedback" />
+              </Grid>
+            </Grid>
+          </Border>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
+  <Style x:Key="{x:Type ScrollBar}" TargetType="{x:Type ScrollBar}">
+    <Setter Property="Stylus.IsFlicksEnabled" Value="false" />
+    <Setter Property="Foreground" Value="{DynamicResource Black}" />
+    <Setter Property="Background" Value="{DynamicResource Transparent}" />
+    <Setter Property="UIElement.Opacity" Value="0.23" />
+    <Setter Property="MinHeight" Value="40" />
+    <Setter Property="Width" Value="8" />
+    <Setter Property="Template" Value="{DynamicResource ScrollBarControlTemplate}" />
+  </Style>
+  <Style x:Key="StyleSwitcherBorderStyle" TargetType="{x:Type Border}">
+    <Setter Property="BorderThickness" Value="1" />
+    <Setter Property="BorderBrush" Value="{DynamicResource Transparent}" />
+  </Style>
+  <Style x:Key="GetHelpMenuImageStyle" TargetType="{x:Type Image}">
+    <Setter Property="Source" Value="/Assets/GetHelpSideMenuNotActive.png" />
+  </Style>
+  <Style x:Key="TermsAndPoliciesMenuImageStyle" TargetType="{x:Type Image}">
+    <Setter Property="Source" Value="/Assets/LegalInformationSideMenuNotActive.png" />
+  </Style>
+  <Style x:Key="NotificationsMenuImageStyle" TargetType="{x:Type Image}">
+    <Setter Property="Source" Value="/Assets/NotificationsMenuNotActive.png" />
+  </Style>
+  <Style x:Key="FeedbackControlUserControlStyle" TargetType="{x:Type UserControl}">
+    <Setter Property="Background" Value="{DynamicResource White}" />
+  </Style>
+  <Style x:Key="SendDiagnosticFileTextForegroundTextBlockStyle" TargetType="{x:Type TextBlock}">
+    <Setter Property="Foreground" Value="{DynamicResource Color1D1D20}" />
+  </Style>
+  <Style x:Key="FeedbackErrorGridBackgroundStyle" TargetType="{x:Type Grid}">
+    <Setter Property="Background" Value="{DynamicResource ColorFAEBE6}" />
+  </Style>
+  <Style x:Key="MainPanelNotificationUserControlStyle" TargetType="{x:Type UserControl}">
+    <Setter Property="Background" Value="{DynamicResource White}" />
+  </Style>
+  <Style x:Key="NotificationsBodyTextBlockStyle" TargetType="{x:Type TextBlock}">
+    <Setter Property="Foreground" Value="{DynamicResource Color959596}" />
+  </Style>
+  <Style x:Key="NotificationsDateTextBlockStyle" TargetType="{x:Type TextBlock}">
+    <Setter Property="Foreground" Value="{DynamicResource Color959596}" />
+  </Style>
+  <Style x:Key="LinkWhiteTextBlockStyle" TargetType="{x:Type TextBlock}">
+    <Setter Property="FontSize" Value="12" />
+    <Setter Property="Margin" Value="5" />
+    <Setter Property="FontFamily" Value="{DynamicResource MuseoSans500FontFamily}" />
+    <Setter Property="Foreground" Value="{DynamicResource White}" />
+    <Style.Triggers>
+      <Trigger Property="UIElement.IsMouseOver" Value="True">
+        <Setter Property="FrameworkElement.Cursor" Value="Hand" />
+        <Setter Property="TextDecorations" Value="Underline" />
+      </Trigger>
+    </Style.Triggers>
+  </Style>
+  <Style x:Key="WhiteButtonStyle" TargetType="{x:Type Button}">
+    <Setter Property="Background" Value="{DynamicResource ColorF4F4F5}" />
+    <Setter Property="Foreground" Value="{DynamicResource Color575860}" />
+    <Setter Property="FontSize" Value="14" />
+    <Setter Property="FontFamily" Value="{DynamicResource MuseoSans700FontFamily}" />
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="{x:Type Button}">
+          <Border Name="Border" Padding="5" Background="{DynamicResource ColorF4F4F5}" BorderBrush="{DynamicResource ColorDCDDDF}" BorderThickness="1" CornerRadius="18">
+            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+          </Border>
+          <ControlTemplate.Triggers>
+            <Trigger Property="UIElement.IsMouseOver" Value="True">
+              <Setter TargetName="Border" Value="{DynamicResource White}" Property="Border.Background" />
+            </Trigger>
+          </ControlTemplate.Triggers>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
+  <Style x:Key="ActiveButtonStyle" TargetType="{x:Type Button}">
+    <Setter Property="Background" Value="{DynamicResource ColorFF864A}" />
+    <Setter Property="Foreground" Value="{DynamicResource White}" />
+    <Setter Property="FontSize" Value="14" />
+    <Setter Property="FontFamily" Value="{DynamicResource MuseoSans700FontFamily}" />
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="{x:Type Button}">
+          <Border Name="Border" Padding="5" Background="{DynamicResource ColorFF864A}" BorderBrush="{DynamicResource ColorDCDDDF}" BorderThickness="1" CornerRadius="18">
+            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+          </Border>
+          <ControlTemplate.Triggers>
+            <Trigger Property="UIElement.IsMouseOver" Value="True">
+              <Setter TargetName="Border" Value="{DynamicResource White}" Property="Border.Background" />
+            </Trigger>
+          </ControlTemplate.Triggers>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+    <Style.Triggers>
+      <Trigger Property="UIElement.IsMouseOver" Value="True">
+        <Setter Property="Foreground" Value="{DynamicResource Color575860}" />
+      </Trigger>
+    </Style.Triggers>
+  </Style>
+  <Style x:Key="FeedbackPopUpImageStyle" TargetType="{x:Type Image}">
+    <Setter Property="Source" Value="/Assets/feedbackPopUpImage.png" />
+  </Style>
+  <Style x:Key="SubscriptionExpireSoonImageStyle" TargetType="{x:Type Image}">
+    <Setter Property="Source" Value="/Assets/SubscriptionExpireSoon.png" />
+  </Style>
+  <Style x:Key="TrustThisNetworkNotificationButtonStyle" TargetType="{x:Type Button}">
+    <Setter Property="Foreground" Value="{DynamicResource ColorFF864A}" />
+    <Setter Property="Background" Value="{DynamicResource Transparent}" />
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate>
+          <Border Name="btnBorder" Background="{TemplateBinding Control.Background}" BorderThickness="0" CornerRadius="20">
+            <TextBlock Name="btnText" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="{DynamicResource MuseoSans500FontFamily}" FontSize="13" Text="Trust this network" />
+          </Border>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+    <Style.Triggers>
+      <Trigger Property="UIElement.IsMouseOver" Value="True">
+        <Setter Property="Foreground" Value="{DynamicResource ColorFF864A}" />
+        <Setter Property="Background" Value="{DynamicResource ColorFCF1EC}" />
+      </Trigger>
+    </Style.Triggers>
+  </Style>
+  <Style x:Key="ThreeHorizontalDotsImageStyle" TargetType="{x:Type Image}">
+    <Setter Property="Source" Value="/Assets/3Dots.png" />
+  </Style>
+  <Style x:Key="WiFiLogoImageStyle" TargetType="{x:Type Image}">
+    <Setter Property="Source" Value="/Assets/WIFI.png" />
+  </Style>
+  <Style x:Key="TrustedNetworkBorderStyle" TargetType="{x:Type Border}">
+    <Setter Property="Border.CornerRadius" Value="10" />
+    <Setter Property="Background" Value="{DynamicResource ColorF4F4F5}" />
+  </Style>
+  <Style x:Key="XCloseGrayButtonStyle" TargetType="{x:Type Image}">
+    <Setter Property="Source" Value="/Assets/XButtonGray.png" />
+    <Setter Property="Width" Value="10" />
+    <Setter Property="Height" Value="10" />
+    <Style.Triggers>
+      <Trigger Property="UIElement.IsMouseOver" Value="True">
+        <Setter Property="Source" Value="/Assets/XButtonOrange.png" />
+      </Trigger>
+    </Style.Triggers>
+  </Style>
+  <Style x:Key="TrustedNetworkListboxStyle" TargetType="{x:Type ListBox}">
+    <Setter Property="Background" Value="{DynamicResource White}" />
+  </Style>
+  <Style x:Key="DeleteTrustedNetworkImageStyle" TargetType="{x:Type Image}">
+    <Setter Property="Source" Value="/Assets/DeleteTrustedNetworksTrash.png" />
+    <Setter Property="Width" Value="20" />
+    <Setter Property="Height" Value="20" />
+  </Style>
+  <Style x:Key="TrustedNetworkWindowStyle" TargetType="{x:Type Window}">
+    <Setter Property="Background" Value="{DynamicResource White}" />
+  </Style>
+  <Style x:Key="TrustedNetworkTextBlockStyle" TargetType="{x:Type TextBlock}">
+    <Setter Property="FontFamily" Value="{DynamicResource MuseoSans500FontFamily}" />
+    <Setter Property="FontSize" Value="10" />
+    <Setter Property="FontWeight" Value="UltraLight" />
+    <Setter Property="UIElement.Opacity" Value="0.8" />
+    <Setter Property="Foreground" Value="{DynamicResource Color1D1D20}" />
+  </Style>
+  <Style x:Key="AccountSideMenuImageStyle" TargetType="{x:Type Image}">
+    <Setter Property="Source" Value="/Assets/AccountSideMenuNotActive.png" />
+  </Style>
+  <Style x:Key="AccountExpirationMessageBorderStyle" TargetType="{x:Type Border}">
+    <Setter Property="BorderBrush" Value="{DynamicResource ColorFCDAAB}" />
+  </Style>
+  <Style x:Key="AccountExpirationMessageImageStyle" TargetType="{x:Type Image}">
+    <Setter Property="Source" Value="/Assets/WarningFull.png" />
+  </Style>
+  <Style x:Key="AccountExpirationMessageTextBlockStyle" TargetType="{x:Type TextBlock}">
+    <Setter Property="FontFamily" Value="{DynamicResource MuseoSans700FontFamily}" />
+    <Setter Property="FontSize" Value="16" />
+    <Setter Property="Foreground" Value="{DynamicResource ColorF59000}" />
+  </Style>
+  <Style x:Key="SplitTunnelingArrowRightImageStyle" TargetType="{x:Type Image}">
+    <Setter Property="Source" Value="/Assets/chevron-right.png" />
+  </Style>
+  <Style x:Key="SplitTunnelingBorderStyle" TargetType="{x:Type Border}">
+    <Setter Property="Background" Value="{DynamicResource Transparent}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource ColorDCDCDF}" />
+    <Setter Property="BorderThickness" Value="1" />
+    <Setter Property="Border.CornerRadius" Value="4" />
+  </Style>
+  <Style x:Key="SplitTunnelingPopUpImageStyle" TargetType="{x:Type Image}">
+    <Setter Property="Source" Value="/Assets/SplitTunnelPopUp.png" />
+  </Style>
+  <Style x:Key="SplitTunnelingDomainAddTextBoxStyle" TargetType="{x:Type TextBox}">
+    <Setter Property="Background" Value="{DynamicResource White}" />
+    <Setter Property="Foreground" Value="{DynamicResource Color94959E}" />
+    <Setter Property="TextBoxBase.CaretBrush" Value="{DynamicResource Color94959E}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource ColorF4F4F5}" />
+    <Setter Property="BorderThickness" Value="1" />
+    <Style.Resources>
+      <ResourceDictionary>
+        <Style x:Key="{x:Type Border}" TargetType="{x:Type Border}">
+          <Setter Property="Border.CornerRadius" Value="3" />
+        </Style>
+      </ResourceDictionary>
+    </Style.Resources>
+  </Style>
+  <Style x:Key="SplitTunnelingDomainAddBorderStyle" TargetType="{x:Type Border}">
+    <Setter Property="Background" Value="{DynamicResource White}" />
+    <Setter Property="Border.CornerRadius" Value="3" />
+  </Style>
+  <Style x:Key="CancelButtonBindingTextStyle" TargetType="{x:Type Button}">
+    <Setter Property="Foreground" Value="{DynamicResource ColorFF864A}" />
+    <Setter Property="Background" Value="{DynamicResource Transparent}" />
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="{x:Type Button}">
+          <Border Name="btnBorder" Background="{TemplateBinding Control.Background}" BorderThickness="0" CornerRadius="20">
+            <TextBlock Name="btnText" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="{DynamicResource MuseoSans500FontFamily}" FontSize="13" Text="{TemplateBinding ContentControl.Content}" />
+          </Border>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+    <Style.Triggers>
+      <Trigger Property="UIElement.IsMouseOver" Value="True">
+        <Setter Property="Foreground" Value="{DynamicResource ColorFF864A}" />
+        <Setter Property="Background" Value="{DynamicResource ColorFCF1EC}" />
+      </Trigger>
+    </Style.Triggers>
+  </Style>
+  <Style x:Key="OkButtonBindingTextStyle" TargetType="{x:Type Button}">
+    <Setter Property="Foreground" Value="{DynamicResource White}" />
+    <Setter Property="Background" Value="{DynamicResource ColorFF864A}" />
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="{x:Type Button}">
+          <Border Name="btnBorder" Background="{TemplateBinding Control.Background}" BorderThickness="0" CornerRadius="20">
+            <TextBlock Name="btnText" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="{DynamicResource MuseoSans500FontFamily}" FontSize="13" Text="{TemplateBinding ContentControl.Content}" />
+          </Border>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+    <Style.Triggers>
+      <Trigger Property="UIElement.IsMouseOver" Value="True">
+        <Setter Property="Foreground" Value="{DynamicResource ColorFF864A}" />
+        <Setter Property="Background" Value="{DynamicResource ColorFCF1EC}" />
+      </Trigger>
+    </Style.Triggers>
+  </Style>
+  <Style x:Key="CircleCounterControlBorderStyle" TargetType="{x:Type Border}">
+    <Setter Property="Background" Value="{DynamicResource ColorFF864A}" />
+  </Style>
+  <Style x:Key="CircleCounterControlTextBlockStyle" TargetType="{x:Type TextBlock}">
+    <Setter Property="Foreground" Value="{DynamicResource White}" />
+    <Setter Property="FontSize" Value="10" />
+    <Setter Property="FontFamily" Value="{DynamicResource MuseoSans500FontFamily}" />
+    <Setter Property="FontWeight" Value="Bold" />
+  </Style>
+  <Style x:Key="SplitTunnelingIncludeSubDomainsInfoImageStyle" TargetType="{x:Type Image}">
+    <Setter Property="Source" Value="/Assets/ST_IncludeSubDomainsInfo.png" />
+  </Style>
+  <Style x:Key="SplitTunnelingIncludeSubDomainsToolTipStyle" BasedOn="{StaticResource {x:Type ToolTip}}" TargetType="{x:Type ToolTip}">
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="{x:Type ToolTip}">
+          <StackPanel Orientation="Vertical">
+            <Border Background="{DynamicResource Color1E1E20}" BorderThickness="0" CornerRadius="5">
+              <StackPanel Margin="10">
+                <TextBlock Width="221" FontSize="12" Foreground="{DynamicResource White}" Text="{x:Static local:VPNConstants.IncludeSubDomainTooltipText}" TextWrapping="Wrap" />
+              </StackPanel>
+            </Border>
+            <Polygon Margin="0,0,0,5" HorizontalAlignment="Center" VerticalAlignment="Bottom" Fill="{DynamicResource Color1E1E20}" Points="0,0 10,0 5,7.5" />
+          </StackPanel>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
+  <Style x:Key="SplitTunnelingListItemToolTipStyle" BasedOn="{StaticResource {x:Type ToolTip}}" TargetType="{x:Type ToolTip}">
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="{x:Type ToolTip}">
+          <StackPanel Orientation="Vertical">
+            <Border Background="{DynamicResource Color1E1E20}" BorderBrush="{DynamicResource ColorDCDCDF}" BorderThickness="0.5" CornerRadius="5">
+              <StackPanel Margin="10">
+                <TextBlock FontSize="12" Foreground="{DynamicResource White}" Text="{TemplateBinding FrameworkElement.ToolTip}" TextWrapping="Wrap" />
+              </StackPanel>
+            </Border>
+          </StackPanel>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
+  <Style x:Key="SplitTunnelingDomainsCheckImageStyle" TargetType="{x:Type Image}">
+    <Setter Property="Source" Value="/Assets/ST_DomainCheck.png" />
+  </Style>
+  <Style x:Key="StreamingModesButtonLocationTabTextStyle" TargetType="{x:Type TextBlock}">
+    <Setter Property="Foreground" Value="{DynamicResource Color2A2A2C}" />
+  </Style>
+  <Style x:Key="LocationListBoxItemStyle" TargetType="{x:Type ListBoxItem}">
+    <Setter Property="Background" Value="{DynamicResource Transparent}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource Transparent}" />
+    <Setter Property="Padding" Value="5" />
+    <Setter Property="Margin" Value="2" />
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="{x:Type ListBoxItem}">
+          <Border Name="Border" Padding="5" BorderThickness="0" CornerRadius="20">
+            <ContentPresenter />
+          </Border>
+          <ControlTemplate.Triggers>
+            <Trigger Property="UIElement.IsMouseOver" Value="True">
+              <Setter TargetName="Border" Value="{DynamicResource ColorF2F2F6}" Property="Border.Background" />
+            </Trigger>
+          </ControlTemplate.Triggers>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
+  <Style x:Key="FavoriteStreamingLocationListboxStyle" TargetType="{x:Type ListBox}">
+    <Setter Property="Background" Value="{DynamicResource White}" />
+  </Style>
+  <Style x:Key="FavoriteLocationsUserControlStyle" TargetType="{x:Type UserControl}">
+    <Setter Property="Background" Value="{DynamicResource White}" />
+  </Style>
+  <Style x:Key="FavoriteBorderTemplateStyle" TargetType="{x:Type Border}">
+    <Setter Property="Background" Value="{DynamicResource White}" />
+    <Setter Property="Border.Padding" Value="5" />
+    <Setter Property="Border.CornerRadius" Value="8" />
+    <Setter Property="UIElement.Effect">
+      <Setter.Value>
+        <DropShadowEffect BlurRadius="10" Direction="240" Opacity="0.5" ShadowDepth="4" Color="{DynamicResource DropShadowColor}" />
+      </Setter.Value>
+    </Setter>
+  </Style>
+  <Style x:Key="StreamingInfoWindowWarringStyle" TargetType="{x:Type Image}">
+    <Setter Property="Source" Value="/Assets/S_WarringFilled.png" />
+  </Style>
+  <Style x:Key="StreamingInfoWindowTitleStyle" TargetType="{x:Type TextBlock}">
+    <Setter Property="Foreground" Value="{DynamicResource Black}" />
+    <Setter Property="FontFamily" Value="{DynamicResource MuseoSans700FontFamily}" />
+    <Setter Property="FontSize" Value="20" />
+  </Style>
+  <Style x:Key="StreamingInfoWindowStyle" TargetType="{x:Type Window}">
+    <Setter Property="Background" Value="{DynamicResource White}" />
+  </Style>
+  <Style x:Key="StreamingInfoWindowTextBlockStyle" TargetType="{x:Type TextBlock}">
+    <Setter Property="Foreground" Value="{DynamicResource Black}" />
+    <Setter Property="FontFamily" Value="{DynamicResource MuseoSans500FontFamily}" />
+    <Setter Property="FontSize" Value="13" />
+  </Style>
+  <Style x:Key="StreamingInfoWindowBorderStyle" TargetType="{x:Type Border}">
+    <Setter Property="BorderBrush" Value="{DynamicResource ColorFCDAAB}" />
+    <Setter Property="Border.CornerRadius" Value="8" />
+    <Setter Property="BorderThickness" Value="1" />
+  </Style>
+  <Style x:Key="StreamingInfoWindowWarringTitleTextBlockStyle" TargetType="{x:Type TextBlock}">
+    <Setter Property="Foreground" Value="{DynamicResource ColorF59000}" />
+    <Setter Property="FontFamily" Value="{DynamicResource MuseoSans500FontFamily}" />
+    <Setter Property="FontSize" Value="12" />
+  </Style>
+  <Style x:Key="StreamingInfoWindowWarringTextBlockStyle" TargetType="{x:Type TextBlock}">
+    <Setter Property="Foreground" Value="{DynamicResource Color94959E}" />
+    <Setter Property="FontFamily" Value="{DynamicResource MuseoSans500FontFamily}" />
+    <Setter Property="FontSize" Value="12" />
+  </Style>
+  <Style x:Key="UpdateButtonSpinnerImageStyle" TargetType="{x:Type Image}">
+    <Setter Property="Source" Value="/Assets/spinner_white.png" />
+  </Style>
+  <Style x:Key="BetaInfoBorderStyle" TargetType="{x:Type Border}">
+    <Setter Property="Background" Value="{DynamicResource ColorFF864A}" />
+  </Style>
+  <Style x:Key="BetaInfoTextBlockStyle" TargetType="{x:Type TextBlock}">
+    <Setter Property="Foreground" Value="{DynamicResource White}" />
+    <Setter Property="FontSize" Value="9" />
+    <Setter Property="FontFamily" Value="{DynamicResource MuseoSans700FontFamily}" />
+  </Style>
+  <Style x:Key="NoStreamingLocationDescriptionTextBlockStyle" TargetType="{x:Type TextBlock}">
+    <Setter Property="Foreground" Value="{DynamicResource Color1E1E20}" />
+    <Setter Property="FontFamily" Value="{DynamicResource MuseoSans500FontFamily}" />
+    <Setter Property="FontSize" Value="12" />
+  </Style>
+  <Style x:Key="NoStreamingLocationImageStyle" TargetType="{x:Type Image}">
+    <Setter Property="Source" Value="/Assets/WarningCircle.png" />
+  </Style>
+  <Style x:Key="ArrowDownSortImageStyle" TargetType="{x:Type Image}">
+    <Setter Property="Source" Value="/Assets/carretdown.png" />
+    <Setter Property="Margin" Value="4,0,0,0" />
+    <Setter Property="Height" Value="4.67" />
+    <Setter Property="Width" Value="8" />
+  </Style>
+  <Style x:Key="FavoriteLocationImageStyle" TargetType="{x:Type Image}">
+    <Setter Property="Source" Value="/Assets/favNormal.png" />
+  </Style>
+  <Style x:Key="XCircleCloseImageStyle" TargetType="{x:Type Image}">
+    <Setter Property="Source" Value="/Assets/XCircleClose.png" />
+  </Style>
+  <Style x:Key="FavoriteLocationListBoxItemStyle" TargetType="{x:Type ListBoxItem}">
+    <Setter Property="Background" Value="{DynamicResource Transparent}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource Transparent}" />
+    <Setter Property="Padding" Value="5" />
+    <Setter Property="Margin" Value="2" />
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="{x:Type ListBoxItem}">
+          <Border Name="Border" Padding="5" BorderThickness="0" CornerRadius="20">
+            <ContentPresenter />
+          </Border>
+          <ControlTemplate.Triggers>
+            <Trigger Property="UIElement.IsMouseOver" Value="True">
+              <Setter TargetName="Border" Value="{DynamicResource Transparent}" Property="Border.Background" />
+            </Trigger>
+          </ControlTemplate.Triggers>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
+  <Style x:Key="FeedbackTabItemStyle" TargetType="{x:Type TabItem}">
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="{x:Type TabItem}">
+          <Border Padding="10,2" Background="{DynamicResource Transparent}" BorderThickness="0,0,0,2">
+            <StackPanel>
+              <ContentPresenter Name="ContentSite" HorizontalAlignment="Center" VerticalAlignment="Center" ContentSource="Header" RecognizesAccessKey="True" />
+            </StackPanel>
+          </Border>
+          <ControlTemplate.Triggers>
+            <Trigger Property="TabItem.IsSelected" Value="True">
+              <Setter TargetName="ContentSite" Value="{DynamicResource Orange}" Property="TextElement.Foreground" />
+              <Setter TargetName="ContentSite" Property="TextElement.FontWeight" Value="Bold" />
+              <Setter Value="{DynamicResource Orange}" Property="BorderBrush" />
+            </Trigger>
+            <Trigger Property="UIElement.IsMouseOver" Value="True">
+              <Setter TargetName="ContentSite" Value="{DynamicResource Gray}" Property="TextElement.Foreground" />
+              <Setter Value="{DynamicResource Gray}" Property="BorderBrush" />
+            </Trigger>
+          </ControlTemplate.Triggers>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
+  <Style x:Key="FeedbackGrayForegroundColorTextBlockStyle" TargetType="{x:Type TextBlock}">
+    <Setter Property="Foreground" Value="{DynamicResource Color6F6E6F}" />
+  </Style>
+  <Style x:Key="FeedbackRedForegroundColorTextBlockStyle" TargetType="{x:Type TextBlock}">
+    <Setter Property="Foreground" Value="{DynamicResource ColorBrushFF2500}" />
+  </Style>
+  <Style x:Key="FeedbackDescriptionErrorImageStyle" TargetType="{x:Type Image}">
+    <Setter Property="Source" Value="/Assets/FeedbackDescriptionError.png" />
+    <Setter Property="Stretch" Value="Uniform" />
+    <Setter Property="RenderOptions.BitmapScalingMode" Value="HighQuality" />
+  </Style>
+  <Style x:Key="FeedbackCheckValidationImageStyle" TargetType="{x:Type Image}">
+    <Setter Property="Source" Value="/Assets/CheckFeedbackValidation.png" />
+    <Setter Property="Stretch" Value="Uniform" />
+    <Setter Property="RenderOptions.BitmapScalingMode" Value="HighQuality" />
+  </Style>
+  <Style x:Key="FeedbackEmojiSelectedBorderEllipseStyle" TargetType="{x:Type Ellipse}">
+    <Setter Property="Fill" Value="{DynamicResource Transparent}" />
+    <Setter Property="Stroke" Value="{DynamicResource ColorBrushEA6900}" />
+    <Setter Property="StrokeThickness" Value="2" />
+    <Setter Property="Width" Value="40" />
+    <Setter Property="Height" Value="40" />
+    <Setter Property="HorizontalAlignment" Value="Center" />
+    <Setter Property="VerticalAlignment" Value="Center" />
+  </Style>
+  <Style x:Key="DiscardChangesButtonBindingTextStyle" TargetType="{x:Type Button}">
+    <Setter Property="Background" Value="{DynamicResource ColorBrushEA6900}" />
+    <Setter Property="Foreground" Value="{DynamicResource White}" />
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="{x:Type Button}">
+          <Border Name="btnBorder" Background="{TemplateBinding Control.Background}" BorderThickness="0" CornerRadius="20">
+            <TextBlock Name="btnText" HorizontalAlignment="Center" VerticalAlignment="Center" Panel.ZIndex="99" FontFamily="{DynamicResource MuseoSans500FontFamily}" FontSize="13" Text="{TemplateBinding ContentControl.Content}" />
+          </Border>
+          <ControlTemplate.Triggers>
+            <Trigger Property="UIElement.IsMouseOver" Value="True">
+              <Setter TargetName="btnBorder" Value="{DynamicResource ColorFCF1EC}" Property="Border.Background" />
+              <Setter TargetName="btnText" Value="{DynamicResource White}" Property="TextBlock.Foreground" />
+            </Trigger>
+          </ControlTemplate.Triggers>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
+  <Style x:Key="FeedbackTextBoxBorderStyle" TargetType="{x:Type Border}">
+    <Setter Property="BorderThickness" Value="1.2" />
+    <Setter Property="BorderBrush" Value="{DynamicResource ColorBFBFBF}" />
+  </Style>
+  <Style x:Key="EllipseHoverStyle" TargetType="{x:Type Ellipse}">
+    <Setter Property="Fill" Value="{StaticResource Transparent}" />
+    <Style.Triggers>
+      <Trigger Property="UIElement.IsMouseOver" Value="True">
+        <Setter Property="Fill" Value="{StaticResource ColorF2F2F6}" />
+      </Trigger>
+    </Style.Triggers>
+  </Style>
+  <Style x:Key="FreeTrialLineStyle" TargetType="{x:Type Line}">
+    <Setter Property="Stroke" Value="{StaticResource Color2B2B2D1A}" />
+  </Style>
+  <Style x:Key="FreeTrialFirstLineDotsStyle" TargetType="{x:Type Line}">
+    <Setter Property="Stroke" Value="{StaticResource ColorFF864A}" />
+  </Style>
+  <Style x:Key="PreferencesSideMenuImageStyle" TargetType="{x:Type Image}">
+    <Setter Property="Source" Value="/Assets/PreferencesSideMenuNotActive.png" />
+  </Style>
+  <Style x:Key="LocationListButtonStyle" TargetType="{x:Type Button}">
+    <Setter Property="Background" Value="#00FFFFFF" />
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="{x:Type Button}">
+          <Grid Background="{TemplateBinding Control.Background}">
+            <ContentPresenter />
+          </Grid>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
+  <Style x:Key="SubscribeButtonStyle" TargetType="{x:Type Button}">
+    <Setter Property="FontSize" Value="20" />
+    <Setter Property="FontFamily" Value="{DynamicResource MuseoSans700FontFamily}" />
+    <Setter Property="Height" Value="60" />
+    <Setter Property="Width" Value="275" />
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="{x:Type Button}">
+          <Border Padding="5" Background="{TemplateBinding Control.Background}" CornerRadius="32">
+            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+          </Border>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
+  <Style x:Key="ClearLogsButtonStyle" TargetType="{x:Type Button}">
+    <Setter Property="Foreground" Value="{DynamicResource Black}" />
+    <Setter Property="Background" Value="{DynamicResource ColorCCCCCC}" />
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate>
+          <Border Name="btnBorder" Background="{TemplateBinding Control.Background}" BorderThickness="0" CornerRadius="0">
+            <TextBlock Name="btnText" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="{DynamicResource MuseoSans500FontFamily}" FontSize="13" Text="Clear" />
+          </Border>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+    <Style.Triggers>
+      <Trigger Property="UIElement.IsMouseOver" Value="True">
+        <Setter Property="Foreground" Value="{DynamicResource White}" />
+        <Setter Property="Background" Value="{DynamicResource ColorFF864A}" />
+      </Trigger>
+    </Style.Triggers>
+  </Style>
+  <Style x:Key="DeleteLogsCancelButtonStyle" TargetType="{x:Type Button}">
+    <Setter Property="Foreground" Value="{DynamicResource Black}" />
+    <Setter Property="Background" Value="{DynamicResource ColorCCCCCC}" />
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate>
+          <Border Name="btnBorder" Background="{TemplateBinding Control.Background}" BorderThickness="0" CornerRadius="0">
+            <TextBlock Name="btnText" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="{DynamicResource MuseoSans500FontFamily}" FontSize="13" Text="Cancel" />
+          </Border>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+    <Style.Triggers>
+      <Trigger Property="UIElement.IsMouseOver" Value="True">
+        <Setter Property="Foreground" Value="{DynamicResource White}" />
+        <Setter Property="Background" Value="{DynamicResource ColorFF864A}" />
+      </Trigger>
+    </Style.Triggers>
+  </Style>
+  <Style x:Key="{x:Type ProgressBar}" TargetType="{x:Type ProgressBar}">
+    <Setter Property="Background" Value="{DynamicResource Color959596}" />
+    <Setter Property="Foreground" Value="{DynamicResource ColorFF864A}" />
+    <Setter Property="BorderThickness" Value="0" />
+  </Style>
+</ResourceDictionary>

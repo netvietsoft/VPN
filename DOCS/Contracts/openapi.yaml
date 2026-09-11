@@ -1,0 +1,91 @@
+openapi: 3.0.3
+info:
+  title: NextAI VPN & Residential Gateway Platform API
+  description: RESTful API for Residential Proxy Node Pool Management, Tenant Quota, and Dedicated Port Allocation.
+  version: 2.1.0
+servers:
+  - url: http://127.0.0.1:6033
+    description: Local Backend Service (Convertme.txt Port 6033)
+paths:
+  /api/v1/health:
+    get:
+      summary: Check system status and metrics
+      responses:
+        '200':
+          description: System is online and healthy
+
+  /api/v1/residential/nodes:
+    get:
+      summary: Get all residential IP nodes grouped by country
+      responses:
+        '200':
+          description: List of available residential proxy nodes
+
+  /api/v1/tenants:
+    get:
+      summary: List all client accounts / tenants
+      responses:
+        '200':
+          description: List of tenants
+    post:
+      summary: Create new client tenant
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                quotaGb:
+                  type: number
+                durationDays:
+                  type: integer
+      responses:
+        '200':
+          description: Tenant created successfully
+
+  /api/v1/proxy/generate:
+    post:
+      summary: Generate proxy connection credentials
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+                country:
+                  type: string
+                sessionId:
+                  type: string
+                durationMinutes:
+                  type: integer
+      responses:
+        '200':
+          description: Proxy strings for SOCKS5 and HTTP CONNECT
+
+  /api/v1/dedicated/allocate:
+    post:
+      summary: Allocate a dedicated local port from range 10001-10500
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                tenantId:
+                  type: string
+                country:
+                  type: string
+                city:
+                  type: string
+      responses:
+        '200':
+          description: Dedicated port allocated successfully

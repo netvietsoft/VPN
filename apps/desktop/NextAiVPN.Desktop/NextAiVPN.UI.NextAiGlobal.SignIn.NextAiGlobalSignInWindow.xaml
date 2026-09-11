@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Window x:Class="NextAiVPN.UI.NextAiGlobal.SignIn.NextAiGlobalSignInWindow" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:local="clr-namespace:NextAiVPN" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:wv2="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf" Title="NextAiVPN" Width="562" Height="647" FontFamily="{DynamicResource MuseoSans500FontFamily}" FontSize="12" Foreground="#2E2E33" Icon="/Assets/NextAiVPN/vpn_icon.ico" Style="{DynamicResource {x:Type Window}}" WindowStartupLocation="CenterScreen" xmlns:signin="clr-namespace:NextAiVPN.UI.NextAiGlobal.SignIn" Closing="Window_Closing" Loaded="SignInWindow_OnLoaded">
+  <WindowChrome.WindowChrome>
+    <WindowChrome CaptionHeight="34" />
+  </WindowChrome.WindowChrome>
+  <DockPanel>
+    <local:WindowHeader x:Name="WindowHeader" DockPanel.Dock="Top" />
+    <Grid>
+      <wv2:WebView2 Name="WebView2" Visibility="Collapsed" />
+      <WebBrowser Name="WebBrowser" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="Collapsed" />
+      <ProgressBar Name="ProgressBar" Width="270" Height="8" Margin="0" IsIndeterminate="True" Visibility="Collapsed" />
+    </Grid>
+  </DockPanel>
+</Window>

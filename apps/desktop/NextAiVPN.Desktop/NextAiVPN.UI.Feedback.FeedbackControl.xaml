@@ -1,0 +1,288 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<UserControl x:Class="NextAiVPN.UI.Feedback.FeedbackControl" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:b="http://schemas.microsoft.com/xaml/behaviors" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:feedbackValidationError="clr-namespace:NextAiVPN.UI.Feedback.FeedbackValidationError" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:nextaitechnologyVpn="clr-namespace:NextAiVPN" xmlns:resx="clr-namespace:NextAiVPN.Properties" xmlns:thankYou="clr-namespace:NextAiVPN.UI.Feedback.ThankYou" Style="{DynamicResource FeedbackControlUserControlStyle}" xmlns:feedback="clr-namespace:NextAiVPN.UI.Feedback" Width="{Binding Path=ControlWidth, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Height="{Binding Path=ControlHeight, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+  <StackPanel>
+    <Grid>
+      <nextaitechnologyVpn:FeedbackThankYou x:Name="FeedbackThankYou" HorizontalAlignment="Center" VerticalAlignment="Top" Visibility="{Binding Path=FeedbackThankYouVisibility, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+    </Grid>
+    <Grid>
+      <thankYou:FeedbackThankYou2 HorizontalAlignment="Center" VerticalAlignment="Top" Visibility="{Binding Path=IssueThankYouVisibility, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+    </Grid>
+    <StackPanel Orientation="Vertical" Visibility="{Binding Path=FeedbackContentVisibility, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+      <Grid Style="{DynamicResource FeedbackErrorGridBackgroundStyle}">
+        <nextaitechnologyVpn:FeedbackErrorMessage Margin="8,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Visibility="{Binding Path=FeedbackErrorVisibility, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+      </Grid>
+      <Grid Style="{DynamicResource FeedbackErrorGridBackgroundStyle}">
+        <feedbackValidationError:FeedbackValidationErrorMessage Margin="8,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Message="{Binding Path=IssueValidationErrorMessage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Visibility="{Binding Path=IssueValidationErrorMessageVisibility, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+      </Grid>
+      <StackPanel Margin="0,20,0,0" Orientation="Horizontal">
+        <TextBlock Width="232" Height="24" Margin="24,0,0,0" FontFamily="{DynamicResource MuseoSans700FontFamily}" FontSize="16" Style="{DynamicResource FeedbackDefaultTextblockHeaderForegroundStyle}" Text="We’d love your feedback" />
+      </StackPanel>
+      <TextBlock Width="232" Margin="24,0,0,0" HorizontalAlignment="Left" FontFamily="{DynamicResource MuseoSans500FontFamily}" FontSize="12" LineHeight="16" Style="{DynamicResource FeedbackDefaultTextblockForegroundStyle}" Text="Tell us what’s working or report any problems you’ve noticed." TextWrapping="Wrap" />
+      <TabControl Background="#00FFFFFF" BorderBrush="#00FFFFFF" BorderThickness="0" SelectedIndex="{Binding SelectedTabIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+        <TabItem Style="{DynamicResource FeedbackTabItemStyle}">
+          <HeaderedContentControl.Header>
+            <Grid>
+              <Rectangle Width="120" Height="30" Panel.ZIndex="99" Fill="#00FFFFFF">
+                <b:Interaction.Triggers>
+                  <b:EventTrigger EventName="MouseDown">
+                    <b:InvokeCommandAction Command="{Binding SendFeedbackTabSelectedCommand}" />
+                  </b:EventTrigger>
+                </b:Interaction.Triggers>
+              </Rectangle>
+              <Border Width="100" Margin="12,8,0,0" BorderBrush="{Binding FeedbackTabHeaderBorderBrush, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" BorderThickness="{Binding FeedbackTabHeaderBorderThickness, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                <TextBlock Margin="0,0,0,0" VerticalAlignment="Center" FontFamily="{DynamicResource MuseoSans700FontFamily}" FontSize="14" Text="Send feedback" Foreground="{Binding FeedbackTabHeaderForeground, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+              </Border>
+            </Grid>
+          </HeaderedContentControl.Header>
+          <StackPanel Margin="12,0,0,0">
+            <StackPanel Orientation="Vertical">
+              <Grid Width="200" Height="50" Margin="12,0,0,0" HorizontalAlignment="Left" ZIndex="99" Background="#00FFFFFF">
+                <Grid.ColumnDefinitions>
+                  <ColumnDefinition />
+                  <ColumnDefinition />
+                  <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <Grid Column="1" Margin="-25,0,0,0">
+                  <Ellipse Style="{DynamicResource FeedbackEmojiSelectedBorderEllipseStyle}" Visibility="{Binding MadEmojiVisibility, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                  <Image Height="36" HorizontalAlignment="Center" RenderOptions.BitmapScalingMode="HighQuality" Source="/assets/mad.png" Stretch="Uniform">
+                    <FrameworkElement.Style>
+                      <Style TargetType="{x:Type Image}">
+                        <Setter Property="Width" Value="{Binding Path=MadWidth, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                        <Setter Property="Height" Value="{Binding Path=MadHeight, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                        <Style.Triggers>
+                          <Trigger Property="UIElement.IsMouseOver" Value="True">
+                            <Setter Property="Width" Value="32" />
+                            <Setter Property="Height" Value="32" />
+                            <Setter Property="FrameworkElement.Cursor" Value="Hand" />
+                          </Trigger>
+                        </Style.Triggers>
+                      </Style>
+                    </FrameworkElement.Style>
+                    <b:Interaction.Triggers>
+                      <b:EventTrigger EventName="MouseDown">
+                        <b:InvokeCommandAction Command="{Binding MadMouseDownCommand}" />
+                      </b:EventTrigger>
+                    </b:Interaction.Triggers>
+                  </Image>
+                </Grid>
+                <Grid Column="0">
+                  <Ellipse Style="{DynamicResource FeedbackEmojiSelectedBorderEllipseStyle}" Visibility="{Binding MahEmojiVisibility, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                  <Image Height="36" HorizontalAlignment="Center" RenderOptions.BitmapScalingMode="HighQuality" Source="/assets/mah.png" Stretch="Uniform">
+                    <FrameworkElement.Style>
+                      <Style TargetType="{x:Type Image}">
+                        <Setter Property="Width" Value="{Binding Path=MahWidth, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                        <Setter Property="Height" Value="{Binding Path=MahHeight, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                        <Style.Triggers>
+                          <Trigger Property="UIElement.IsMouseOver" Value="True">
+                            <Setter Property="Width" Value="32" />
+                            <Setter Property="Height" Value="32" />
+                            <Setter Property="FrameworkElement.Cursor" Value="Hand" />
+                          </Trigger>
+                        </Style.Triggers>
+                      </Style>
+                    </FrameworkElement.Style>
+                    <b:Interaction.Triggers>
+                      <b:EventTrigger EventName="MouseDown">
+                        <b:InvokeCommandAction Command="{Binding MahMouseDownCommand}" />
+                      </b:EventTrigger>
+                    </b:Interaction.Triggers>
+                  </Image>
+                </Grid>
+                <Grid Column="2" Margin="-50,0,0,0">
+                  <Ellipse Style="{DynamicResource FeedbackEmojiSelectedBorderEllipseStyle}" Visibility="{Binding SmileEmojiVisibility, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                  <Image Height="36" HorizontalAlignment="Center" RenderOptions.BitmapScalingMode="HighQuality" Source="/assets/smile.png" Stretch="Uniform">
+                    <FrameworkElement.Style>
+                      <Style TargetType="{x:Type Image}">
+                        <Setter Property="Width" Value="{Binding Path=SmileWidth, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                        <Setter Property="Height" Value="{Binding Path=SmileHeight, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                        <Style.Triggers>
+                          <Trigger Property="UIElement.IsMouseOver" Value="True">
+                            <Setter Property="Width" Value="32" />
+                            <Setter Property="Height" Value="32" />
+                            <Setter Property="FrameworkElement.Cursor" Value="Hand" />
+                          </Trigger>
+                        </Style.Triggers>
+                      </Style>
+                    </FrameworkElement.Style>
+                    <b:Interaction.Triggers>
+                      <b:EventTrigger EventName="MouseDown">
+                        <b:InvokeCommandAction Command="{Binding SmileMouseDownCommand}" />
+                      </b:EventTrigger>
+                    </b:Interaction.Triggers>
+                  </Image>
+                </Grid>
+              </Grid>
+            </StackPanel>
+            <StackPanel Orientation="Vertical">
+              <StackPanel Orientation="Horizontal">
+                <TextBlock Margin="12,12,0,0" FontFamily="{DynamicResource MuseoSans500FontFamily}" FontSize="12" Style="{DynamicResource FeedbackDefaultTextblockHeaderForegroundStyle}" Text="Email" />
+                <TextBlock Margin="5,12,0,0" FontFamily="{DynamicResource MuseoSans500FontFamily}" FontSize="12" Style="{DynamicResource FeedbackGrayForegroundColorTextBlockStyle}" Text="Optional" />
+              </StackPanel>
+              <Border Name="EmailBorderTextBox" Margin="12,12,12,0" Style="{DynamicResource FeedbackTextBoxBorderStyle}" BorderBrush="{Binding Path=EmailBorderBrush, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                <Grid Margin="5">
+                  <Image Width="13.3" Height="13.3" Margin="0,0,5,0" HorizontalAlignment="Right" Panel.ZIndex="99" Style="{DynamicResource FeedbackCheckValidationImageStyle}" Visibility="{Binding FeedbackCheckValidationImageVisibility, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                  <TextBox Name="EmailTextBox" Height="32" Padding="5" AcceptsReturn="True" BorderThickness="0" Focusable="True" FontFamily="{DynamicResource MuseoSans500FontFamily}" FontSize="14" Style="{DynamicResource TextBoxBackgroundStyle}" TextAlignment="Left" TextWrapping="Wrap" CaretBrush="{Binding Path=EmailCaretBrush, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Foreground="{Binding Path=EmailForeground, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Text="{Binding Path=EmailText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                    <b:Interaction.Triggers>
+                      <b:EventTrigger EventName="TextChanged">
+                        <b:InvokeCommandAction Command="{Binding EmailTextChangedCommand}" />
+                      </b:EventTrigger>
+                      <b:EventTrigger EventName="LostFocus">
+                        <b:InvokeCommandAction Command="{Binding EmailTextLostFocusCommand}" />
+                      </b:EventTrigger>
+                      <b:EventTrigger EventName="GotFocus">
+                        <b:InvokeCommandAction Command="{Binding EmailTextGotFocusCommand}" />
+                      </b:EventTrigger>
+                      <b:EventTrigger EventName="PreviewMouseDown">
+                        <b:InvokeCommandAction Command="{Binding EmailTextLeftMouseDownCommand}" />
+                      </b:EventTrigger>
+                    </b:Interaction.Triggers>
+                  </TextBox>
+                </Grid>
+              </Border>
+              <TextBlock Margin="12,8,0,0" FontFamily="{DynamicResource MuseoSans500FontFamily}" FontSize="10" Style="{DynamicResource FeedbackGrayForegroundColorTextBlockStyle}" Text="We'll only use this email to contact you about your feedback." />
+              <StackPanel Margin="12,12,0,0">
+                <TextBlock FontFamily="{DynamicResource MuseoSans500FontFamily}" FontSize="12" Style="{DynamicResource FeedbackDefaultTextblockHeaderForegroundStyle}" Text="Send Feedback" />
+              </StackPanel>
+              <StackPanel>
+                <Border Name="BorderTextBox" Width="Auto" Height="105" Margin="12,12,12,0" Style="{DynamicResource FeedbackTextBoxBorderStyle}" BorderBrush="{Binding Path=FeedbackBorderBrush, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                  <Grid>
+                    <Grid.ColumnDefinitions>
+                      <ColumnDefinition Width="315*" />
+                      <ColumnDefinition Width="19*" />
+                    </Grid.ColumnDefinitions>
+                    <TextBox Name="FeedbackTextBox" Grid.ColumnSpan="2" Margin="5" Padding="5" AcceptsReturn="True" BorderThickness="0" Focusable="True" FontFamily="{DynamicResource MuseoSans500FontFamily}" FontSize="14" MaxLength="512" Style="{DynamicResource TextBoxBackgroundStyle}" TextAlignment="Left" TextWrapping="Wrap" Foreground="{Binding Path=FeedbackForeground, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Text="{Binding Path=FeedbackText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                      <b:Interaction.Triggers>
+                        <b:EventTrigger EventName="TextChanged">
+                          <b:InvokeCommandAction Command="{Binding FeedbackTextChangedCommand}" />
+                        </b:EventTrigger>
+                        <b:EventTrigger EventName="LostFocus">
+                          <b:InvokeCommandAction Command="{Binding FeedbackTextLostFocusCommand}" />
+                        </b:EventTrigger>
+                        <b:EventTrigger EventName="GotFocus">
+                          <b:InvokeCommandAction Command="{Binding FeedbackTextGotFocusCommand}" />
+                        </b:EventTrigger>
+                        <b:EventTrigger EventName="PreviewMouseDown">
+                          <b:InvokeCommandAction Command="{Binding FeedbackTextLeftMouseDownCommand}" />
+                        </b:EventTrigger>
+                      </b:Interaction.Triggers>
+                    </TextBox>
+                  </Grid>
+                </Border>
+                <TextBlock Margin="12,8,0,0" FontFamily="{DynamicResource MuseoSans500FontFamily}" FontSize="10" Style="{DynamicResource FeedbackGrayForegroundColorTextBlockStyle}" Text="Write at least 20 characters." />
+              </StackPanel>
+              <DockPanel Margin="0,-15,0,0" Visibility="Visible">
+                <StackPanel Orientation="Horizontal" Visibility="{Binding Path=SendDiagnosticFileVisibility, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                  <CheckBox Margin="12,5" Style="{DynamicResource CheckBoxStyle2}" IsChecked="{Binding Path=NeedToSendDiagnosticFile, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                  <TextBlock Margin="-5,5,0,0" FontFamily="{DynamicResource MuseoSans500FontFamily}" FontSize="12" FontWeight="Normal" Style="{DynamicResource SendDiagnosticFileTextForegroundTextBlockStyle}" Text="{x:Static resx:Resources.IncludeDialogFileText}" />
+                </StackPanel>
+                <Grid Margin="0,0,5,0" HorizontalAlignment="Right">
+                  <TextBlock Margin="0,0,35,0" HorizontalAlignment="Right" FontFamily="{DynamicResource MuseoSans700FontFamily}" FontSize="10" FontWeight="Bold" Style="{DynamicResource FeedbackTextblockForegroundStyle}" Foreground="{Binding Path=CharacterCounterForeground, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Text="{Binding Path=CharacterCounter, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                  <TextBlock Margin="0,0,30,0" HorizontalAlignment="Right" FontFamily="{DynamicResource MuseoSans700FontFamily}" FontSize="10" Style="{DynamicResource FeedbackTextblockForegroundStyle}" Text="/" />
+                  <TextBlock Margin="0,0,12,0" HorizontalAlignment="Right" FontFamily="{DynamicResource MuseoSans700FontFamily}" FontSize="10" Style="{DynamicResource FeedbackTextblockForegroundStyle}" Text="512" />
+                </Grid>
+              </DockPanel>
+              <Grid Height="32" Margin="0,12,0,12" VerticalAlignment="Bottom">
+                <Button Width="315" Height="32" VerticalAlignment="Bottom" HorizontalContentAlignment="Center" Style="{DynamicResource BtnSendFeedbackButtonStyle}" Command="{Binding SendFeedbackButtonClickCommand}" Content="{Binding Path=SendFeedbackButtonContent, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding Path=IsSendFeedbackButtonEnable, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                <Image Name="SendSpinner" Width="15" Height="15" HorizontalAlignment="Center" VerticalAlignment="Center" Style="{DynamicResource ConnectButtonSpinnerImageStyle}" Visibility="{Binding Path=SpinnerButtonVisibility, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+              </Grid>
+            </StackPanel>
+          </StackPanel>
+        </TabItem>
+        <TabItem Style="{DynamicResource FeedbackTabItemStyle}">
+          <HeaderedContentControl.Header>
+            <Grid>
+              <Rectangle Width="100" Height="30" Margin="-15,0,0,0" Panel.ZIndex="99" Fill="#00FFFFFF">
+                <b:Interaction.Triggers>
+                  <b:EventTrigger EventName="MouseDown">
+                    <b:InvokeCommandAction Command="{Binding ReportAnIssueTabSelectedCommand}" />
+                  </b:EventTrigger>
+                </b:Interaction.Triggers>
+              </Rectangle>
+              <Border Margin="-15,8,0,0" BorderBrush="{Binding IssueTabHeaderBorderBrush, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" BorderThickness="{Binding IssueTabHeaderBorderThickness, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                <TextBlock VerticalAlignment="Center" FontFamily="{DynamicResource MuseoSans700FontFamily}" FontSize="14" Text="Report a problem" Foreground="{Binding IssueTabHeaderForeground, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+              </Border>
+            </Grid>
+          </HeaderedContentControl.Header>
+          <StackPanel Margin="12,0,0,0" Orientation="Vertical">
+            <StackPanel Margin="12,12,0,0" Orientation="Horizontal">
+              <TextBlock FontFamily="{DynamicResource MuseoSans500FontFamily}" FontSize="12" Style="{DynamicResource FeedbackDefaultTextblockHeaderForegroundStyle}" Text="Email" />
+            </StackPanel>
+            <Border Margin="12,12,12,0" Style="{DynamicResource FeedbackTextBoxBorderStyle}" BorderBrush="{Binding Path=IssueEmailBorderBrush, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" BorderThickness="{Binding Path=IssueEmailBorderThickness, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+              <Grid Margin="5">
+                <Image Width="13.3" Height="13.3" Margin="0,0,5,0" HorizontalAlignment="Right" Panel.ZIndex="99" Style="{DynamicResource FeedbackCheckValidationImageStyle}" Visibility="{Binding FeedbackIssueCheckValidationImageVisibility, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                <TextBox Height="32" Padding="5" AcceptsReturn="True" BorderThickness="0" Focusable="True" FontFamily="{DynamicResource MuseoSans500FontFamily}" FontSize="14" Style="{DynamicResource TextBoxBackgroundStyle}" TextAlignment="Left" TextWrapping="Wrap" CaretBrush="{Binding Path=IssueEmailCaretBrush, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Foreground="{Binding Path=IssueEmailForeground, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Text="{Binding Path=IssueEmailText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                  <b:Interaction.Triggers>
+                    <b:EventTrigger EventName="TextChanged">
+                      <b:InvokeCommandAction Command="{Binding IssueEmailTextChangedCommand}" />
+                    </b:EventTrigger>
+                    <b:EventTrigger EventName="LostFocus">
+                      <b:InvokeCommandAction Command="{Binding IssueEmailTextLostFocusCommand}" />
+                    </b:EventTrigger>
+                    <b:EventTrigger EventName="GotFocus">
+                      <b:InvokeCommandAction Command="{Binding IssueEmailTextGotFocusCommand}" />
+                    </b:EventTrigger>
+                    <b:EventTrigger EventName="PreviewMouseDown">
+                      <b:InvokeCommandAction Command="{Binding IssueEmailTextLeftMouseDownCommand}" />
+                    </b:EventTrigger>
+                  </b:Interaction.Triggers>
+                </TextBox>
+              </Grid>
+            </Border>
+            <Grid Margin="12,4,0,0">
+              <TextBlock FontFamily="{DynamicResource MuseoSans500FontFamily}" FontSize="10" Style="{DynamicResource FeedbackGrayForegroundColorTextBlockStyle}" Text="We’ll only use this to follow up this issue." Visibility="{Binding EmailUnderDescriptionVisibility, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+              <StackPanel Orientation="Horizontal" Visibility="{Binding EmailErrorMessageVisibility, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                <Image Width="13.3" Height="13.3" Margin="0,0,3,0" Style="{DynamicResource FeedbackDescriptionErrorImageStyle}" />
+                <TextBlock FontFamily="{DynamicResource MuseoSans500FontFamily}" FontSize="10" Style="{DynamicResource FeedbackRedForegroundColorTextBlockStyle}" Text="{Binding EmailErrorMessage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+              </StackPanel>
+            </Grid>
+            <StackPanel Margin="12,12,0,0" Orientation="Horizontal">
+              <TextBlock FontFamily="{DynamicResource MuseoSans500FontFamily}" FontSize="12" Style="{DynamicResource FeedbackDefaultTextblockHeaderForegroundStyle}" Text="Description of the issue" />
+            </StackPanel>
+            <StackPanel>
+              <Border Name="BorderTextBox1" Width="Auto" Height="105" Margin="12,12,12,0" Style="{DynamicResource FeedbackTextBoxBorderStyle}" BorderBrush="{Binding Path=IssueTextBorderBrush, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" BorderThickness="{Binding Path=IssueTextBorderThickness, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                <TextBox Name="FeedbackTextBox1" Margin="5" Padding="5" AcceptsReturn="True" BorderThickness="0" Focusable="True" FontFamily="{DynamicResource MuseoSans500FontFamily}" FontSize="14" MaxLength="512" Style="{DynamicResource TextBoxBackgroundStyle}" TextAlignment="Left" TextWrapping="Wrap" Foreground="{Binding Path=IssueTextForeground, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Text="{Binding Path=IssueText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                  <b:Interaction.Triggers>
+                    <b:EventTrigger EventName="TextChanged">
+                      <b:InvokeCommandAction Command="{Binding IssueTextChangedCommand}" />
+                    </b:EventTrigger>
+                    <b:EventTrigger EventName="LostFocus">
+                      <b:InvokeCommandAction Command="{Binding IssueTextLostFocusCommand}" />
+                    </b:EventTrigger>
+                    <b:EventTrigger EventName="GotFocus">
+                      <b:InvokeCommandAction Command="{Binding IssueTextGotFocusCommand}" />
+                    </b:EventTrigger>
+                    <b:EventTrigger EventName="PreviewMouseDown">
+                      <b:InvokeCommandAction Command="{Binding IssueTextLeftMouseDownCommand}" />
+                    </b:EventTrigger>
+                  </b:Interaction.Triggers>
+                </TextBox>
+              </Border>
+              <Grid Margin="12,4,0,0">
+                <TextBlock FontFamily="{DynamicResource MuseoSans500FontFamily}" FontSize="10" Style="{DynamicResource FeedbackGrayForegroundColorTextBlockStyle}" Text="Write at least 20 characters." Visibility="{Binding IssueTextUnderDescriptionVisibility, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                <StackPanel Orientation="Horizontal" Visibility="{Binding IssueTextErrorMessageVisibility, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                  <Image Width="13.3" Height="13.3" Margin="0,0,3,0" Style="{DynamicResource FeedbackDescriptionErrorImageStyle}" />
+                  <TextBlock FontFamily="{DynamicResource MuseoSans500FontFamily}" FontSize="10" Style="{DynamicResource FeedbackRedForegroundColorTextBlockStyle}" Text="{Binding IssueTextErrorMessage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                </StackPanel>
+              </Grid>
+            </StackPanel>
+            <DockPanel Margin="0,8,0,0" Visibility="Visible">
+              <StackPanel Orientation="Horizontal">
+                <CheckBox Margin="12,5" Style="{DynamicResource CheckBoxStyle2}" IsChecked="{Binding Path=NeedToSendDiagnosticFileIssue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                <TextBlock Margin="-5,5,0,0" FontFamily="{DynamicResource MuseoSans500FontFamily}" FontSize="12" FontWeight="Normal" Style="{DynamicResource SendDiagnosticFileTextForegroundTextBlockStyle}" Text="{Binding IssueAttachFileText}" />
+              </StackPanel>
+              <Grid Margin="0,-20,5,0" HorizontalAlignment="Right">
+                <TextBlock Margin="0,0,35,0" HorizontalAlignment="Right" FontFamily="{DynamicResource MuseoSans700FontFamily}" FontSize="10" FontWeight="Bold" Style="{DynamicResource FeedbackTextblockForegroundStyle}" Foreground="{Binding Path=IssueCharacterCounterForeground, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Text="{Binding Path=IssueCharacterCounter, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                <TextBlock Margin="0,0,30,0" HorizontalAlignment="Right" FontFamily="{DynamicResource MuseoSans700FontFamily}" FontSize="10" Style="{DynamicResource FeedbackTextblockForegroundStyle}" Text="/" />
+                <TextBlock Margin="0,0,12,0" HorizontalAlignment="Right" FontFamily="{DynamicResource MuseoSans700FontFamily}" FontSize="10" Style="{DynamicResource FeedbackTextblockForegroundStyle}" Text="512" />
+              </Grid>
+            </DockPanel>
+            <Grid Height="32" Margin="0,12,0,12" VerticalAlignment="Bottom">
+              <Button Width="315" Height="32" VerticalAlignment="Bottom" HorizontalContentAlignment="Center" Style="{DynamicResource BtnSendFeedbackButtonStyle}" Command="{Binding ReportAnIssueButtonClickCommand}" Content="{Binding Path=SendIssueButtonContent, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding Path=IsSendIssueButtonEnable, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+              <Image Name="SendIssueSpinner" Width="15" Height="15" HorizontalAlignment="Center" VerticalAlignment="Center" Style="{DynamicResource ConnectButtonSpinnerImageStyle}" Visibility="{Binding Path=SpinnerButtonVisibility, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            </Grid>
+          </StackPanel>
+        </TabItem>
+      </TabControl>
+    </StackPanel>
+  </StackPanel>
+</UserControl>

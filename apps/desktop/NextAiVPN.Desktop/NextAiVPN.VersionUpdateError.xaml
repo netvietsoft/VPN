@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Window x:Class="NextAiVPN.VersionUpdateError" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:nextaitechnologyVpn="clr-namespace:NextAiVPN" Title="" Width="386" Height="350" Icon="/Assets/vpn_icon.ico" ResizeMode="NoResize" Style="{DynamicResource {x:Type Window}}" WindowStartupLocation="CenterScreen" WindowState="Normal" Loaded="VersionUpdateError_OnLoaded">
+  <WindowChrome.WindowChrome>
+    <WindowChrome CaptionHeight="34" />
+  </WindowChrome.WindowChrome>
+  <DockPanel>
+    <nextaitechnologyVpn:WindowHeader x:Name="WindowHeader" DockPanel.Dock="Top" />
+    <Grid>
+      <StackPanel>
+        <Image Width="40" Height="40" Margin="0,50,0,10" HorizontalAlignment="Center" Source="/Assets/errorTap.png" />
+        <TextBlock Margin="0,0,0,20" HorizontalAlignment="Center" FontFamily="{DynamicResource MuseoSans700FontFamily}" FontSize="20" Style="{DynamicResource NewUserControlTextblockHeaderForegroundStyle}" Text="An error occured!" />
+        <TextBlock Name="Description" Width="340" FontFamily="{DynamicResource MuseoSans700FontFamily}" FontSize="16" LineHeight="20" Style="{DynamicResource NewUserControlTextblockForegroundStyle}" TextAlignment="Center" TextWrapping="Wrap" />
+        <Button Width="180" Height="48" Margin="0,45,0,0" HorizontalAlignment="Center" Content="Ok" FontSize="20" Style="{DynamicResource PrimaryRoundedButtonStyle}" Click="Button_Click" />
+      </StackPanel>
+    </Grid>
+  </DockPanel>
+</Window>

@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NextAiVPN Design Tokens - Clean Light & Emerald Green (WPF XAML Ready)</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-body: #f8fafc;
+            --bg-card: #ffffff;
+            --border-subtle: #e2e8f0;
+            --border-emerald: #bbf7d0;
+            
+            --emerald-900: #064e3b;
+            --emerald-800: #065f46;
+            --emerald-700: #047857;
+            --emerald-600: #059669;
+            --emerald-500: #10b981;
+            --emerald-100: #dcfce7;
+            --emerald-50: #f0fdf4;
+            
+            --text-primary: #0f172a;
+            --text-secondary: #334155;
+            --text-muted: #64748b;
+            
+            --font-main: 'Plus Jakarta Sans', -apple-system, sans-serif;
+            --font-heading: 'Outfit', sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+            
+            --shadow-card: 0 4px 14px -2px rgba(15, 23, 42, 0.06), 0 0 0 1px rgba(226, 232, 240, 0.8);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-body);
+            color: var(--text-primary);
+            font-family: var(--font-main);
+            padding: 36px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .token-header {
+            margin-bottom: 32px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .token-header h1 {
+            font-family: var(--font-heading);
+            font-size: 26px;
+            font-weight: 800;
+            color: var(--emerald-900);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .token-header p {
+            color: var(--text-secondary);
+            font-size: 14px;
+            margin-top: 6px;
+        }
+
+        .section-title {
+            font-family: var(--font-heading);
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--emerald-800);
+            margin: 28px 0 14px 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Swatches Grid */
+        .swatch-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .swatch-card {
+            background: #ffffff;
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            padding: 14px;
+            box-shadow: var(--shadow-card);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .swatch-color-box {
+            height: 60px;
+            border-radius: 8px;
+            border: 1px solid rgba(0,0,0,0.06);
+        }
+
+        .swatch-name {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .swatch-hex {
+            font-family: var(--font-mono);
+            font-size: 12px;
+            color: var(--emerald-700);
+            font-weight: 600;
+        }
+
+        .swatch-xaml {
+            font-family: var(--font-mono);
+            font-size: 10px;
+            color: var(--text-secondary);
+            background: #f1f5f9;
+            padding: 4px 6px;
+            border-radius: 4px;
+            user-select: all;
+        }
+
+        /* Code Block */
+        .code-snippet-box {
+            background: #0f172a;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 24px;
+            position: relative;
+        }
+
+        .code-snippet-box pre {
+            font-family: var(--font-mono);
+            font-size: 12px;
+            color: #d1fae5;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            line-height: 1.5;
+        }
+
+        .copy-btn {
+            position: absolute;
+            top: 14px;
+            right: 14px;
+            background: rgba(16, 185, 129, 0.2);
+            border: 1px solid rgba(16, 185, 129, 0.4);
+            color: #6ee7b7;
+            font-family: var(--font-main);
+            font-size: 11px;
+            font-weight: 700;
+            padding: 5px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .copy-btn:hover {
+            background: var(--emerald-600);
+            color: #ffffff;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="token-header">
+            <h1>
+                <svg style="width: 28px; height: 28px; fill: var(--emerald-700);" viewBox="0 0 24 24"><path d="M12 3c-4.97 0-9 4.03-9 9 0 2.12.74 4.07 1.97 5.61L4.35 19.4c-.39.39-.39 1.02 0 1.41.39.39 1.02.39 1.41 0l1.9-1.9C9.36 19.64 10.63 20 12 20c4.97 0 9-4.03 9-9s-4.03-9-9-9zm0 15c-3.31 0-6-2.69-6-6s2.69-6 6-6 6 2.69 6 6-2.69 6-6 6z"/></svg>
+                NextAiVPN Design Tokens & WPF XAML Dictionary (Clean Light Edition)
+            </h1>
+            <p>Hệ thống Design Tokens chuẩn Nền Sáng Hiện Đại với Điểm Nhấn Xanh Ngọc Lục Bảo (Emerald Accents), sẵn sàng sao chép trực tiếp vào <code>theme.light.xaml</code> / <code>theme.dark.xaml</code> (.NET 10 WPF) và CMS CSS.</p>
+        </div>
+
+        <!-- 1. Color Swatches -->
+        <div class="section-title">1. Bảng Màu Chuẩn (Color Palette & WPF Brushes)</div>
+        <div class="swatch-grid">
+            
+            <div class="swatch-card">
+                <div class="swatch-color-box" style="background: #ffffff;"></div>
+                <div class="swatch-name">Window Background (Trắng Tinh)</div>
+                <span class="swatch-hex">#ffffff</span>
+                <span class="swatch-xaml">&lt;SolidColorBrush x:Key="BrushBgWindow" Color="#FFFFFF"/&gt;</span>
+            </div>
+
+            <div class="swatch-card">
+                <div class="swatch-color-box" style="background: #f8fafc;"></div>
+                <div class="swatch-name">Subtle Background (Xám Nhạt)</div>
+                <span class="swatch-hex">#f8fafc</span>
+                <span class="swatch-xaml">&lt;SolidColorBrush x:Key="BrushBgSubtle" Color="#F8FAFC"/&gt;</span>
+            </div>
+
+            <div class="swatch-card">
+                <div class="swatch-color-box" style="background: #059669;"></div>
+                <div class="swatch-name">Emerald 600 (Nút Bấm & Điểm Nhấn)</div>
+                <span class="swatch-hex">#059669</span>
+                <span class="swatch-xaml">&lt;SolidColorBrush x:Key="BrushEmerald600" Color="#059669"/&gt;</span>
+            </div>
+
+            <div class="swatch-card">
+                <div class="swatch-color-box" style="background: #064e3b;"></div>
+                <div class="swatch-name">Emerald 900 (Tiêu Đề Đậm)</div>
+                <span class="swatch-hex">#064e3b</span>
+                <span class="swatch-xaml">&lt;SolidColorBrush x:Key="BrushEmerald900" Color="#064E3B"/&gt;</span>
+            </div>
+
+            <div class="swatch-card">
+                <div class="swatch-color-box" style="background: #dcfce7;"></div>
+                <div class="swatch-name">Emerald 100 (Huy Hiệu / Tag)</div>
+                <span class="swatch-hex">#dcfce7</span>
+                <span class="swatch-xaml">&lt;SolidColorBrush x:Key="BrushEmerald100" Color="#DCFCE7"/&gt;</span>
+            </div>
+
+            <div class="swatch-card">
+                <div class="swatch-color-box" style="background: #0f172a;"></div>
+                <div class="swatch-name">Text Primary (Chữ Chính)</div>
+                <span class="swatch-hex">#0f172a</span>
+                <span class="swatch-xaml">&lt;SolidColorBrush x:Key="BrushTextPrimary" Color="#0F172A"/&gt;</span>
+            </div>
+
+        </div>
+
+        <!-- 2. WPF XAML ResourceDictionary -->
+        <div class="section-title">2. Đoạn Mã XAML ResourceDictionary Chuẩn (Dành cho theme.light.xaml)</div>
+        <div class="code-snippet-box">
+            <button class="copy-btn" onclick="copyXAML()">Copy XAML</button>
+            <pre id="xaml-code">&lt;!-- NextAiVPN Clean Light & Emerald Theme Dictionary --&gt;
+&lt;ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"&gt;
+
+    &lt;!-- Color Definitions --&gt;
+    &lt;Color x:Key="ColorBgWindow"&gt;#FFFFFF&lt;/Color&gt;
+    &lt;Color x:Key="ColorBgSubtle"&gt;#F8FAFC&lt;/Color&gt;
+    &lt;Color x:Key="ColorBorderSubtle"&gt;#E2E8F0&lt;/Color&gt;
+    &lt;Color x:Key="ColorBorderEmerald"&gt;#BBF7D0&lt;/Color&gt;
+    &lt;Color x:Key="ColorEmerald600"&gt;#059669&lt;/Color&gt;
+    &lt;Color x:Key="ColorEmerald700"&gt;#047857&lt;/Color&gt;
+    &lt;Color x:Key="ColorEmerald900"&gt;#064E3B&lt;/Color&gt;
+    &lt;Color x:Key="ColorEmerald100"&gt;#DCFCE7&lt;/Color&gt;
+    &lt;Color x:Key="ColorTextPrimary"&gt;#0F172A&lt;/Color&gt;
+    &lt;Color x:Key="ColorTextSecondary"&gt;#334155&lt;/Color&gt;
+    &lt;Color x:Key="ColorTextMuted"&gt;#64748B&lt;/Color&gt;
+
+    &lt;!-- SolidColorBrush Resources --&gt;
+    &lt;SolidColorBrush x:Key="BrushBgWindow" Color="{StaticResource ColorBgWindow}"/&gt;
+    &lt;SolidColorBrush x:Key="BrushBgSubtle" Color="{StaticResource ColorBgSubtle}"/&gt;
+    &lt;SolidColorBrush x:Key="BrushBorderSubtle" Color="{StaticResource ColorBorderSubtle}"/&gt;
+    &lt;SolidColorBrush x:Key="BrushBorderEmerald" Color="{StaticResource ColorBorderEmerald}"/&gt;
+    &lt;SolidColorBrush x:Key="BrushEmerald600" Color="{StaticResource ColorEmerald600}"/&gt;
+    &lt;SolidColorBrush x:Key="BrushEmerald700" Color="{StaticResource ColorEmerald700}"/&gt;
+    &lt;SolidColorBrush x:Key="BrushEmerald900" Color="{StaticResource ColorEmerald900}"/&gt;
+    &lt;SolidColorBrush x:Key="BrushEmerald100" Color="{StaticResource ColorEmerald100}"/&gt;
+    &lt;SolidColorBrush x:Key="BrushTextPrimary" Color="{StaticResource ColorTextPrimary}"/&gt;
+    &lt;SolidColorBrush x:Key="BrushTextSecondary" Color="{StaticResource ColorTextSecondary}"/&gt;
+    &lt;SolidColorBrush x:Key="BrushTextMuted" Color="{StaticResource ColorTextMuted}"/&gt;
+
+&lt;/ResourceDictionary&gt;</pre>
+        </div>
+
+        <!-- 3. National Flag Standard Tokens -->
+        <div class="section-title">3. Quy Chuẩn Hiển Thị Quốc Kỳ Tròn (Circular National Flag Tokens)</div>
+        <div class="swatch-grid">
+            <div class="swatch-card">
+                <div class="swatch-name">Flag Dimensions (Tỉ lệ tròn 1:1 Circle)</div>
+                <span class="swatch-hex">Width: 28px | Height: 28px (Avatar Badge)</span>
+                <span class="swatch-xaml">&lt;Border Width="28" Height="28" CornerRadius="14" BorderThickness="1.5" BorderBrush="#E2E8F0"&gt;</span>
+            </div>
+            <div class="swatch-card">
+                <div class="swatch-name">Flag Image Stretch (Khớp tâm tròn hoàn hảo)</div>
+                <span class="swatch-hex">Stretch="UniformToFill"</span>
+                <span class="swatch-xaml">&lt;Image Stretch="UniformToFill" RenderOptions.BitmapScalingMode="HighQuality"/&gt;</span>
+            </div>
+            <div class="swatch-card">
+                <div class="swatch-name">Flag Border Radius (Hình tròn 50% / Circle Badge)</div>
+                <span class="swatch-hex">CornerRadius: 14px (50% tròn đều)</span>
+                <span class="swatch-xaml">&lt;Border CornerRadius="14" ClipToBounds="True"/&gt;</span>
+            </div>
+        </div>
+
+        <!-- 4. SaaS License & HWID Device Limit Tokens -->
+        <div class="section-title">4. Quy Chuẩn Bản Quyền Thiết Bị (1 PC + 1 Mobile HWID Enforcement)</div>
+        <div class="swatch-grid">
+            <div class="swatch-card">
+                <div class="swatch-name">PC HWID Fingerprint</div>
+                <span class="swatch-hex">SHA256(CPU_ID + MB_UUID + MAC)</span>
+                <span class="swatch-xaml">HWID-PC-WIN11-8F92-A3B1-94E2</span>
+            </div>
+            <div class="swatch-card">
+                <div class="swatch-name">Mobile Device Fingerprint</div>
+                <span class="swatch-hex">IDFV (iOS) / SSAID (Android)</span>
+                <span class="swatch-xaml">HWID-MOB-IOS-7C4D-2E91-88A0</span>
+            </div>
+            <div class="swatch-card">
+                <div class="swatch-name">Device Limit Rule</div>
+                <span class="swatch-hex">Max Concurrent: 1 PC + 1 Mobile</span>
+                <span class="swatch-xaml">HTTP 409 Conflict: DEVICE_LIMIT_EXCEEDED</span>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        function copyXAML() {
+            const text = document.getElementById('xaml-code').innerText;
+            navigator.clipboard.writeText(text).then(() => {
+                alert('Đã sao chép đoạn mã XAML ResourceDictionary vào clipboard!');
+            });
+        }
+    </script>
+</body>
+</html>

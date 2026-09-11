@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<UserControl x:Class="NextAiVPN.WindowHeader" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" Height="46" Background="{DynamicResource White}" xmlns:nextaivpn="clr-namespace:NextAiVPN;assembly=NextAiVPN">
+  <UIElement.CommandBindings>
+    <CommandBinding Command="{x:Static SystemCommands.CloseWindowCommand}" CanExecute="CommandBinding_CanExecute" Executed="CommandBinding_Executed_Close" />
+    <CommandBinding Command="{x:Static SystemCommands.MaximizeWindowCommand}" CanExecute="CommandBinding_CanExecute" Executed="CommandBinding_Executed_Maximize" />
+    <CommandBinding Command="{x:Static SystemCommands.MinimizeWindowCommand}" CanExecute="CommandBinding_CanExecute" Executed="CommandBinding_Executed_Minimize" />
+    <CommandBinding Command="{x:Static SystemCommands.RestoreWindowCommand}" CanExecute="CommandBinding_CanExecute" Executed="CommandBinding_Executed_Restore" />
+  </UIElement.CommandBindings>
+  <Border BorderBrush="{DynamicResource BrushBorderSubtle}" BorderThickness="0,0,0,1" Background="{DynamicResource White}" Padding="12,0,12,0">
+    <Grid>
+      <!-- Left: App Logo & Brand Title -->
+      <StackPanel HorizontalAlignment="Left" VerticalAlignment="Center" Orientation="Horizontal">
+        <Border Width="28" Height="28" CornerRadius="7" BorderThickness="0" Margin="0,0,8,0">
+          <Border.Background>
+            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+              <GradientStop Color="#059669" Offset="0"/>
+              <GradientStop Color="#064E3B" Offset="1"/>
+            </LinearGradientBrush>
+          </Border.Background>
+          <Path Width="14" Height="14" HorizontalAlignment="Center" VerticalAlignment="Center" Fill="{DynamicResource White}" Data="M12,1L3,5V11C3,16.55 6.84,21.74 12,23C17.16,21.74 21,16.55 21,11V5L12,1M12,11.99H19C18.47,16.11 15.72,19.78 12,20.93V12H5V6.3L12,3.19V11.99Z" Stretch="Uniform" />
+        </Border>
+        <TextBlock VerticalAlignment="Center" FontFamily="{DynamicResource MuseoSans700FontFamily}" FontSize="14" FontWeight="ExtraBold" Foreground="{DynamicResource BrushEmerald900}" Text="NextAiVPN" />
+      </StackPanel>
+
+      <!-- Center: Status Pill (Protected - IP / Disconnected) -->
+      <Border Name="StatusPillBorder" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="12,4" Background="{DynamicResource BrushBgSubtle}" BorderBrush="{DynamicResource BrushBorderSubtle}" BorderThickness="1" CornerRadius="99">
+        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+          <Ellipse Name="StatusDot" Width="8" Height="8" Margin="0,0,8,0" Fill="{DynamicResource BrushEmerald500}">
+            <Ellipse.Effect>
+              <DropShadowEffect Color="#10B981" BlurRadius="6" ShadowDepth="0" Opacity="0.8"/>
+            </Ellipse.Effect>
+          </Ellipse>
+          <TextBlock Name="StatusPillText" FontSize="12" FontWeight="SemiBold" Foreground="{DynamicResource Color2E2E33}" Text="Protected - Universal Gateway (Port 10000)" VerticalAlignment="Center" />
+        </StackPanel>
+      </Border>
+
+      <!-- Right: Notification Bell, User Avatar & Win Controls -->
+      <StackPanel HorizontalAlignment="Right" VerticalAlignment="Center" Orientation="Horizontal">
+        <!-- Notification Bell -->
+        <Border Name="NotificationBellBtn" Width="30" Height="30" CornerRadius="8" Background="{DynamicResource White}" BorderBrush="{DynamicResource BrushBorderSubtle}" BorderThickness="1" Margin="0,0,8,0" Cursor="Hand" ToolTip="Notifications" MouseLeftButtonUp="NotificationBellBtn_MouseLeftButtonUp">
+          <Grid>
+            <Path Width="14" Height="14" HorizontalAlignment="Center" VerticalAlignment="Center" Fill="{DynamicResource Color6D6E70}" Data="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z" Stretch="Uniform"/>
+            <Border Width="12" Height="12" CornerRadius="6" Background="#DC2626" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,1,1,0">
+              <TextBlock Text="1" FontSize="8" FontWeight="Bold" Foreground="{DynamicResource White}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            </Border>
+          </Grid>
+        </Border>
+
+        <!-- User Avatar Pill -->
+        <Border Name="UserAvatarPill" Margin="0,0,12,0" Padding="3,2,10,2" CornerRadius="20" Background="{DynamicResource BrushBgSubtle}" BorderBrush="{DynamicResource BrushBorderSubtle}" BorderThickness="1" Cursor="Hand" MouseLeftButtonUp="UserAvatarPill_MouseLeftButtonUp">
+          <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+            <Border Width="22" Height="22" CornerRadius="11" Margin="0,0,6,0">
+              <Border.Background>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                  <GradientStop Color="#059669" Offset="0"/>
+                  <GradientStop Color="#064E3B" Offset="1"/>
+                </LinearGradientBrush>
+              </Border.Background>
+              <TextBlock Text="VIP" FontSize="9" FontWeight="ExtraBold" Foreground="{DynamicResource White}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            </Border>
+            <TextBlock Text="NextAi VIP" FontSize="11" FontWeight="Bold" Foreground="{DynamicResource BrushEmerald900}" VerticalAlignment="Center"/>
+          </StackPanel>
+        </Border>
+
+        <!-- Windows Standard Controls -->
+        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+          <Button Command="{x:Static SystemCommands.MinimizeWindowCommand}" Style="{DynamicResource MinimizeButtonStyle}" ToolTip="Minimize" WindowChrome.IsHitTestVisibleInChrome="True" />
+          <Button Name="RestoreButton" Command="{x:Static SystemCommands.RestoreWindowCommand}" Style="{DynamicResource RestoreButtonStyle}" ToolTip="Restore" Visibility="Collapsed" WindowChrome.IsHitTestVisibleInChrome="True" />
+          <Button Name="MaximizeButton" Command="{x:Static SystemCommands.MaximizeWindowCommand}" IsEnabled="False" Style="{DynamicResource MaximizeButtonStyle}" ToolTip="Maximize" Visibility="Collapsed" WindowChrome.IsHitTestVisibleInChrome="True" />
+          <Button Command="{x:Static SystemCommands.CloseWindowCommand}" Style="{DynamicResource CloseButtonStyle}" ToolTip="Close" WindowChrome.IsHitTestVisibleInChrome="True" />
+        </StackPanel>
+      </StackPanel>
+    </Grid>
+  </Border>
+</UserControl>

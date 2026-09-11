@@ -1,0 +1,71 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<UserControl x:Class="NextAiVPN.UI.Notifications.NotificationItemControl" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:local="clr-namespace:NextAiVPN.UI.Notifications" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006">
+  <Grid>
+    <Border BorderBrush="#FFD3D3D3" BorderThickness="0,0,0,0.5">
+      <Grid Margin="10" Background="{Binding ItemBackground}">
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="0" />
+          <ColumnDefinition Width="*" />
+          <ColumnDefinition Width="0" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+          <RowDefinition />
+          <RowDefinition />
+        </Grid.RowDefinitions>
+        <Image Grid.Column="0" Width="25" Height="25" Margin="10,10,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" RenderOptions.BitmapScalingMode="HighQuality" Stretch="Uniform" Source="{Binding ImageSource}" />
+        <StackPanel Grid.Column="1" Orientation="Horizontal">
+          <Grid Column="1" Margin="0,0" VerticalAlignment="Center">
+            <Grid.RowDefinitions>
+              <RowDefinition Height="0.5*" />
+              <RowDefinition Height="0.5*" />
+            </Grid.RowDefinitions>
+            <DockPanel Width="520" Margin="10,5,0,0">
+              <TextBlock Grid.Row="0" Width="250" VerticalAlignment="Center" FontSize="16" FontWeight="DemiBold" Style="{DynamicResource DefaultTextBlockForegroundStyle}" TextWrapping="Wrap" FontFamily="{Binding TitleFont}" Text="{Binding Title}" />
+              <TextBlock Name="NotificationDate" Grid.Row="0" HorizontalAlignment="Right" VerticalAlignment="Center" DockPanel.Dock="Right" FontFamily="{DynamicResource MuseoSans700FontFamily}" FontSize="10" Style="{DynamicResource NotificationsDateTextBlockStyle}" Text="{Binding Path=NotificationDate, Converter={StaticResource NotificationDateConverter}}" />
+            </DockPanel>
+            <TextBlock Name="NotificationDescription" Grid.Row="1" Width="450" Height="auto" Margin="10,5,0,5" HorizontalAlignment="Left" VerticalAlignment="Center" FontFamily="{DynamicResource MuseoSans500FontFamily}" FontSize="12" LineHeight="18" Style="{DynamicResource NotificationsBodyTextBlockStyle}" TextWrapping="Wrap" Text="{Binding Description}">
+              <TextBlock Name="NotificationsHyperlink" Margin="0" Style="{DynamicResource LinksTextBlockStyle}" TextWrapping="Wrap" Text="{Binding HyperlinkUrl}" MouseLeftButtonDown="UIElement_OnMouseLeftButtonDown" />
+            </TextBlock>
+          </Grid>
+        </StackPanel>
+        <Button Name="GoToAccountButton" Grid.Row="1" Grid.Column="1" Width="150" Height="40" Margin="-370,0,0,0" VerticalAlignment="Top" Panel.ZIndex="99" Content="Go to account" FontSize="20" Style="{DynamicResource UpdateActionButtonStyle}" Visibility="{Binding GoToAccountCTAVisibility}" Click="GoToAccountButton_OnClick" />
+        <Grid Name="UpdateGrid" Column="2" Margin="0,10,0,0">
+          <Button Name="UpdateBtn" Width="90" Height="100" VerticalAlignment="Top" Content="Update" FontSize="20" Style="{DynamicResource UpdateActionButtonStyle}" Visibility="{Binding UpdateCTAVisibility}" Click="UpdateBtn_OnClick" />
+          <Image Name="UpdateSpinner" Width="24" Height="24" Margin="60,10,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Panel.ZIndex="100" Source="/Assets/spinner_white.png" Visibility="Collapsed" />
+        </Grid>
+        <Grid Name="MenuGrid" Column="2" Visibility="{Binding DotsMenuVisibility}" MouseDown="MenuGrid_OnMouseDown" MouseEnter="MenuGrid_MouseEnter" MouseLeave="MenuGrid_MouseLeave">
+          <Border Name="BorderMenu" Width="30" Height="30" CornerRadius="15">
+            <FrameworkElement.Style>
+              <Style>
+                <Setter Property="Border.Background" Value="#FF000000" />
+                <Setter Property="UIElement.Opacity" Value="0" />
+              </Style>
+            </FrameworkElement.Style>
+          </Border>
+          <Image Name="DotsImage" Grid.RowSpan="2" Grid.Column="2" Width="20" Height="20" Margin="5,0" HorizontalAlignment="Center" Source="/Assets/notifications/dotsmenu.png" Visibility="{Binding DotsMenuVisibility}">
+            <FrameworkElement.ContextMenu>
+              <ContextMenu Name="contextmenu">
+                <Control.Template>
+                  <ControlTemplate>
+                    <Border BorderBrush="#FFD3D3D3" BorderThickness="1">
+                      <UIElement.Effect>
+                        <DropShadowEffect ShadowDepth="10" Color="Red" />
+                      </UIElement.Effect>
+                      <Grid Width="auto" Background="#FFFFFFFF">
+                        <StackPanel HorizontalAlignment="Left">
+                          <MenuItem HorizontalAlignment="Left" Header="Mark as Read" Click="MenuItem_OnClick" />
+                          <Separator Opacity="0.4" />
+                          <MenuItem HorizontalAlignment="Left" Header="Delete" Click="MenuItem_OnClick" />
+                        </StackPanel>
+                      </Grid>
+                    </Border>
+                  </ControlTemplate>
+                </Control.Template>
+              </ContextMenu>
+            </FrameworkElement.ContextMenu>
+          </Image>
+        </Grid>
+      </Grid>
+    </Border>
+  </Grid>
+</UserControl>

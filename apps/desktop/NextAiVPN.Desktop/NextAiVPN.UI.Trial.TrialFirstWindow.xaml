@@ -1,0 +1,53 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Window x:Class="NextAiVPN.UI.Trial.TrialFirstWindow" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:nextaitechnologyVpn="clr-namespace:NextAiVPN" xmlns:vm="clr-namespace:NextAiVPN.UI.Trial" Width="320" Height="448" Icon="/Assets/NextAiVPN/vpn_icon.ico" ResizeMode="NoResize" Style="{DynamicResource {x:Type Window}}" WindowStartupLocation="CenterScreen">
+  <WindowChrome.WindowChrome>
+    <WindowChrome CaptionHeight="34" />
+  </WindowChrome.WindowChrome>
+  <StackPanel>
+    <nextaitechnologyVpn:WindowHeader x:Name="WindowHeader" />
+    <Grid Margin="32">
+      <Grid.RowDefinitions>
+        <RowDefinition />
+        <RowDefinition />
+        <RowDefinition />
+      </Grid.RowDefinitions>
+      <TextBlock FontSize="20" FontWeight="Bold" Style="{DynamicResource DefaultTextBlockForegroundStyle}" Text="{Binding MainTitle, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+      <Grid Row="1" Margin="0,32,0,0">
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="60" />
+          <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+          <RowDefinition Height="70" />
+          <RowDefinition Height="70" />
+          <RowDefinition Height="70" />
+        </Grid.RowDefinitions>
+        <Image Grid.Row="0" Grid.Column="0" Width="32" Height="32" HorizontalAlignment="Left" VerticalAlignment="Top" RenderOptions.BitmapScalingMode="HighQuality" Stretch="Uniform" Source="{Binding ShieldImageSource, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+        <Line Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" Margin="16,31,0,37" StrokeDashArray="0 2" StrokeDashCap="Round" StrokeThickness="2" Style="{DynamicResource FreeTrialFirstLineDotsStyle}" X1="0" X2="0" Y1="0" Y2="35" Visibility="{Binding FirstLineVisibility, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+        <Line Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" Margin="16,34,0,37" HorizontalAlignment="Left" StrokeDashCap="Round" StrokeEndLineCap="Round" StrokeStartLineCap="Round" StrokeThickness="2" Style="{DynamicResource FreeTrialLineStyle}" X1="0" X2="0" Y1="0" Y2="33" Visibility="{Binding SecondLineVisibility, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+        <StackPanel Grid.Row="0" Grid.Column="1" Opacity="{Binding FirstBlockOpacity}">
+          <TextBlock FontSize="16" FontWeight="Bold" Style="{DynamicResource DefaultTextBlockForegroundStyle}" Text="Today" />
+          <TextBlock Margin="0,5,0,0" FontSize="14" Style="{DynamicResource ProtocolInfoTextBlockStyle}" Text="Up to 30GB included." />
+          <TextBlock FontSize="14" Style="{DynamicResource ProtocolInfoTextBlockStyle}" Text="Full access to all features." />
+        </StackPanel>
+        <Image Grid.Row="1" Grid.Column="0" Width="32" Height="32" HorizontalAlignment="Left" VerticalAlignment="Top" RenderOptions.BitmapScalingMode="HighQuality" Stretch="Uniform" Source="{Binding BellImageSource, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+        <Line Grid.Row="1" Grid.RowSpan="2" Grid.Column="0" Margin="16,34,0,37" HorizontalAlignment="Left" StrokeDashCap="Round" StrokeEndLineCap="Round" StrokeStartLineCap="Round" StrokeThickness="2" Style="{DynamicResource FreeTrialLineStyle}" X1="0" X2="0" Y1="0" Y2="33" />
+        <StackPanel Grid.Row="1" Grid.Column="1" Opacity="{Binding MiddleBlockOpacity}">
+          <TextBlock FontSize="16" FontWeight="Bold" Style="{DynamicResource DefaultTextBlockForegroundStyle}" Text="Day 27 reminder" />
+          <TextBlock Margin="0,5,0,0" FontSize="14" Style="{DynamicResource ProtocolInfoTextBlockStyle}" Text="We'll send an email reminder." />
+          <TextBlock FontSize="14" Style="{DynamicResource ProtocolInfoTextBlockStyle}" Text="" />
+        </StackPanel>
+        <Image Grid.Row="2" Grid.Column="0" Width="32" Height="32" HorizontalAlignment="Left" VerticalAlignment="Top" RenderOptions.BitmapScalingMode="HighQuality" Stretch="Uniform" Source="{Binding StarImageSource, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+        <StackPanel Grid.Row="2" Grid.Column="1" Opacity="{Binding LastBlockOpacity}">
+          <TextBlock FontSize="16" FontWeight="Bold" Style="{DynamicResource DefaultTextBlockForegroundStyle}" Text="{Binding ThirdLineHeader, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+          <TextBlock Margin="0,5,0,0" FontSize="14" Style="{DynamicResource ProtocolInfoTextBlockStyle}" TextWrapping="Wrap" Text="{Binding ThirdLineText1, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+          <TextBlock FontSize="14" Style="{DynamicResource ProtocolInfoTextBlockStyle}" Text="{Binding ThirdLineText2, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+        </StackPanel>
+      </Grid>
+      <StackPanel Grid.Row="2" Margin="0,22,0,0">
+        <Button Width="178" Height="40" Style="{DynamicResource ActiveButtonStyle}" Command="{Binding StartButtonPressedCommand}" Content="{Binding ButtonText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+        <TextBlock Margin="0,8,0,0" HorizontalAlignment="Center" FontSize="9" Style="{DynamicResource ProtocolInfoTextBlockStyle}" Text="{Binding SubscriptionPlanText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+      </StackPanel>
+    </Grid>
+  </StackPanel>
+</Window>

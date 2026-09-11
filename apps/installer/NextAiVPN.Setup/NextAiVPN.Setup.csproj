@@ -1,0 +1,35 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWPF>true</UseWPF>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <ApplicationIcon>app.ico</ApplicationIcon>
+    <AssemblyName>NextAiVPN_Setup</AssemblyName>
+    <RootNamespace>NextAiVPN.Setup</RootNamespace>
+    <Version>8.0.0.0</Version>
+    <AssemblyVersion>8.0.0.0</AssemblyVersion>
+    <FileVersion>8.0.0.0</FileVersion>
+    <Product>NextAI VPN Desktop &amp; Residential Gateway</Product>
+    <Company>nextaitechnology</Company>
+
+    <!-- [VI] Cấu hình đóng gói Single-File tự trích xuất thư viện Native của WPF để chạy độc lập 100% -->
+    <!-- [EN] Configure Single-File packaging with native WPF extraction for 100% standalone execution -->
+    <PublishSingleFile>true</PublishSingleFile>
+    <SelfContained>true</SelfContained>
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
+    <IncludeAllContentForSelfExtract>true</IncludeAllContentForSelfExtract>
+    <EnableCompressionInSingleFile>true</EnableCompressionInSingleFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="payload.zip">
+      <LogicalName>payload.zip</LogicalName>
+    </EmbeddedResource>
+    <Resource Include="app.ico" />
+  </ItemGroup>
+
+</Project>

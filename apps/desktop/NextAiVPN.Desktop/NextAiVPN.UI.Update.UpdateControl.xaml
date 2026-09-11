@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<UserControl x:Class="NextAiVPN.UI.Update.UpdateControl" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:update="clr-namespace:NextAiVPN.UI.Update;assembly=NextAiVPN" Visibility="{Binding ControlVisibility, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+  <Grid>
+    <Border Name="UpdateMessage" BorderBrush="#00FFFFFF" CornerRadius="8" Style="{DynamicResource UpdateBackgroundBorderStyle}">
+      <DockPanel Grid.Row="0" Height="140" Visibility="Visible">
+        <StackPanel Margin="10">
+          <TextBlock HorizontalAlignment="Left" VerticalAlignment="Top" FontFamily="{DynamicResource MuseoSans700FontFamily}" FontSize="20" FontWeight="SemiBold" Style="{DynamicResource ProtocolInfoTextBlockStyle}" Text="Updates" TextAlignment="Center" />
+          <TextBlock Width="375" HorizontalAlignment="Left" LineHeight="19" Style="{DynamicResource ProtocolInfoTextBlockStyle}" Text="A new version of NextAiVPN available. Please notice that your VPN will stop running while we update it." TextWrapping="Wrap" />
+          <Button Name="UpdateVersionButton" Width="140" Height="40" Margin="0,10,0,0" HorizontalAlignment="Left" VerticalAlignment="Bottom" Content="Update Now" FontSize="20" Style="{DynamicResource UpdateActionButtonStyle}" />
+          <Image Name="UpdateSpinnerImage" Width="24" Height="24" Margin="55,-32,0,10" HorizontalAlignment="Left" VerticalAlignment="Bottom" Style="{DynamicResource UpdateButtonSpinnerImageStyle}" Visibility="Collapsed" />
+        </StackPanel>
+      </DockPanel>
+    </Border>
+  </Grid>
+</UserControl>

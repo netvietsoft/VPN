@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<UserControl x:Class="NextAiVPN.UI.Preferences.PreferencesControl" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:local="clr-namespace:NextAiVPN.UI.Preferences" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:nextaitechnologyVpn="clr-namespace:NextAiVPN" xmlns:themeAppearance="clr-namespace:NextAiVPN.UI.ThemeAppearance">
+  <Grid IsEnabled="{Binding MainGridIsEnabled, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Opacity="{Binding MainGridOpacity, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+    <Grid.RowDefinitions>
+      <RowDefinition Height="48" />
+      <RowDefinition />
+    </Grid.RowDefinitions>
+    <Rectangle Grid.RowSpan="3" Panel.ZIndex="990" Fill="#00FFFFFF" IsEnabled="False" Opacity="0.4" Visibility="{Binding DisablerRectangleVisibility, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+    <TextBlock Grid.Row="0" Margin="16,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center" FontFamily="{DynamicResource MuseoSans700FontFamily}" FontSize="20" Style="{DynamicResource DefaultTextBlockForegroundStyle}" Text="Preferences" />
+    <Separator Grid.Row="0" Width="Auto" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Foreground="#FFD3D3D3" Opacity="0.2" />
+    <StackPanel Grid.Row="1">
+      <StackPanel Margin="16,16,16,0">
+        <Grid>
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="0.5*" />
+            <ColumnDefinition Width="0.5*" />
+          </Grid.ColumnDefinitions>
+          <TextBlock Grid.Column="0" Width="100" HorizontalAlignment="Left" VerticalAlignment="Center" FontFamily="{DynamicResource MuseoSans700FontFamily}" FontSize="16" Style="{DynamicResource GeneralExpendedTextBlockStyle}" Text="Startup" />
+          <nextaitechnologyVpn:ToggleSwitch x:Name="StartUpToggle" Grid.Column="1" Width="65" Height="25" Margin="0,0,30,0" HorizontalAlignment="Right" VerticalAlignment="Center" />
+        </Grid>
+        <StackPanel Margin="0,6,0,0">
+          <TextBlock Width="400" HorizontalAlignment="Left" FontSize="12" LineHeight="19" Style="{DynamicResource ProtocolInfoTextBlockStyle}" Text="NextAiVPN will automatically open when you start your computer." TextWrapping="Wrap" />
+        </StackPanel>
+      </StackPanel>
+      <themeAppearance:ThemeAppearanceControl x:Name="ThemeAppearanceControl" Margin="16,0,0,0" />
+    </StackPanel>
+  </Grid>
+</UserControl>

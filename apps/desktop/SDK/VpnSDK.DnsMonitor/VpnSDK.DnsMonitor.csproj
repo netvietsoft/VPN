@@ -1,0 +1,31 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <AssemblyName>VpnSDK.DnsMonitor</AssemblyName>
+    <GenerateAssemblyInfo>False</GenerateAssemblyInfo>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+  <PropertyGroup>
+    <LangVersion>14.0</LangVersion>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <CheckForOverflowUnderflow>False</CheckForOverflowUnderflow>
+  </PropertyGroup>
+  <PropertyGroup />
+  <ItemGroup />
+  <ItemGroup>
+    <Reference Include="VpnSDK.NetFilter">
+      <HintPath>extracted/PFiles64/FastVPN/VpnSDK.NetFilter.dll</HintPath>
+    </Reference>
+    <Reference Include="VpnSDK.Core">
+      <HintPath>extracted/PFiles64/FastVPN/VpnSDK.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.Logging.Abstractions">
+      <HintPath>extracted/PFiles64/FastVPN/Microsoft.Extensions.Logging.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="Nager.PublicSuffix">
+      <HintPath>extracted/PFiles64/FastVPN/Nager.PublicSuffix.dll</HintPath>
+    </Reference>
+    <Reference Include="ARSoft.Tools.NetStandard">
+      <HintPath>extracted/PFiles64/FastVPN/ARSoft.Tools.NetStandard.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+</Project>

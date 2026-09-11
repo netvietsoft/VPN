@@ -1,0 +1,50 @@
+[
+  {
+    "id": 1001,
+    "email": "user.premium@example.com",
+    "password_hash": "$2a$12$K8M...sampleHash1",
+    "account_status": "active",
+    "is_premium": 1,
+    "xray_uuid": "4a2b9f10-7e3c-4b51-9e20-1a2b3c4d5e6f",
+    "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjEwMDEsImlzcyI6ImJyb3dzZWMifQ.sample_sig_1",
+    "subscription_plan": "annual",
+    "paid_until": "2027-10-15T00:00:00Z",
+    "created_at": "2024-01-10T12:00:00Z"
+  },
+  {
+    "id": 1002,
+    "email": "business.vpn@corp.net",
+    "password_hash": "$2a$12$L9N...sampleHash2",
+    "account_status": "active",
+    "is_premium": 1,
+    "xray_uuid": "8c3d1e20-9f4a-4a62-8f31-2b3c4d5e6f7a",
+    "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjEwMDIsImlzcyI6ImJyb3dzZWMifQ.sample_sig_2",
+    "subscription_plan": "biennial",
+    "paid_until": "2028-05-20T00:00:00Z",
+    "created_at": "2024-03-01T09:30:00Z"
+  },
+  {
+    "id": 1003,
+    "email": "free.trial@gmail.com",
+    "password_hash": "$2a$12$M0O...sampleHash3",
+    "account_status": "active",
+    "is_premium": 0,
+    "xray_uuid": "1f2e3d4c-5b6a-7890-abcd-ef1234567890",
+    "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjEwMDMsImlzcyI6ImJyb3dzZWMifQ.sample_sig_3",
+    "subscription_plan": "none",
+    "paid_until": "",
+    "created_at": "2026-02-14T15:20:00Z"
+  },
+  {
+    "id": 1004,
+    "email": "banned.abuser@tempmail.org",
+    "password_hash": "$2a$12$N1P...sampleHash4",
+    "account_status": "banned",
+    "is_premium": 0,
+    "xray_uuid": "99999999-8888-7777-6666-555544443333",
+    "access_token": "revoked_token_banned",
+    "subscription_plan": "none",
+    "paid_until": "",
+    "created_at": "2025-11-05T18:40:00Z"
+  }
+]

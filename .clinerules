@@ -1,0 +1,12 @@
+# QUY TẮC DÀNH CHO CLINE / ROO CODE (.CLINERULES)
+================================================================================
+Dự án: NextAI VPN Platform & Residential Gateway Mesh (Chuẩn V2.1)
+================================================================================
+
+Các rule cốt lõi:
+- Tham chiếu trực tiếp đến Hiến pháp [AGENTS.md](AGENTS.md).
+- Tuân thủ quy chuẩn mã nguồn trong [Docs/rules.md](Docs/rules.md).
+- Kiến trúc hệ thống tham chiếu tại [Docs/Architecture/](Docs/Architecture/).
+- Không sửa file ngoài phạm vi task được chỉ định.
+- Giữ vững tính độc lập tuyệt đối giữa VPN Platform và các hệ thống client/browser bên ngoài (KikiLogin).
+- Cập nhật nhật ký [TASK_LOG.md](TASK_LOG.md) và [UPDATETODOS.md](UPDATETODOS.md).

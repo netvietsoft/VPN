@@ -1,0 +1,2399 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NextAI VPN & Residential Mesh - SaaS Enterprise CMS Portal</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* Clean Light Theme with Deep Emerald Accents */
+            --bg-body: #f8fafc;
+            --bg-sidebar: #ffffff;
+            --bg-card: #ffffff;
+            --bg-card-hover: #f0fdf4;
+            --bg-input: #ffffff;
+            --bg-subtle: #f1f5f9;
+            
+            --border-subtle: #e2e8f0;
+            --border-emerald: #bbf7d0;
+            --border-highlight: #10b981;
+            
+            --emerald-900: #064e3b;
+            --emerald-800: #065f46;
+            --emerald-700: #047857;
+            --emerald-600: #059669;
+            --emerald-500: #10b981;
+            --emerald-100: #dcfce7;
+            --emerald-50: #f0fdf4;
+            
+            --text-main: #0f172a;
+            --text-secondary: #334155;
+            --text-muted: #64748b;
+            --text-emerald: #047857;
+            
+            --accent-gold: #d97706;
+            --accent-gold-bg: #fef3c7;
+            --accent-red: #dc2626;
+            --accent-red-bg: #fee2e2;
+            --accent-cyan: #0284c7;
+            --accent-cyan-bg: #e0f2fe;
+            --accent-purple: #7c3aed;
+            --accent-purple-bg: #ede9fe;
+            
+            --font-main: 'Plus Jakarta Sans', -apple-system, sans-serif;
+            --font-heading: 'Outfit', sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+            
+            --shadow-card: 0 2px 10px -2px rgba(15, 23, 42, 0.06), 0 0 0 1px rgba(226, 232, 240, 0.8);
+            --shadow-card-hover: 0 10px 25px -4px rgba(15, 23, 42, 0.1), 0 0 0 1px var(--border-emerald);
+            --shadow-btn: 0 4px 12px rgba(5, 150, 105, 0.3);
+            --shadow-dropdown: 0 12px 30px -4px rgba(15, 23, 42, 0.15), 0 0 0 1px rgba(226, 232, 240, 0.9);
+            
+            --radius-card: 14px;
+            --radius-btn: 10px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            font-family: var(--font-main);
+            min-height: 100vh;
+            display: flex;
+            overflow-x: hidden;
+        }
+
+        /* Sidebar Navigation */
+        .cms-sidebar {
+            width: 270px;
+            background: var(--bg-sidebar);
+            border-right: 1px solid var(--border-subtle);
+            display: flex;
+            flex-direction: column;
+            padding: 24px 16px;
+            gap: 16px;
+            z-index: 10;
+            flex-shrink: 0;
+            height: 100vh;
+            position: sticky;
+            top: 0;
+        }
+
+        .brand-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .brand-logo-badge {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--emerald-600), var(--emerald-800));
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 10px rgba(5, 150, 105, 0.35);
+            flex-shrink: 0;
+        }
+
+        .brand-logo-badge svg {
+            width: 22px;
+            height: 22px;
+            fill: #ffffff;
+        }
+
+        .brand-title-box h2 {
+            font-family: var(--font-heading);
+            font-size: 17px;
+            font-weight: 800;
+            color: var(--emerald-900);
+            letter-spacing: -0.3px;
+        }
+
+        .brand-title-box span {
+            font-size: 11px;
+            color: var(--text-muted);
+            font-family: var(--font-mono);
+        }
+
+        .sidebar-nav-group {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+            flex: 1;
+            overflow-y: auto;
+            scrollbar-width: thin;
+        }
+
+        .nav-category-title {
+            font-size: 10.5px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            color: var(--text-muted);
+            padding: 10px 12px 4px 12px;
+        }
+
+        .sidebar-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 12px;
+            border-radius: 9px;
+            color: var(--text-secondary);
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            text-decoration: none;
+            border: 1px solid transparent;
+            user-select: none;
+        }
+
+        .sidebar-link svg {
+            width: 17px;
+            height: 17px;
+            fill: currentColor;
+            transition: all 0.15s;
+            flex-shrink: 0;
+        }
+
+        .sidebar-link:hover {
+            background: var(--emerald-50);
+            color: var(--emerald-700);
+        }
+
+        .sidebar-link.active {
+            background: var(--emerald-50);
+            color: var(--emerald-800);
+            border-color: var(--border-emerald);
+            font-weight: 700;
+        }
+
+        .sidebar-link.active svg {
+            fill: var(--emerald-600);
+        }
+
+        .link-badge {
+            margin-left: auto;
+            font-size: 10.5px;
+            font-family: var(--font-mono);
+            font-weight: 700;
+            padding: 2px 7px;
+            border-radius: 99px;
+            background: var(--emerald-100);
+            color: var(--emerald-800);
+        }
+
+        /* Sidebar Bottom Server Card */
+        .sidebar-server-info {
+            background: var(--emerald-50);
+            border: 1px solid var(--border-emerald);
+            border-radius: 12px;
+            padding: 12px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            flex-shrink: 0;
+        }
+
+        .server-status-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--emerald-900);
+        }
+
+        .live-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--emerald-500);
+            border-radius: 50%;
+            box-shadow: 0 0 6px var(--emerald-500);
+        }
+
+        .server-port-text {
+            font-family: var(--font-mono);
+            font-size: 11px;
+            color: var(--emerald-700);
+        }
+
+        /* Main Workspace Content */
+        .cms-main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-width: 0;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        /* Top Sticky Header */
+        .cms-top-header {
+            height: 64px;
+            background: #ffffff;
+            border-bottom: 1px solid var(--border-subtle);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 28px;
+            position: sticky;
+            top: 0;
+            z-index: 9;
+            flex-shrink: 0;
+        }
+
+        .header-search-bar {
+            position: relative;
+            width: 360px;
+        }
+
+        .header-search-bar svg {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 16px;
+            height: 16px;
+            fill: var(--text-muted);
+        }
+
+        .cms-search-input {
+            width: 100%;
+            padding: 9px 14px 9px 36px;
+            background: var(--bg-subtle);
+            border: 1px solid var(--border-subtle);
+            border-radius: 9px;
+            font-family: var(--font-main);
+            font-size: 13px;
+            color: var(--text-main);
+            outline: none;
+            transition: all 0.2s;
+        }
+
+        .cms-search-input:focus {
+            background: #ffffff;
+            border-color: var(--emerald-500);
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.15);
+        }
+
+        .header-right-tools {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .sync-badge-pill {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--emerald-50);
+            border: 1px solid var(--border-emerald);
+            padding: 5px 12px;
+            border-radius: 99px;
+            font-size: 11.5px;
+            font-weight: 700;
+            color: var(--emerald-800);
+            font-family: var(--font-mono);
+        }
+
+        .sync-dot {
+            width: 7px;
+            height: 7px;
+            background: var(--emerald-500);
+            border-radius: 50%;
+            animation: pulse-live 1.5s infinite;
+        }
+
+        @keyframes pulse-live {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.4); opacity: 0.6; }
+        }
+
+        .admin-profile-chip {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            padding: 4px 8px 4px 4px;
+            border-radius: 99px;
+            border: 1px solid var(--border-subtle);
+            background: #ffffff;
+            transition: all 0.2s;
+        }
+
+        .admin-profile-chip:hover {
+            border-color: var(--border-emerald);
+            background: var(--emerald-50);
+        }
+
+        .admin-avatar {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, var(--emerald-600), var(--emerald-800));
+            color: #ffffff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 800;
+        }
+
+        .admin-name {
+            font-size: 12.5px;
+            font-weight: 700;
+            color: var(--text-main);
+            padding-right: 4px;
+        }
+
+        /* Body Workspace */
+        .workspace-body {
+            padding: 24px 28px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        /* MODULE SECTIONS (TAB PANELS) */
+        .saas-tab-section {
+            display: none;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .saas-tab-section.active {
+            display: flex;
+        }
+
+        /* Bento 4-Cards Grid */
+        .bento-stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+        }
+
+        .bento-stat-card {
+            background: #ffffff;
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-card);
+            padding: 18px 20px;
+            box-shadow: var(--shadow-card);
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            transition: transform 0.2s, box-shadow 0.2s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .bento-stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-card-hover);
+        }
+
+        .stat-card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+        }
+
+        .stat-icon-box {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            background: var(--emerald-100);
+            color: var(--emerald-700);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .stat-icon-box.cyan { background: var(--accent-cyan-bg); color: var(--accent-cyan); }
+        .stat-icon-box.gold { background: var(--accent-gold-bg); color: var(--accent-gold); }
+        .stat-icon-box.purple { background: var(--accent-purple-bg); color: var(--accent-purple); }
+
+        .stat-icon-box svg {
+            width: 18px;
+            height: 18px;
+            fill: currentColor;
+        }
+
+        .stat-val-text {
+            font-family: var(--font-heading);
+            font-size: 26px;
+            font-weight: 900;
+            color: var(--emerald-900);
+            line-height: 1.1;
+        }
+
+        .stat-trend-footer {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 11.5px;
+            font-weight: 600;
+            color: var(--emerald-600);
+            font-family: var(--font-mono);
+        }
+
+        /* Action Toolbar */
+        .cms-action-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .country-filter-chips {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .filter-chip-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 7px 12px;
+            border-radius: 8px;
+            border: 1px solid var(--border-subtle);
+            background: #ffffff;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+
+        .filter-chip-btn:hover {
+            border-color: var(--border-emerald);
+            background: var(--emerald-50);
+            color: var(--emerald-700);
+        }
+
+        .filter-chip-btn.active {
+            background: var(--emerald-600);
+            color: #ffffff;
+            border-color: var(--emerald-600);
+        }
+
+        /* SLEEK CIRCULAR NATIONAL FLAG BADGES (50% radius) */
+        .country-flag-img-sm {
+            width: 24px;
+            height: 24px;
+            object-fit: cover;
+            border-radius: 50%;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+            border: 1.5px solid rgba(0,0,0,0.1);
+            display: inline-block;
+            vertical-align: middle;
+            flex-shrink: 0;
+            background: #f8fafc;
+        }
+
+        .flag-pill-img {
+            width: 16px;
+            height: 16px;
+            object-fit: cover;
+            border-radius: 50%;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+            border: 1px solid rgba(0,0,0,0.12);
+            margin-right: 5px;
+            vertical-align: middle;
+            display: inline-block;
+            flex-shrink: 0;
+        }
+
+        .action-buttons-cluster {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-emerald-solid {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 9px 16px;
+            border-radius: var(--radius-btn);
+            border: none;
+            background: linear-gradient(135deg, var(--emerald-600), var(--emerald-700));
+            color: #ffffff;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: var(--shadow-btn);
+            transition: all 0.2s;
+        }
+
+        .btn-emerald-solid:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 18px rgba(5, 150, 105, 0.45);
+        }
+
+        .btn-emerald-solid svg {
+            width: 15px;
+            height: 15px;
+            fill: currentColor;
+        }
+
+        .btn-ghost-secondary {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 9px 16px;
+            border-radius: var(--radius-btn);
+            border: 1px solid var(--border-subtle);
+            background: #ffffff;
+            color: var(--text-secondary);
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-ghost-secondary:hover {
+            background: var(--emerald-50);
+            color: var(--emerald-700);
+            border-color: var(--border-emerald);
+        }
+
+        .btn-ghost-secondary.danger:hover {
+            background: var(--accent-red-bg);
+            color: var(--accent-red);
+            border-color: rgba(220, 38, 38, 0.3);
+        }
+
+        /* Main Data Table Card */
+        .table-data-card {
+            background: #ffffff;
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-card);
+            box-shadow: var(--shadow-card);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .table-card-header {
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border-subtle);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .table-card-header h3 {
+            font-size: 15px;
+            font-weight: 800;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .data-table-clean {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        .data-table-clean th {
+            background: var(--bg-subtle);
+            padding: 12px 16px;
+            font-size: 11.5px;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .data-table-clean td {
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border-subtle);
+            font-size: 12.5px;
+            color: var(--text-main);
+            vertical-align: middle;
+        }
+
+        .data-table-clean tr:hover td {
+            background: var(--emerald-50);
+        }
+
+        .country-node-cell {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .node-info-text h5 {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        .node-info-text span {
+            font-size: 11px;
+            color: var(--text-muted);
+            font-family: var(--font-mono);
+        }
+
+        .proto-badge {
+            font-family: var(--font-mono);
+            font-size: 10.5px;
+            font-weight: 700;
+            padding: 2px 7px;
+            border-radius: 4px;
+            background: var(--bg-subtle);
+            color: var(--text-secondary);
+        }
+
+        .proto-badge.socks5 { background: var(--accent-cyan-bg); color: var(--accent-cyan); }
+        .proto-badge.vless { background: var(--emerald-100); color: var(--emerald-800); }
+        .proto-badge.pro { background: var(--accent-gold-bg); color: var(--accent-gold); }
+        .proto-badge.free { background: var(--bg-subtle); color: var(--text-muted); }
+
+        .ping-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-family: var(--font-mono);
+            font-size: 11.5px;
+            font-weight: 700;
+            color: var(--emerald-700);
+        }
+
+        .ping-indicator.mid { color: var(--accent-gold); }
+        .ping-indicator.dead { color: var(--accent-red); }
+
+        .kikilogin-syntax-copy {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--bg-subtle);
+            border: 1px solid var(--border-subtle);
+            padding: 3px 8px;
+            border-radius: 6px;
+            font-family: var(--font-mono);
+            font-size: 11px;
+            color: var(--emerald-800);
+        }
+
+        .btn-copy-tag {
+            border: none;
+            background: var(--emerald-600);
+            color: #ffffff;
+            border-radius: 4px;
+            padding: 2px 6px;
+            font-size: 10px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .btn-action-sm {
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 700;
+            cursor: pointer;
+            border: 1px solid var(--border-subtle);
+            background: #ffffff;
+            color: var(--text-secondary);
+            transition: all 0.15s;
+        }
+
+        .btn-action-sm:hover {
+            background: var(--emerald-50);
+            color: var(--emerald-700);
+            border-color: var(--border-emerald);
+        }
+
+        .btn-action-sm.danger:hover {
+            background: var(--accent-red-bg);
+            color: var(--accent-red);
+            border-color: rgba(220, 38, 38, 0.3);
+        }
+
+        /* SaaS Specific Cards & Grids */
+        .saas-metrics-row {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 16px;
+        }
+
+        .revenue-chart-card {
+            background: #ffffff;
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-card);
+            padding: 20px;
+            box-shadow: var(--shadow-card);
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .chart-header-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .chart-bars-container {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            height: 160px;
+            padding-top: 10px;
+            border-bottom: 1px solid var(--border-subtle);
+            gap: 14px;
+        }
+
+        .chart-bar-col {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            height: 100%;
+            justify-content: flex-end;
+        }
+
+        .bar-pillar {
+            width: 100%;
+            max-width: 38px;
+            background: linear-gradient(180deg, var(--emerald-500), var(--emerald-700));
+            border-radius: 4px 4px 0 0;
+            transition: height 0.3s;
+        }
+
+        .bar-pillar.muted {
+            background: linear-gradient(180deg, #94a3b8, #64748b);
+        }
+
+        .bar-label {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--text-muted);
+            font-family: var(--font-mono);
+        }
+
+        .device-breakdown-card {
+            background: #ffffff;
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-card);
+            padding: 20px;
+            box-shadow: var(--shadow-card);
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .device-bar-track {
+            height: 14px;
+            border-radius: 99px;
+            background: #e2e8f0;
+            overflow: hidden;
+            display: flex;
+        }
+
+        .track-pc { background: var(--emerald-600); height: 100%; width: 54.2%; }
+        .track-mob { background: var(--accent-cyan); height: 100%; width: 45.8%; }
+
+        /* MODAL OVERLAYS */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(15, 23, 42, 0.45);
+            backdrop-filter: blur(4px);
+            z-index: 2000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal-card-box {
+            width: 540px;
+            background: #ffffff;
+            border-radius: 16px;
+            box-shadow: var(--shadow-dropdown);
+            border: 1px solid var(--border-subtle);
+            padding: 26px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-close-btn {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background: none;
+            border: none;
+            font-size: 18px;
+            color: var(--text-muted);
+            cursor: pointer;
+        }
+
+        .form-row-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .form-group-item {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .form-label {
+            font-size: 11.5px;
+            font-weight: 700;
+            color: var(--text-secondary);
+        }
+
+        .form-control {
+            padding: 8px 12px;
+            border-radius: 8px;
+            border: 1px solid var(--border-subtle);
+            background: var(--bg-subtle);
+            font-family: var(--font-main);
+            font-size: 12.5px;
+            outline: none;
+        }
+
+        .form-control:focus {
+            border-color: var(--emerald-500);
+            background: #ffffff;
+        }
+
+        /* Toast Container */
+        .toast-container {
+            position: fixed;
+            bottom: 24px;
+            right: 28px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            z-index: 3000;
+        }
+
+        .toast-message {
+            background: #ffffff;
+            border: 1px solid var(--border-emerald);
+            border-left: 4px solid var(--emerald-600);
+            box-shadow: 0 8px 20px -4px rgba(15, 23, 42, 0.15);
+            padding: 10px 16px;
+            border-radius: 8px;
+            font-size: 12.5px;
+            font-weight: 600;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            animation: slideUpToast 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        /* Multi-Relay Master Switcher & Cards */
+        .relay-master-box {
+            background: #ffffff;
+            border: 1px solid var(--border-emerald);
+            border-radius: var(--radius-card);
+            padding: 20px 24px;
+            box-shadow: var(--shadow-card);
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .relay-switch-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .relay-mode-pills {
+            display: flex;
+            background: var(--bg-subtle);
+            padding: 4px;
+            border-radius: 12px;
+            border: 1px solid var(--border-subtle);
+            gap: 4px;
+        }
+
+        .relay-mode-btn {
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 700;
+            border: none;
+            background: transparent;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .relay-mode-btn.active {
+            background: #ffffff;
+            color: var(--emerald-700);
+            box-shadow: var(--shadow-card);
+            border: 1px solid var(--border-emerald);
+        }
+
+        .relay-mode-btn.active.bypass {
+            color: #b91c1c;
+            border-color: #fca5a5;
+        }
+
+        .relay-fleet-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 14px;
+        }
+
+        .relay-vps-card {
+            background: var(--bg-subtle);
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            padding: 14px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            transition: border-color 0.2s;
+        }
+
+        .relay-vps-card:hover {
+            border-color: var(--emerald-500);
+        }
+
+        .relay-vps-card.disabled {
+            opacity: 0.5;
+            filter: grayscale(80%);
+        }
+
+        .relay-card-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .relay-title {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        .relay-slider-box {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 11.5px;
+            color: var(--text-muted);
+            gap: 8px;
+        }
+
+        .relay-slider {
+            flex: 1;
+            accent-color: var(--emerald-600);
+            cursor: pointer;
+        }
+
+        /* Per-Proxy 300MB Metering Styles */
+        .quota-meter-wrap {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            min-width: 140px;
+        }
+
+        .quota-meter-track {
+            height: 7px;
+            border-radius: 99px;
+            background: #e2e8f0;
+            overflow: hidden;
+            display: flex;
+        }
+
+        .quota-meter-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--emerald-500), var(--emerald-600));
+            border-radius: 99px;
+            transition: width 0.3s;
+        }
+
+        .quota-meter-fill.exhausted {
+            background: #ef4444;
+        }
+
+        .quota-meter-text {
+            font-size: 10.5px;
+            font-family: var(--font-mono);
+            color: var(--text-secondary);
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .tier-tag {
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-size: 10.5px;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .tier-tag.vip {
+            background: var(--emerald-50);
+            color: var(--emerald-700);
+            border: 1px solid var(--border-emerald);
+        }
+
+        .tier-tag.free {
+            background: #f1f5f9;
+            color: #475569;
+            border: 1px solid #cbd5e1;
+        }
+
+        .status-pill.exhausted {
+            background: #fee2e2;
+            color: #dc2626;
+            border: 1px solid #fca5a5;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Sidebar Navigation (7 Complete SaaS Modules) -->
+    <aside class="cms-sidebar">
+        
+        <!-- Brand Header -->
+        <div class="brand-header">
+            <div class="brand-logo-badge">
+                <svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"/></svg>
+            </div>
+            <div class="brand-title-box">
+                <h2>NextAiVPN SaaS</h2>
+                <span>Enterprise Management Portal</span>
+            </div>
+        </div>
+
+        <!-- Navigation Links -->
+        <nav class="sidebar-nav-group">
+            
+            <span class="nav-category-title">Tổng Quan & Tài Chính</span>
+            
+            <a class="sidebar-link active" onclick="switchSaaSTab('dashboard', this)">
+                <svg viewBox="0 0 24 24"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg>
+                Executive Dashboard
+                <span class="link-badge">$48.2k MRR</span>
+            </a>
+
+            <a class="sidebar-link" onclick="switchSaaSTab('billing', this)">
+                <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.11 0-1.99.89-1.99 2L2 18c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2zm0 14H4v-6h16v6zm0-10H4V6h16v2z"/></svg>
+                Doanh Thu & Cổng Pay
+                <span class="link-badge" style="background: var(--accent-gold-bg); color: var(--accent-gold);">Stripe • USDT</span>
+            </a>
+
+            <span class="nav-category-title">Người Dùng & Bản Quyền (HWID)</span>
+
+            <a class="sidebar-link" onclick="switchSaaSTab('users', this)">
+                <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+                Quản Lý Người Dùng
+                <span class="link-badge">6,310</span>
+            </a>
+
+            <a class="sidebar-link" onclick="switchSaaSTab('licenses', this)">
+                <svg viewBox="0 0 24 24"><path d="M12.65 10C11.83 7.67 9.61 6 7 6c-3.31 0-6 2.69-6 6s2.69 6 6 6c2.61 0 4.83-1.67 5.65-4H17v4h4v-4h2v-4H12.65zM7 14c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z"/></svg>
+                License Key (1 PC+1 Mob)
+                <span class="link-badge" style="background: var(--emerald-100); color: var(--emerald-800);">HWID Binding</span>
+            </a>
+
+            <span class="nav-category-title">Kênh Đối Tác & Đại Lý</span>
+
+            <a class="sidebar-link" onclick="switchSaaSTab('partners', this)">
+                <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
+                Reseller & Affiliate
+                <span class="link-badge" style="background: var(--accent-purple-bg); color: var(--accent-purple);">25% Hoa Hồng</span>
+            </a>
+
+            <span class="nav-category-title">Hạ Tầng & Bảo Mật</span>
+
+            <a class="sidebar-link" onclick="switchSaaSTab('proxies', this)">
+                <svg viewBox="0 0 24 24"><path d="M4 6h16v10H4zM20 18H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2h16c1.1 0 2 .9 2 2v10c0 1.1-.9 2-2 2zm-6 2H10v2h4v-2z"/></svg>
+                Proxy Hub (Cổng 10000)
+                <span class="link-badge">42 Nodes</span>
+            </a>
+
+            <a class="sidebar-link" onclick="switchSaaSTab('security', this)">
+                <svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 6c1.4 0 2.8 1.1 2.8 2.5V11c.6 0 1.2.6 1.2 1.2v3.5c0 .7-.6 1.3-1.2 1.3H9.2c-.6 0-1.2-.6-1.2-1.2v-3.5c0-.7.6-1.3 1.2-1.3v-1.5C9.2 8.1 10.6 7 12 7z"/></svg>
+                Anti-Sharing & Audits
+                <span class="link-badge" style="background: var(--accent-red-bg); color: var(--accent-red);">0 Fraud</span>
+            </a>
+
+        </nav>
+
+        <!-- Sidebar Server Info Card -->
+        <div class="sidebar-server-info">
+            <div class="server-status-row">
+                <span>GATEWAY PORT</span>
+                <div class="live-dot"></div>
+            </div>
+            <div class="server-port-text">127.0.0.1:10000 (SOCKS5/HTTP)</div>
+            <div style="font-size: 10.5px; color: var(--emerald-800);">Kestrel API: Port 6033 LIVE</div>
+        </div>
+
+    </aside>
+
+    <!-- Main Content Workspace -->
+    <main class="cms-main-content">
+        
+        <!-- Top Sticky Header -->
+        <header class="cms-top-header">
+            <div class="header-search-bar">
+                <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+                <input type="text" class="cms-search-input" placeholder="Search Users, HWID, Licenses, Transactions, Nodes..." onkeyup="filterCmsSearch(this.value)">
+            </div>
+
+            <div class="header-right-tools">
+                <div class="sync-badge-pill">
+                    <div class="sync-dot"></div>
+                    <span>Zero-Rebuild Real-Time Sync: LIVE</span>
+                </div>
+
+                <div class="admin-profile-chip" onclick="showToast('Master Admin Account: boluc@nextai.vn')">
+                    <div class="admin-avatar">AD</div>
+                    <span class="admin-name">Master Admin</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Workspace Body -->
+        <div class="workspace-body">
+            
+            <!-- ======================================================== -->
+            <!-- TAB 1: EXECUTIVE SAAS DASHBOARD -->
+            <!-- ======================================================== -->
+            <section class="saas-tab-section active" id="tab-dashboard">
+                
+                <!-- 4 KPI Bento Cards -->
+                <div class="bento-stats-grid">
+                    
+                    <div class="bento-stat-card">
+                        <div class="stat-card-header">
+                            <span class="stat-label">Monthly Recurring Revenue</span>
+                            <div class="stat-icon-box">
+                                <svg viewBox="0 0 24 24"><path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"/></svg>
+                            </div>
+                        </div>
+                        <div class="stat-val-text">$48,250</div>
+                        <div class="stat-trend-footer">
+                            <span>↑ 14.8% vs last month ($579k ARR)</span>
+                        </div>
+                    </div>
+
+                    <div class="bento-stat-card">
+                        <div class="stat-card-header">
+                            <span class="stat-label">Active Paid Subscribers</span>
+                            <div class="stat-icon-box cyan">
+                                <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+                            </div>
+                        </div>
+                        <div class="stat-val-text">6,310 Users</div>
+                        <div class="stat-trend-footer" style="color: var(--accent-cyan);">
+                            <span>3,420 PC Nodes • 2,890 Mobiles</span>
+                        </div>
+                    </div>
+
+                    <div class="bento-stat-card">
+                        <div class="stat-card-header">
+                            <span class="stat-label">Gateway Live Throughput</span>
+                            <div class="stat-icon-box gold">
+                                <svg viewBox="0 0 24 24"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM17 13l-5 5-5-5h3V9h4v4h3z"/></svg>
+                            </div>
+                        </div>
+                        <div class="stat-val-text">4.82 Gbps</div>
+                        <div class="stat-trend-footer" style="color: var(--accent-gold);">
+                            <span>Total 28.4 TB Bandwidth / Month</span>
+                        </div>
+                    </div>
+
+                    <div class="bento-stat-card">
+                        <div class="stat-card-header">
+                            <span class="stat-label">ARPU & Low Churn Rate</span>
+                            <div class="stat-icon-box purple">
+                                <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                            </div>
+                        </div>
+                        <div class="stat-val-text">$7.65 / 1.8%</div>
+                        <div class="stat-trend-footer" style="color: var(--accent-purple);">
+                            <span>98.2% Proxy Node Health</span>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Revenue Chart & Device Breakdown Row -->
+                <div class="saas-metrics-row">
+                    
+                    <div class="revenue-chart-card">
+                        <div class="chart-header-row">
+                            <div>
+                                <h3 style="font-size: 15px; font-weight: 800;">Monthly Revenue Growth (USD)</h3>
+                                <p style="font-size: 11.5px; color: var(--text-muted);">Recurring subscriptions + Reseller bulk licenses</p>
+                            </div>
+                            <span class="tab-badge" style="background: var(--emerald-100); color: var(--emerald-800); font-size: 11px; padding: 4px 10px;">Year 2026 Target: $1.2M</span>
+                        </div>
+                        <div class="chart-bars-container">
+                            <div class="chart-bar-col"><div class="bar-pillar muted" style="height: 45%;"></div><span class="bar-label">Apr</span></div>
+                            <div class="chart-bar-col"><div class="bar-pillar muted" style="height: 55%;"></div><span class="bar-label">May</span></div>
+                            <div class="chart-bar-col"><div class="bar-pillar muted" style="height: 68%;"></div><span class="bar-label">Jun</span></div>
+                            <div class="chart-bar-col"><div class="bar-pillar muted" style="height: 78%;"></div><span class="bar-label">Jul</span></div>
+                            <div class="chart-bar-col"><div class="bar-pillar" style="height: 90%;"></div><span class="bar-label">Aug</span></div>
+                            <div class="chart-bar-col"><div class="bar-pillar" style="height: 100%; box-shadow: 0 0 12px rgba(16, 185, 129, 0.4);"></div><span class="bar-label">Sep</span></div>
+                        </div>
+                    </div>
+
+                    <div class="device-breakdown-card">
+                        <h3 style="font-size: 15px; font-weight: 800;">1 PC + 1 Mobile Device Mix</h3>
+                        <p style="font-size: 11.5px; color: var(--text-muted);">Strict hardware binding distribution</p>
+                        
+                        <div class="device-bar-track">
+                            <div class="track-pc" title="54.2% Windows/macOS PC"></div>
+                            <div class="track-mob" title="45.8% Android/iOS Mobile"></div>
+                        </div>
+
+                        <div style="display: flex; flex-direction: column; gap: 8px; font-size: 12px;">
+                            <div style="display: flex; justify-content: space-between;">
+                                <span>💻 PC HWID Bound:</span>
+                                <strong>3,420 (54.2%)</strong>
+                            </div>
+                            <div style="display: flex; justify-content: space-between;">
+                                <span>📱 Mobile Devices Bound:</span>
+                                <strong>2,890 (45.8%)</strong>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; color: var(--accent-red);">
+                                <span>⚠️ Anti-Sharing Violations Blocked:</span>
+                                <strong>128 attempts</strong>
+                            </div>
+                        </div>
+
+                        <button class="btn-emerald-solid" style="margin-top: auto; justify-content: center;" onclick="openKeyGenModal()">
+                            🔑 Generate Batch License Keys
+                        </button>
+                    </div>
+
+                </div>
+
+            </section>
+
+            <!-- ======================================================== -->
+            <!-- TAB 2: USER & SUBSCRIPTION MANAGEMENT -->
+            <!-- ======================================================== -->
+            <section class="saas-tab-section" id="tab-users">
+                
+                <div class="cms-action-bar">
+                    <div class="country-filter-chips">
+                        <button class="filter-chip-btn active">All Users (6,310)</button>
+                        <button class="filter-chip-btn">⭐ Pro Unlimited (4,820)</button>
+                        <button class="filter-chip-btn">🆓 Free Tier 300MB (1,490)</button>
+                        <button class="filter-chip-btn">🏢 Team / Business (85)</button>
+                    </div>
+
+                    <div class="action-buttons-cluster">
+                        <button class="btn-emerald-solid" onclick="alert('Creating new subscriber...')">
+                            + Add New Subscriber
+                        </button>
+                    </div>
+                </div>
+
+                <div class="table-data-card">
+                    <div class="table-card-header">
+                        <h3>👥 User & Subscription Accounts Directory</h3>
+                        <span style="font-size: 11.5px; color: var(--text-muted);">Hardware ID bound per seat (Max 1 PC + 1 Mobile)</span>
+                    </div>
+
+                    <table class="data-table-clean">
+                        <thead>
+                            <tr>
+                                <th>Email / Subscriber</th>
+                                <th>Plan & Tier</th>
+                                <th>HWID Bound Devices</th>
+                                <th>Quota Used</th>
+                                <th>Expires At</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <strong>boluc@nextai.vn</strong>
+                                    <div style="font-size: 11px; color: var(--text-muted);">ID: USR-88902 • Master Admin</div>
+                                </td>
+                                <td><span class="proto-badge pro">PRO VIP (1 PC + 1 MOB)</span></td>
+                                <td>
+                                    <div style="font-size: 11.5px;">💻 <code>DESKTOP-WIN11-OFFICE</code></div>
+                                    <div style="font-size: 11.5px;">📱 <code>iPhone 15 Pro Max</code></div>
+                                </td>
+                                <td><code>142.8 GB / Uncapped</code></td>
+                                <td>10 Sep 2027</td>
+                                <td><span class="ping-indicator">● Active</span></td>
+                                <td>
+                                    <button class="btn-action-sm" onclick="openUserDeviceManager('boluc@nextai.vn')">📱 Manage HWID</button>
+                                    <button class="btn-action-sm" onclick="showToast('Quota refreshed.')">🔄 Reset</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <strong>anh.vu@techcorp.vn</strong>
+                                    <div style="font-size: 11px; color: var(--text-muted);">ID: USR-77124 • Reseller Client</div>
+                                </td>
+                                <td><span class="proto-badge pro">PRO VIP (1 PC + 1 MOB)</span></td>
+                                <td>
+                                    <div style="font-size: 11.5px;">💻 <code>LAPTOP-DELL-XPS15</code></div>
+                                    <div style="font-size: 11.5px; color: var(--text-muted);">📱 Slot 2 Empty (Available)</div>
+                                </td>
+                                <td><code>38.4 GB / Uncapped</code></td>
+                                <td>24 Jan 2027</td>
+                                <td><span class="ping-indicator">● Active</span></td>
+                                <td>
+                                    <button class="btn-action-sm" onclick="openUserDeviceManager('anh.vu@techcorp.vn')">📱 Manage HWID</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <strong>freeuser99@gmail.com</strong>
+                                    <div style="font-size: 11px; color: var(--text-muted);">ID: USR-10029 • Free Tier</div>
+                                </td>
+                                <td><span class="proto-badge free">FREE 300MB/DAY</span></td>
+                                <td>
+                                    <div style="font-size: 11.5px;">💻 <code>PC-GAMING-HOME</code></div>
+                                </td>
+                                <td><code style="color: var(--accent-gold);">185.4 MB / 300.0 MB</code></td>
+                                <td>Daily Reset</td>
+                                <td><span class="ping-indicator mid">● Free Session</span></td>
+                                <td>
+                                    <button class="btn-action-sm" onclick="showToast('Upgrade link sent.')">⭐ Promote</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+            </section>
+
+            <!-- ======================================================== -->
+            <!-- TAB 3: LICENSE KEY & HWID BINDING ENFORCEMENT -->
+            <!-- ======================================================== -->
+            <section class="saas-tab-section" id="tab-licenses">
+                
+                <div class="cms-action-bar">
+                    <div class="country-filter-chips">
+                        <button class="filter-chip-btn active">All Keys (12,400)</button>
+                        <button class="filter-chip-btn">🟢 Activated (6,310)</button>
+                        <button class="filter-chip-btn">🟡 Unused Available (5,890)</button>
+                        <button class="filter-chip-btn">🔴 Revoked (200)</button>
+                    </div>
+
+                    <div class="action-buttons-cluster">
+                        <button class="btn-emerald-solid" onclick="openKeyGenModal()">
+                            🔑 Generate New Batch Keys
+                        </button>
+                    </div>
+                </div>
+
+                <div class="table-data-card">
+                    <div class="table-card-header">
+                        <h3>🔑 License Keys & Hardware Fingerprint (HWID) Ledger</h3>
+                        <span class="tab-badge" style="background: var(--emerald-100); color: var(--emerald-800);">Strict 1 PC + 1 Mobile Enforcement</span>
+                    </div>
+
+                    <table class="data-table-clean">
+                        <thead>
+                            <tr>
+                                <th>License Key</th>
+                                <th>Plan Specification</th>
+                                <th>Bound PC HWID</th>
+                                <th>Bound Mobile ID</th>
+                                <th>Transfers Used</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <div class="kikilogin-syntax-copy">
+                                        <span>NEXTAI-PRO-8821-99A0-4421</span>
+                                        <button class="btn-copy-tag" onclick="copyText('NEXTAI-PRO-8821-99A0-4421')">Copy</button>
+                                    </div>
+                                </td>
+                                <td><strong>Pro 1-Year (1 PC + 1 Mobile)</strong></td>
+                                <td><code>HWID-PC-WIN11-8F92-A3B1-94E2</code></td>
+                                <td><code>MOB-IOS-7E21-B890-44AA</code></td>
+                                <td><span class="tab-badge" style="background: var(--bg-subtle);">0/3</span></td>
+                                <td><span class="ping-indicator">● Activated</span></td>
+                                <td>
+                                    <button class="btn-action-sm danger" onclick="showToast('Key devices deauthorized.')">Unlink Devices</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="kikilogin-syntax-copy">
+                                        <span>NEXTAI-PRO-7710-BB32-1189</span>
+                                        <button class="btn-copy-tag" onclick="copyText('NEXTAI-PRO-7710-BB32-1189')">Copy</button>
+                                    </div>
+                                </td>
+                                <td><strong>Pro 1-Month (1 PC + 1 Mobile)</strong></td>
+                                <td><code>HWID-PC-WIN11-44B1-CC09-8871</code></td>
+                                <td><em style="color: var(--text-muted);">Not bound yet</em></td>
+                                <td><span class="tab-badge" style="background: var(--bg-subtle);">1/3</span></td>
+                                <td><span class="ping-indicator">● Activated</span></td>
+                                <td>
+                                    <button class="btn-action-sm danger" onclick="showToast('Key devices deauthorized.')">Unlink Devices</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="kikilogin-syntax-copy">
+                                        <span>NEXTAI-PRO-9999-UNUS-0012</span>
+                                        <button class="btn-copy-tag" onclick="copyText('NEXTAI-PRO-9999-UNUS-0012')">Copy</button>
+                                    </div>
+                                </td>
+                                <td><strong>Pro 1-Year (Reseller Batch #4)</strong></td>
+                                <td><em style="color: var(--text-muted);">Unactivated</em></td>
+                                <td><em style="color: var(--text-muted);">Unactivated</em></td>
+                                <td><span class="tab-badge" style="background: var(--bg-subtle);">0/3</span></td>
+                                <td><span class="ping-indicator mid">○ Available</span></td>
+                                <td>
+                                    <button class="btn-action-sm" onclick="showToast('Key assigned to customer.')">Assign</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+            </section>
+
+            <!-- ======================================================== -->
+            <!-- TAB 4: BILLING, REVENUE & PAYMENT GATEWAYS -->
+            <!-- ======================================================== -->
+            <section class="saas-tab-section" id="tab-billing">
+                
+                <div class="bento-stats-grid">
+                    <div class="bento-stat-card">
+                        <div class="stat-label">Stripe Processing (Credit Card)</div>
+                        <div class="stat-val-text">$31,420</div>
+                        <div class="stat-trend-footer"><span>Auto-renew active (94.2%)</span></div>
+                    </div>
+                    <div class="bento-stat-card">
+                        <div class="stat-label">Crypto Web3 (USDT TRC20/BEP20)</div>
+                        <div class="stat-val-text">$12,850</div>
+                        <div class="stat-trend-footer" style="color: var(--accent-cyan);"><span>Automated Webhook Confirmed</span></div>
+                    </div>
+                    <div class="bento-stat-card">
+                        <div class="stat-label">VietQR / Banking (Vietnam)</div>
+                        <div class="stat-val-text">98.5M VND</div>
+                        <div class="stat-trend-footer" style="color: var(--accent-gold);"><span>Instant Auto-Activation</span></div>
+                    </div>
+                    <div class="bento-stat-card">
+                        <div class="stat-label">PayPal Global</div>
+                        <div class="stat-val-text">$3,980</div>
+                        <div class="stat-trend-footer" style="color: var(--accent-purple);"><span>0 Chargebacks</span></div>
+                    </div>
+                </div>
+
+                <div class="table-data-card">
+                    <div class="table-card-header">
+                        <h3>💳 Live Transactions & Invoices Ledger</h3>
+                        <button class="btn-emerald-solid" onclick="showToast('Exporting financial report CSV...')">📊 Export CSV Report</button>
+                    </div>
+
+                    <table class="data-table-clean">
+                        <thead>
+                            <tr>
+                                <th>Invoice #</th>
+                                <th>Customer</th>
+                                <th>Package Plan</th>
+                                <th>Gateway</th>
+                                <th>Amount</th>
+                                <th>Status</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>INV-202609-0891</code></td>
+                                <td>boluc@nextai.vn</td>
+                                <td>Pro Unlimited Yearly (1 PC + 1 Mobile)</td>
+                                <td><span class="proto-badge socks5">STRIPE</span></td>
+                                <td><strong>$39.99 USD</strong></td>
+                                <td><span class="ping-indicator">● COMPLETED</span></td>
+                                <td>10 Sep 2026, 16:40</td>
+                            </tr>
+                            <tr>
+                                <td><code>INV-202609-0890</code></td>
+                                <td>reseller_asia_01</td>
+                                <td>Bulk 100 Keys Gold Tier (45% Off)</td>
+                                <td><span class="proto-badge vless">USDT TRC20</span></td>
+                                <td><strong>$2,199.45 USD</strong></td>
+                                <td><span class="ping-indicator">● COMPLETED</span></td>
+                                <td>10 Sep 2026, 14:15</td>
+                            </tr>
+                            <tr>
+                                <td><code>INV-202609-0889</code></td>
+                                <td>member_vn@gmail.com</td>
+                                <td>Pro Monthly Subscription</td>
+                                <td><span class="proto-badge pro">VIETQR</span></td>
+                                <td><strong>120,000 VND</strong></td>
+                                <td><span class="ping-indicator">● COMPLETED</span></td>
+                                <td>10 Sep 2026, 12:08</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+            </section>
+
+            <!-- ======================================================== -->
+            <!-- TAB 5: PARTNERS, RESELLERS & AFFILIATE NETWORK -->
+            <!-- ======================================================== -->
+            <section class="saas-tab-section" id="tab-partners">
+                
+                <div class="bento-stats-grid">
+                    <div class="bento-stat-card">
+                        <div class="stat-label">Active Resellers (Đại Lý)</div>
+                        <div class="stat-val-text">38 Partners</div>
+                        <div class="stat-trend-footer"><span>Tier Gold & Platinum (45%-55% off)</span></div>
+                    </div>
+                    <div class="bento-stat-card">
+                        <div class="stat-label">Affiliate Publishers</div>
+                        <div class="stat-val-text">245 Affiliates</div>
+                        <div class="stat-trend-footer" style="color: var(--accent-cyan);"><span>25% Lifetime Recurring</span></div>
+                    </div>
+                    <div class="bento-stat-card">
+                        <div class="stat-label">Affiliate Sales This Month</div>
+                        <div class="stat-val-text">$18,400</div>
+                        <div class="stat-trend-footer" style="color: var(--accent-gold);"><span>Commission Paid: $4,600</span></div>
+                    </div>
+                    <div class="bento-stat-card">
+                        <div class="stat-label">Pending Payout Requests</div>
+                        <div class="stat-val-text">2 Requests</div>
+                        <div class="stat-trend-footer" style="color: var(--accent-purple);"><span>$1,250.00 Total</span></div>
+                    </div>
+                </div>
+
+                <div class="table-data-card">
+                    <div class="table-card-header">
+                        <h3>🤝 Reseller & Wholesale License Accounts</h3>
+                        <button class="btn-emerald-solid" onclick="alert('Adding new reseller partner...')">+ Add Reseller Partner</button>
+                    </div>
+
+                    <table class="data-table-clean">
+                        <thead>
+                            <tr>
+                                <th>Reseller Code</th>
+                                <th>Company / Contact</th>
+                                <th>Wholesale Tier</th>
+                                <th>Wallet Balance</th>
+                                <th>Total Keys Sold</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>RESELLER_ASIA_01</code></td>
+                                <td>TechAsia Proxy Solutions (Hong Kong)</td>
+                                <td><span class="proto-badge pro">PLATINUM (55% OFF)</span></td>
+                                <td><strong>$12,450.00 USD</strong></td>
+                                <td>2,400 Keys</td>
+                                <td><span class="ping-indicator">● Active</span></td>
+                                <td>
+                                    <button class="btn-action-sm" onclick="showToast('Wallet balance topup opened.')">💳 Top Up</button>
+                                    <button class="btn-action-sm" onclick="showToast('Exported 100 bulk keys.')">📦 Export Keys</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><code>RESELLER_VN_MMO</code></td>
+                                <td>MMO Vietnam Community Hub</td>
+                                <td><span class="proto-badge vless">GOLD (45% OFF)</span></td>
+                                <td><strong>$4,200.00 USD</strong></td>
+                                <td>850 Keys</td>
+                                <td><span class="ping-indicator">● Active</span></td>
+                                <td>
+                                    <button class="btn-action-sm" onclick="showToast('Wallet balance topup opened.')">💳 Top Up</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+            </section>
+
+            <!-- ======================================================== -->
+            <!-- TAB 6: PROXY MATRIX, MULTI-RELAY SHIELD & 10GB/300MB QUOTA CONTROLLER (PORT 10000) -->
+            <!-- ======================================================== -->
+            <section class="saas-tab-section" id="tab-proxies">
+                
+                <!-- 1. DÀN KHIÊN CHẮN MULTI-RELAY MASTER SWITCH & FLEET CONTROLLER -->
+                <div class="relay-master-box">
+                    <div class="relay-switch-header">
+                        <div>
+                            <h3 style="font-size: 15px; font-weight: 800; color: var(--text-main); display: flex; align-items: center; gap: 8px;">
+                                🛡️ Dàn VPS Trung Chuyển Phân Tán (Multi-Relay Shield) & Bộ Chuyển Mạch Tải
+                            </h3>
+                            <span style="font-size: 12px; color: var(--text-muted);">
+                                Ẩn danh tuyệt đối IP máy chủ Core, chia tải song song qua các cụm VPS Singapore, Tokyo, Frankfurt, Los Angeles.
+                            </span>
+                        </div>
+
+                        <!-- 3-Mode Master Switcher -->
+                        <div class="relay-mode-pills">
+                            <button class="relay-mode-btn" id="btnModeFull" onclick="setRelayMode('FullRelay', this)">
+                                🛡️ 100% Full Relay (Max Privacy)
+                            </button>
+                            <button class="relay-mode-btn active" id="btnModeSemi" onclick="setRelayMode('SemiRelay', this)">
+                                ⚡ Semi-Relay (Bán phần / Chia tải)
+                            </button>
+                            <button class="relay-mode-btn" id="btnModeBypass" onclick="setRelayMode('DirectBypass', this)">
+                                🚀 Direct Bypass (Tắt Relay khi quá tải)
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Relay Fleet Cards Grid -->
+                    <div class="relay-fleet-grid">
+                        
+                        <!-- VPS 1: Singapore -->
+                        <div class="relay-vps-card" id="cardRelaySG">
+                            <div class="relay-card-top">
+                                <div class="relay-title">
+                                    <img class="country-flag-img-sm" src="flags/sg.png" alt="SG">
+                                    <span>Relay-SG-01 (Singapore)</span>
+                                </div>
+                                <span class="ping-indicator">● 18 ms</span>
+                            </div>
+                            <div style="font-size: 11.5px; color: var(--text-secondary); display: flex; justify-content: space-between;">
+                                <span>IP: <code>103.150.12.88</code></span>
+                                <span>Tải: <strong>142 / 5,000 Streams</strong></span>
+                            </div>
+                            <div class="relay-slider-box">
+                                <span>Trọng số tải (Weight):</span>
+                                <input type="range" class="relay-slider" min="1" max="100" value="40" oninput="updateRelayWeight('SG', this.value)">
+                                <strong id="weightValSG">40%</strong>
+                            </div>
+                        </div>
+
+                        <!-- VPS 2: Tokyo -->
+                        <div class="relay-vps-card" id="cardRelayJP">
+                            <div class="relay-card-top">
+                                <div class="relay-title">
+                                    <img class="country-flag-img-sm" src="flags/jp.png" alt="JP">
+                                    <span>Relay-Tokyo-02 (Japan)</span>
+                                </div>
+                                <span class="ping-indicator">● 38 ms</span>
+                            </div>
+                            <div style="font-size: 11.5px; color: var(--text-secondary); display: flex; justify-content: space-between;">
+                                <span>IP: <code>45.76.108.92</code></span>
+                                <span>Tải: <strong>98 / 4,000 Streams</strong></span>
+                            </div>
+                            <div class="relay-slider-box">
+                                <span>Trọng số tải (Weight):</span>
+                                <input type="range" class="relay-slider" min="1" max="100" value="30" oninput="updateRelayWeight('JP', this.value)">
+                                <strong id="weightValJP">30%</strong>
+                            </div>
+                        </div>
+
+                        <!-- VPS 3: Frankfurt Germany -->
+                        <div class="relay-vps-card" id="cardRelayDE">
+                            <div class="relay-card-top">
+                                <div class="relay-title">
+                                    <img class="country-flag-img-sm" src="flags/de.png" alt="DE">
+                                    <span>Relay-Frankfurt-03 (Germany)</span>
+                                </div>
+                                <span class="ping-indicator">● 145 ms</span>
+                            </div>
+                            <div style="font-size: 11.5px; color: var(--text-secondary); display: flex; justify-content: space-between;">
+                                <span>IP: <code>159.69.198.45</code></span>
+                                <span>Tải: <strong>86 / 6,000 Streams</strong></span>
+                            </div>
+                            <div class="relay-slider-box">
+                                <span>Trọng số tải (Weight):</span>
+                                <input type="range" class="relay-slider" min="1" max="100" value="30" oninput="updateRelayWeight('DE', this.value)">
+                                <strong id="weightValDE">30%</strong>
+                            </div>
+                        </div>
+
+                        <!-- VPS 4: Los Angeles US -->
+                        <div class="relay-vps-card" id="cardRelayUS">
+                            <div class="relay-card-top">
+                                <div class="relay-title">
+                                    <img class="country-flag-img-sm" src="flags/us.png" alt="US">
+                                    <span>Relay-LosAngeles-04 (USA)</span>
+                                </div>
+                                <span class="ping-indicator">● 180 ms</span>
+                            </div>
+                            <div style="font-size: 11.5px; color: var(--text-secondary); display: flex; justify-content: space-between;">
+                                <span>IP: <code>108.61.219.14</code></span>
+                                <span>Tải: <strong>110 / 5,000 Streams</strong></span>
+                            </div>
+                            <div class="relay-slider-box">
+                                <span>Trọng số tải (Weight):</span>
+                                <input type="range" class="relay-slider" min="1" max="100" value="35" oninput="updateRelayWeight('US', this.value)">
+                                <strong id="weightValUS">35%</strong>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- 2. BENTO STATS QUẢN LÝ HÀNG NGHÌN PROXY (10GB/THÁNG ~ 300MB/NGÀY) -->
+                <div class="bento-stats-grid">
+                    <div class="bento-stat-card">
+                        <div class="stat-label">Tổng Kho Proxy (Pool Size)</div>
+                        <div class="stat-val-text" id="statTotalProxies">1,248 Nodes</div>
+                        <div class="stat-trend-footer"><span>Active Quota: <strong>1,180</strong> • Exhausted: <strong>68</strong></span></div>
+                    </div>
+                    <div class="bento-stat-card">
+                        <div class="stat-label">Phân Cấp Proxy Pool</div>
+                        <div class="stat-val-text">820 VIP / 428 Free</div>
+                        <div class="stat-trend-footer" style="color: var(--emerald-600);"><span>VIP (Auth 1Gbps) • Free (No-Pass 10Mbps)</span></div>
+                    </div>
+                    <div class="bento-stat-card">
+                        <div class="stat-label">Lưu Lượng Tiêu Thụ Hôm Nay</div>
+                        <div class="stat-val-text">284.5 GB / Day</div>
+                        <div class="stat-trend-footer" style="color: var(--accent-gold);"><span>Hạn mức chuẩn: 300MB / Con / Ngày</span></div>
+                    </div>
+                    <div class="bento-stat-card">
+                        <div class="stat-label">Sự Kiện Tự Động Đảo Proxy</div>
+                        <div class="stat-val-text">1,420 Auto-Switches</div>
+                        <div class="stat-trend-footer" style="color: var(--accent-purple);"><span>Tự đảo khi proxy hết 300MB</span></div>
+                    </div>
+                </div>
+
+                <!-- 3. ACTION BAR & POOL FILTER -->
+                <div class="cms-action-bar">
+                    <div class="country-filter-chips">
+                        <button class="filter-chip-btn active" onclick="filterTier('all', this)">🌐 Tất Cả (1,248)</button>
+                        <button class="filter-chip-btn" onclick="filterTier('vip', this)">⭐ VIP Pool (User:Pass)</button>
+                        <button class="filter-chip-btn" onclick="filterTier('free', this)">🟢 Free Pool (No-Pass / Chậm)</button>
+                        <button class="filter-chip-btn" onclick="filterTier('exhausted', this)">🔒 Hết 300MB Hôm Nay (68)</button>
+                    </div>
+
+                    <div class="action-buttons-cluster">
+                        <button class="btn-emerald-solid" onclick="openBulkModal()">
+                            + Nhập Hàng Nghìn Proxy
+                        </button>
+                        <button class="btn-ghost-secondary" onclick="pingAllProxies()">
+                            ⚡ 1-Click Ping All
+                        </button>
+                        <button class="btn-ghost-secondary" onclick="resetAllDailyQuotas()">
+                            🔄 Reset 300MB Quota Ngày
+                        </button>
+                        <button class="btn-ghost-secondary danger" onclick="purgeDeadProxies()">
+                            🗑️ Xóa Node Chết
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 4. TABLE PROXY VỚI THANH ĐO QUOTA 300MB/NGÀY -->
+                <div class="table-data-card">
+                    <div class="table-card-header">
+                        <h3>🌐 Universal Proxy Gateway & Residential Mesh Nodes (Port 10000)</h3>
+                        <span style="font-size: 11.5px; color: var(--text-muted);">Tự động ngắt và đảo proxy khi chạm ngưỡng 300MB/ngày</span>
+                    </div>
+
+                    <table class="data-table-clean" id="proxyTable">
+                        <thead>
+                            <tr>
+                                <th style="width: 30px;"><input type="checkbox"></th>
+                                <th>Quốc Gia & Cụm Node</th>
+                                <th>IP : Port</th>
+                                <th>Phân Cấp (Tier)</th>
+                                <th>Hạn Mức 300MB Hôm Nay</th>
+                                <th>Độ Trễ</th>
+                                <th>Cú Pháp KikiLogin</th>
+                                <th>Thao Tác</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- US Node 1 (VIP - Active) -->
+                            <tr data-tier="vip" data-exhausted="false" data-c="us">
+                                <td><input type="checkbox"></td>
+                                <td>
+                                    <div class="country-node-cell">
+                                        <img class="country-flag-img-sm" src="flags/us.png" alt="US">
+                                        <div class="node-info-text">
+                                            <h5>United States (Atlanta) #1</h5>
+                                            <span>Comcast Residential Dedicated</span>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td><code>192.111.130.5:17002</code></td>
+                                <td><span class="tier-tag vip">⭐ VIP (User:Pass)</span></td>
+                                <td>
+                                    <div class="quota-meter-wrap">
+                                        <div class="quota-meter-track">
+                                            <div class="quota-meter-fill" style="width: 61.8%;"></div>
+                                        </div>
+                                        <div class="quota-meter-text">
+                                            <span>185.4 MB</span>
+                                            <span>300 MB (61.8%)</span>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td><span class="ping-indicator">● 38 ms</span></td>
+                                <td>
+                                    <div class="kikilogin-syntax-copy">
+                                        <span>127.0.0.1:10000:us_atl1:pass</span>
+                                        <button class="btn-copy-tag" onclick="copyText('127.0.0.1:10000:us_atl1:pass')">Copy</button>
+                                    </div>
+                                </td>
+                                <td><button class="btn-action-sm" onclick="showToast('Testing US Atlanta...')">Test</button></td>
+                            </tr>
+
+                            <!-- VN Hanoi (VIP - Active) -->
+                            <tr data-tier="vip" data-exhausted="false" data-c="vn">
+                                <td><input type="checkbox"></td>
+                                <td>
+                                    <div class="country-node-cell">
+                                        <img class="country-flag-img-sm" src="flags/vn.png" alt="VN">
+                                        <div class="node-info-text">
+                                            <h5>Vietnam (Hanoi) #1</h5>
+                                            <span>VNPT Residential Fiber High-Speed</span>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td><code>14.248.82.114:1080</code></td>
+                                <td><span class="tier-tag vip">⭐ VIP (User:Pass)</span></td>
+                                <td>
+                                    <div class="quota-meter-wrap">
+                                        <div class="quota-meter-track">
+                                            <div class="quota-meter-fill" style="width: 42.0%;"></div>
+                                        </div>
+                                        <div class="quota-meter-text">
+                                            <span>126.0 MB</span>
+                                            <span>300 MB (42.0%)</span>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td><span class="ping-indicator">● 8 ms</span></td>
+                                <td>
+                                    <div class="kikilogin-syntax-copy">
+                                        <span>127.0.0.1:10000:vn_han1:pass</span>
+                                        <button class="btn-copy-tag" onclick="copyText('127.0.0.1:10000:vn_han1:pass')">Copy</button>
+                                    </div>
+                                </td>
+                                <td><button class="btn-action-sm" onclick="showToast('Testing VN Hanoi...')">Test</button></td>
+                            </tr>
+
+                            <!-- SG Node (Free - No Pass - Active) -->
+                            <tr data-tier="free" data-exhausted="false" data-c="sg">
+                                <td><input type="checkbox"></td>
+                                <td>
+                                    <div class="country-node-cell">
+                                        <img class="country-flag-img-sm" src="flags/sg.png" alt="SG">
+                                        <div class="node-info-text">
+                                            <h5>Singapore (Singtel Hub)</h5>
+                                            <span>Public Free Tier Shared Proxy</span>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td><code>103.253.25.10:3128</code></td>
+                                <td><span class="tier-tag free">🟢 Free (No-Pass)</span></td>
+                                <td>
+                                    <div class="quota-meter-wrap">
+                                        <div class="quota-meter-track">
+                                            <div class="quota-meter-fill" style="width: 78.5%;"></div>
+                                        </div>
+                                        <div class="quota-meter-text">
+                                            <span>235.5 MB</span>
+                                            <span>300 MB (78.5%)</span>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td><span class="ping-indicator" style="color: var(--accent-gold);">● 85 ms</span></td>
+                                <td>
+                                    <div class="kikilogin-syntax-copy">
+                                        <span>127.0.0.1:10000:free_sg:nopass</span>
+                                        <button class="btn-copy-tag" onclick="copyText('127.0.0.1:10000:free_sg:nopass')">Copy</button>
+                                    </div>
+                                </td>
+                                <td><button class="btn-action-sm" onclick="showToast('Testing SG Free...')">Test</button></td>
+                            </tr>
+
+                            <!-- JP Tokyo (VIP - EXHAUSTED TODAY -> Auto-Switched) -->
+                            <tr data-tier="vip" data-exhausted="true" data-c="jp">
+                                <td><input type="checkbox"></td>
+                                <td>
+                                    <div class="country-node-cell">
+                                        <img class="country-flag-img-sm" src="flags/jp.png" alt="JP">
+                                        <div class="node-info-text">
+                                            <h5>Japan (Tokyo Equinix) #1</h5>
+                                            <span>NTT East Residential Dedicated</span>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td><code>45.76.108.92:1080</code></td>
+                                <td><span class="tier-tag vip">⭐ VIP (User:Pass)</span></td>
+                                <td>
+                                    <div class="quota-meter-wrap">
+                                        <div class="quota-meter-track">
+                                            <div class="quota-meter-fill exhausted" style="width: 100%;"></div>
+                                        </div>
+                                        <div class="quota-meter-text">
+                                            <span style="color: #dc2626; font-weight: 700;">300.0 MB (100%)</span>
+                                            <span class="status-pill exhausted">🔒 ĐÃ HẾT 300MB</span>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td><span class="ping-indicator">● 38 ms</span></td>
+                                <td>
+                                    <div class="kikilogin-syntax-copy">
+                                        <span style="color: var(--text-muted); text-decoration: line-through;">127.0.0.1:10000:jp_tyo1:pass</span>
+                                        <button class="btn-copy-tag" style="background: #fee2e2; color: #dc2626;" onclick="showToast('Node này đã hết 300MB hôm nay, hệ thống tự đảo sang node JP khác.')">Đã Đảo Node</button>
+                                    </div>
+                                </td>
+                                <td><button class="btn-action-sm" onclick="resetSingleProxyQuota(this)">Mở Lại</button></td>
+                            </tr>
+
+                            <!-- DE Germany (Free - No Pass - Active) -->
+                            <tr data-tier="free" data-exhausted="false" data-c="de">
+                                <td><input type="checkbox"></td>
+                                <td>
+                                    <div class="country-node-cell">
+                                        <img class="country-flag-img-sm" src="flags/de.png" alt="DE">
+                                        <div class="node-info-text">
+                                            <h5>Germany (Frankfurt)</h5>
+                                            <span>Vodafone Free Tier Proxy</span>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td><code>159.69.198.45:8080</code></td>
+                                <td><span class="tier-tag free">🟢 Free (No-Pass)</span></td>
+                                <td>
+                                    <div class="quota-meter-wrap">
+                                        <div class="quota-meter-track">
+                                            <div class="quota-meter-fill" style="width: 32.0%;"></div>
+                                        </div>
+                                        <div class="quota-meter-text">
+                                            <span>96.0 MB</span>
+                                            <span>300 MB (32.0%)</span>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td><span class="ping-indicator" style="color: var(--accent-gold);">● 165 ms</span></td>
+                                <td>
+                                    <div class="kikilogin-syntax-copy">
+                                        <span>127.0.0.1:10000:free_de:nopass</span>
+                                        <button class="btn-copy-tag" onclick="copyText('127.0.0.1:10000:free_de:nopass')">Copy</button>
+                                    </div>
+                                </td>
+                                <td><button class="btn-action-sm" onclick="showToast('Testing DE Free...')">Test</button></td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+
+            </section>
+
+            <!-- ======================================================== -->
+            <!-- TAB 7: SECURITY & ANTI-SHARING FRAUD AUDIT -->
+            <!-- ======================================================== -->
+            <section class="saas-tab-section" id="tab-security">
+                
+                <div class="table-data-card">
+                    <div class="table-card-header">
+                        <h3>🛡️ Real-Time Anti-Sharing Fraud Alerts & Audit Trail</h3>
+                        <span class="tab-badge" style="background: var(--accent-red-bg); color: var(--accent-red);">0 Active Breaches</span>
+                    </div>
+
+                    <table class="data-table-clean">
+                        <thead>
+                            <tr>
+                                <th>Timestamp</th>
+                                <th>Event Type</th>
+                                <th>Actor / Account</th>
+                                <th>IP & Location</th>
+                                <th>Fraud Diagnostic Detail</th>
+                                <th>Enforced Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>10 Sep 2026, 16:32:10</code></td>
+                                <td><span class="proto-badge pro" style="background: var(--accent-red-bg); color: var(--accent-red);">LIMIT_EXCEEDED</span></td>
+                                <td>user992@gmail.com</td>
+                                <td>113.190.22.4 (Hanoi)</td>
+                                <td>Attempted login from 2nd PC (<code>HWID-PC-WIN11-B892</code>) while 1st PC active</td>
+                                <td><strong style="color: var(--accent-red);">409 BLOCKED (Prompted Transfer)</strong></td>
+                            </tr>
+                            <tr>
+                                <td><code>10 Sep 2026, 15:10:04</code></td>
+                                <td><span class="proto-badge vless">DEVICE_KICKED</span></td>
+                                <td>boluc@nextai.vn</td>
+                                <td>14.248.82.114 (Hanoi)</td>
+                                <td>User manually deauthorized Mobile ID (<code>MOB-IOS-7E21</code>)</td>
+                                <td><strong style="color: var(--emerald-700);">Session Revoked Successfully</strong></td>
+                            </tr>
+                            <tr>
+                                <td><code>10 Sep 2026, 14:02:18</code></td>
+                                <td><span class="proto-badge socks5">KEY_ACTIVATED</span></td>
+                                <td>anh.vu@techcorp.vn</td>
+                                <td>171.244.39.20 (Hanoi)</td>
+                                <td>Redeemed Key <code>NEXTAI-PRO-7710-BB32</code> on 1st PC</td>
+                                <td><strong style="color: var(--emerald-700);">HWID Bound to Slot 1</strong></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+            </section>
+
+        </div>
+
+    </main>
+
+    <!-- MODAL 1: BATCH KEY GENERATOR -->
+    <div class="modal-overlay" id="keyGenModal">
+        <div class="modal-card-box">
+            <button class="modal-close-btn" onclick="closeKeyGenModal()">✕</button>
+            <h3 style="font-size: 17px; font-weight: 800; color: var(--emerald-900);">🔑 Batch License Key Generator</h3>
+            <p style="font-size: 12px; color: var(--text-muted);">Generate unique, tamper-proof license keys with hardcoded 1 PC + 1 Mobile hardware binding constraints.</p>
+            
+            <div class="form-row-grid">
+                <div class="form-group-item">
+                    <label class="form-label">Subscription Tier</label>
+                    <select class="form-control" id="genPlanCode">
+                        <option>Pro Unlimited (1 PC + 1 Mobile)</option>
+                        <option>Residential VIP (1 PC + 1 Mobile)</option>
+                        <option>Team Multi-Seat (5 PC + 5 Mobile)</option>
+                    </select>
+                </div>
+                <div class="form-group-item">
+                    <label class="form-label">Duration</label>
+                    <select class="form-control">
+                        <option>1 Year (365 Days)</option>
+                        <option>1 Month (30 Days)</option>
+                        <option>Lifetime Unlimited</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-row-grid">
+                <div class="form-group-item">
+                    <label class="form-label">Quantity of Keys</label>
+                    <input type="number" class="form-control" value="10" min="1" max="1000">
+                </div>
+                <div class="form-group-item">
+                    <label class="form-label">Assign to Reseller (Optional)</label>
+                    <select class="form-control">
+                        <option>Direct Retail Customers</option>
+                        <option>RESELLER_ASIA_01 (TechAsia)</option>
+                        <option>RESELLER_VN_MMO (MMO Hub)</option>
+                    </select>
+                </div>
+            </div>
+
+            <button class="btn-emerald-solid" style="justify-content: center; margin-top: 8px;" onclick="executeKeyGen()">
+                🚀 Generate & Export License Batch
+            </button>
+        </div>
+    </div>
+
+    <!-- MODAL 2: BULK PROXY ADD -->
+    <div class="modal-overlay" id="bulkModal">
+        <div class="modal-card-box">
+            <button class="modal-close-btn" onclick="closeBulkModal()">✕</button>
+            <h3 style="font-size: 17px; font-weight: 800; color: var(--emerald-900);">🌐 Add Proxy Nodes (Bulk Import)</h3>
+            <p style="font-size: 12px; color: var(--text-muted);">Input raw proxy list formatted as <code>ip:port:user:pass:country</code>.</p>
+            
+            <textarea class="form-control" style="height: 120px; font-family: var(--font-mono); font-size: 11px;" placeholder="192.111.130.5:17002:user:pass:US
+14.248.82.114:1080:user:pass:VN
+82.165.197.1:1080:user:pass:GB"></textarea>
+
+            <button class="btn-emerald-solid" style="justify-content: center;" onclick="executeAddProxies()">
+                📥 Import & Auto-Ping Test
+            </button>
+        </div>
+    </div>
+
+    <!-- Toast Area -->
+    <div class="toast-container" id="toastBox"></div>
+
+    <script>
+        function switchSaaSTab(tabId, el) {
+            document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('active'));
+            if (el) el.classList.add('active');
+
+            document.querySelectorAll('.saas-tab-section').forEach(s => s.classList.remove('active'));
+            const target = document.getElementById('tab-' + tabId);
+            if (target) {
+                target.classList.add('active');
+            }
+        }
+
+        /* ---------------------------------------------------- */
+        /* MULTI-RELAY FAN-OUT & 300MB QUOTA CONTROLLER JS      */
+        /* ---------------------------------------------------- */
+        function setRelayMode(mode, btn) {
+            document.querySelectorAll('.relay-mode-btn').forEach(b => b.classList.remove('active'));
+            if (btn) btn.classList.add('active');
+
+            const cards = document.querySelectorAll('.relay-vps-card');
+            if (mode === 'FullRelay') {
+                cards.forEach(c => {
+                    c.style.opacity = '1';
+                    c.style.borderColor = 'var(--border-emerald)';
+                });
+                showToast('🛡️ Chế độ 100% Full Relay: Mọi luồng đi qua 4 VPS trung chuyển (SG, JP, DE, US). IP gốc NextAiVPN được ẩn 100%!');
+            } else if (mode === 'SemiRelay') {
+                cards.forEach(c => {
+                    c.style.opacity = '1';
+                    c.style.borderColor = 'var(--border-emerald)';
+                });
+                showToast('⚡ Chế độ Semi-Relay (Bán phần): User VIP đi qua Relay ẩn IP; User Free cân bằng tải trực tiếp!');
+            } else if (mode === 'DirectBypass') {
+                cards.forEach(c => {
+                    c.style.opacity = '0.55';
+                    c.style.borderColor = 'var(--border-subtle)';
+                });
+                showToast('🚀 Chế độ Direct Bypass: Đã tạm ngắt Relay khi quá tải! Core kết nối trực tiếp đến Upstream Proxy để giải phóng băng thông.');
+            }
+        }
+
+        function updateRelayWeight(code, val) {
+            const label = document.getElementById('weightVal' + code);
+            if (label) {
+                label.innerText = val + '%';
+            }
+            showToast(`⚙️ Đã cập nhật trọng số điều phối cho Relay ${code}: ${val}%`);
+        }
+
+        function filterTier(tier, btn) {
+            document.querySelectorAll('.country-filter-chips .filter-chip-btn').forEach(b => b.classList.remove('active'));
+            if (btn) btn.classList.add('active');
+
+            const rows = document.querySelectorAll('#proxyTable tbody tr');
+            rows.forEach(r => {
+                const rTier = r.getAttribute('data-tier');
+                const rExhausted = r.getAttribute('data-exhausted');
+
+                if (tier === 'all') {
+                    r.style.display = '';
+                } else if (tier === 'vip') {
+                    r.style.display = (rTier === 'vip') ? '' : 'none';
+                } else if (tier === 'free') {
+                    r.style.display = (rTier === 'free') ? '' : 'none';
+                } else if (tier === 'exhausted') {
+                    r.style.display = (rExhausted === 'true') ? '' : 'none';
+                }
+            });
+        }
+
+        function resetAllDailyQuotas() {
+            const rows = document.querySelectorAll('#proxyTable tbody tr');
+            rows.forEach(r => {
+                r.setAttribute('data-exhausted', 'false');
+                const fill = r.querySelector('.quota-meter-fill');
+                if (fill) {
+                    fill.classList.remove('exhausted');
+                    fill.style.width = '0%';
+                }
+                const text = r.querySelector('.quota-meter-text');
+                if (text) {
+                    text.innerHTML = '<span>0.0 MB</span><span>300 MB (0.0%)</span>';
+                }
+                const copyWrap = r.querySelector('.kikilogin-syntax-copy');
+                if (copyWrap) {
+                    const span = copyWrap.querySelector('span');
+                    if (span) {
+                        span.style.textDecoration = 'none';
+                        span.style.color = 'var(--emerald-800)';
+                    }
+                    const cBtn = copyWrap.querySelector('.btn-copy-tag');
+                    if (cBtn) {
+                        cBtn.style.background = '';
+                        cBtn.style.color = '';
+                        cBtn.innerText = 'Copy';
+                        cBtn.onclick = function() { copyText(span.innerText); };
+                    }
+                }
+            });
+
+            // Update stats
+            const statTotal = document.getElementById('statTotalProxies');
+            if (statTotal) {
+                const footer = statTotal.parentElement.querySelector('.stat-trend-footer');
+                if (footer) footer.innerHTML = '<span>Active Quota: <strong>1,248</strong> • Exhausted: <strong>0</strong></span>';
+            }
+
+            showToast('🔄 Đã Reset 300MB/ngày cho toàn bộ 1,248 proxy! Tất cả node đã mở lại quota thành công.');
+        }
+
+        function resetSingleProxyQuota(btn) {
+            const row = btn.closest('tr');
+            if (!row) return;
+
+            row.setAttribute('data-exhausted', 'false');
+            const fill = row.querySelector('.quota-meter-fill');
+            if (fill) {
+                fill.classList.remove('exhausted');
+                fill.style.width = '0%';
+            }
+            const text = row.querySelector('.quota-meter-text');
+            if (text) {
+                text.innerHTML = '<span>0.0 MB</span><span>300 MB (0.0%)</span>';
+            }
+            const copyWrap = row.querySelector('.kikilogin-syntax-copy');
+            if (copyWrap) {
+                const span = copyWrap.querySelector('span');
+                if (span) {
+                    span.style.textDecoration = 'none';
+                    span.style.color = 'var(--emerald-800)';
+                }
+                const cBtn = copyWrap.querySelector('.btn-copy-tag');
+                if (cBtn) {
+                    cBtn.style.background = '';
+                    cBtn.style.color = '';
+                    cBtn.innerText = 'Copy';
+                    cBtn.onclick = function() { copyText(span.innerText); };
+                }
+            }
+            btn.innerText = 'Đã Mở';
+            btn.style.background = 'var(--emerald-100)';
+            btn.style.color = 'var(--emerald-800)';
+
+            showToast('✅ Đã mở lại quota 300MB cho proxy này!');
+        }
+
+        function filterCountry(code, btn) {
+            document.querySelectorAll('.country-filter-chips .filter-chip-btn').forEach(b => b.classList.remove('active'));
+            if (btn) btn.classList.add('active');
+
+            const rows = document.querySelectorAll('#proxyTable tbody tr');
+            rows.forEach(r => {
+                if (code === 'all' || r.getAttribute('data-c') === code) {
+                    r.style.display = '';
+                } else {
+                    r.style.display = 'none';
+                }
+            });
+        }
+
+        function filterCmsSearch(query) {
+            const q = query.toLowerCase();
+            const rows = document.querySelectorAll('tbody tr');
+            rows.forEach(r => {
+                const text = r.innerText.toLowerCase();
+                r.style.display = text.includes(q) ? '' : 'none';
+            });
+        }
+
+        function pingAllProxies() {
+            showToast('⚡ Running 1-Click concurrent Ping check on all 42 nodes...');
+            setTimeout(() => {
+                showToast('✅ All active nodes healthy (Avg Latency: 34ms). 0 dead proxies detected.');
+            }, 1200);
+        }
+
+        function purgeDeadProxies() {
+            showToast('🗑️ Purged 0 dead nodes. Database is completely clean.');
+        }
+
+        function openKeyGenModal() {
+            document.getElementById('keyGenModal').classList.add('active');
+        }
+
+        function closeKeyGenModal() {
+            document.getElementById('keyGenModal').classList.remove('active');
+        }
+
+        function executeKeyGen() {
+            closeKeyGenModal();
+            showToast('🎉 10 License Keys generated with 1 PC + 1 Mobile HWID constraint!');
+        }
+
+        function openBulkModal() {
+            document.getElementById('bulkModal').classList.add('active');
+        }
+
+        function closeBulkModal() {
+            document.getElementById('bulkModal').classList.remove('active');
+        }
+
+        function executeAddProxies() {
+            closeBulkModal();
+            showToast('✅ 3 New Residential Nodes imported and synced to Gateway Port 10000.');
+        }
+
+        function openUserDeviceManager(email) {
+            showToast(`Opening HWID Device Manager for ${email}... (1 PC + 1 Mobile slot bound)`);
+        }
+
+        function copyText(txt) {
+            navigator.clipboard.writeText(txt).then(() => {
+                showToast(`Copied: ${txt}`);
+            });
+        }
+
+        function showToast(msg) {
+            const box = document.getElementById('toastBox');
+            const toast = document.createElement('div');
+            toast.className = 'toast-message';
+            toast.innerHTML = `
+                <svg style="width: 16px; height: 16px; fill: #059669; flex-shrink: 0;" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+                <span>${msg}</span>
+            `;
+            box.appendChild(toast);
+            setTimeout(() => { toast.remove(); }, 3200);
+        }
+    </script>
+</body>
+</html>

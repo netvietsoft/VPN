@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<UserControl x:Class="NextAiVPN.NoNetwork_Control" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" Style="{DynamicResource NoNetworkBackgroundUserControlStyle}" xmlns:nextaivpn="clr-namespace:NextAiVPN;assembly=NextAiVPN">
+  <Grid>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="0.15*" />
+      <RowDefinition Height="0.85*" />
+    </Grid.RowDefinitions>
+    <Image Grid.RowSpan="2" Stretch="UniformToFill" Style="{DynamicResource NoNetworkImageBackgroundStyle}" />
+    <Image Name="ExpandCollapse" Width="45" Height="45" Margin="0,21,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Opacity="0.72" Source="/Assets/btnCollapse.png" Visibility="Collapsed" MouseEnter="ExpandCollapse_MouseEnter" MouseLeave="ExpandCollapse_MouseLeave" MouseLeftButtonUp="ExpandCollapse_MouseLeftButtonUp" />
+    <Grid Row="1" Width="350" Height="250" Margin="0,50,0,0" HorizontalAlignment="Center" VerticalAlignment="Top">
+      <Image Grid.Row="1" Width="42" Height="42" Margin="0,65,0,0" HorizontalAlignment="Center" VerticalAlignment="Top" Source="/Assets/error-white.png" />
+      <TextBlock Grid.Row="1" Margin="0,130,0,0" HorizontalAlignment="Center" VerticalAlignment="Top" FontFamily="{DynamicResource MuseoSans500FontFamily}" FontSize="32" Foreground="{DynamicResource White}" Text="No network detected" />
+      <TextBlock Grid.Row="1" Width="350" Margin="0,175,0,0" HorizontalAlignment="Center" VerticalAlignment="Top" FontFamily="{DynamicResource MuseoSans700FontFamily}" FontSize="16" Foreground="{DynamicResource White}" LineHeight="23" Text="Please ensure you have internet connection." TextAlignment="Center" TextWrapping="WrapWithOverflow" />
+    </Grid>
+  </Grid>
+</UserControl>

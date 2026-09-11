@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<UserControl x:Class="NextAiVPN.SubscriptionExpired_CompletePurchase" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" Style="{DynamicResource SubscriptionExpiredBackgroundUserControlStyle}" xmlns:nextaivpn="clr-namespace:NextAiVPN;assembly=NextAiVPN">
+  <Grid>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="0.35*" />
+      <RowDefinition Height="0.5*" />
+      <RowDefinition Height="0.25*" />
+    </Grid.RowDefinitions>
+    <Image Name="exclamationIcon" Grid.Row="0" Width="44" Height="44" Margin="0,0,0,0" HorizontalAlignment="Center" VerticalAlignment="Bottom" Style="{DynamicResource SubscriptionExpiredIconImageStyle}" />
+    <StackPanel Grid.Row="1">
+      <TextBlock Width="368" Margin="0,25,0,0" HorizontalAlignment="Center" FontFamily="{DynamicResource MuseoSans700FontFamily}" FontSize="25" FontWeight="SemiBold" Foreground="{DynamicResource White}" Text="You still need to purchase your VPN subscription" TextAlignment="Center" TextWrapping="Wrap" />
+      <TextBlock Width="338" Margin="0,20,0,0" HorizontalAlignment="Center" FontFamily="{DynamicResource MuseoSans500FontFamily}" FontSize="16" Foreground="{DynamicResource White}" Text="If you've experienced any problems completing your order, then please contact customer support." TextAlignment="Center" TextWrapping="Wrap" />
+    </StackPanel>
+    <StackPanel Grid.Row="2">
+      <Border VerticalAlignment="Top">
+        <FrameworkElement.Style>
+          <Style TargetType="{x:Type Border}">
+            <Setter Property="Background" Value="{x:Null}" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Style.Triggers>
+              <Trigger Property="UIElement.IsMouseOver" Value="True">
+                <Setter Property="UIElement.Effect">
+                  <Setter.Value>
+                    <DropShadowEffect BlurRadius="35" Opacity="0.4" ShadowDepth="8" Color="Black" />
+                  </Setter.Value>
+                </Setter>
+              </Trigger>
+            </Style.Triggers>
+          </Style>
+        </FrameworkElement.Style>
+        <Button Name="CompletePurchase" Grid.Row="2" Background="{DynamicResource White}" Content="Complete Purchase" Cursor="Hand" Foreground="{DynamicResource ColorFE4E4F}" Style="{DynamicResource SubscribeButtonStyle}" />
+      </Border>
+      <TextBlock Name="CustomerSupportLink" Margin="0,25,0,0" HorizontalAlignment="Center" FontFamily="{DynamicResource MuseoSans700FontFamily}" FontSize="20" FontWeight="SemiBold" Foreground="{DynamicResource White}" Text="Contact Support Team" MouseLeftButtonUp="CustomerSupportLink_MouseLeftButtonUp" />
+    </StackPanel>
+  </Grid>
+</UserControl>

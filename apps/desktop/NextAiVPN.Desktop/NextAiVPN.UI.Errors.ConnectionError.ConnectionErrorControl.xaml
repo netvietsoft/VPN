@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<UserControl x:Class="NextAiVPN.UI.Errors.ConnectionError.ConnectionErrorControl" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:b="http://schemas.microsoft.com/xaml/behaviors" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:connectionerror="clr-namespace:NextAiVPN.UI.Errors.ConnectionError;assembly=NextAiVPN" Visibility="{Binding ControlVisibility, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+  <Grid Opacity="0.9" Background="{Binding MainGridBackGroundColor, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+    <TextBlock Name="vpnErrorText" Margin="0,90,0,0" HorizontalAlignment="Center" VerticalAlignment="Top" FontFamily="{DynamicResource MuseoSans500FontFamily}" FontSize="26" Foreground="{DynamicResource White}" Text="VPN error" />
+    <Image Name="ErrorIcon" Width="40" Height="40" Margin="0,136,0,0" HorizontalAlignment="Center" VerticalAlignment="Top" Source="/Assets/error-white.png" Visibility="Visible" />
+    <StackPanel Margin="0,190,0,0" Orientation="Vertical" Visibility="{Binding DescriptionPrivateModeVisibility, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+      <TextBlock HorizontalAlignment="Center" VerticalAlignment="Top" FontFamily="{DynamicResource MuseoSans500FontFamily}" FontSize="18" Foreground="{DynamicResource White}" Opacity="1" Text="Try a different protocol or" />
+      <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Orientation="Horizontal">
+        <TextBlock Margin="0,0,0,0" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="{DynamicResource MuseoSans500FontFamily}" FontSize="18" Foreground="{DynamicResource White}" Opacity="1" Text="contact our" />
+        <TextBlock Margin="5,0,0,0" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="{DynamicResource MuseoSans500FontFamily}" FontSize="18" Foreground="{DynamicResource White}" Opacity="1" Text="customer support." TextDecorations="Underline">
+          <b:Interaction.Triggers>
+            <b:EventTrigger EventName="MouseDown">
+              <b:InvokeCommandAction Command="{Binding CustomerSupportTextBlockMouseDownCommand}" />
+            </b:EventTrigger>
+          </b:Interaction.Triggers>
+        </TextBlock>
+      </StackPanel>
+    </StackPanel>
+    <StackPanel Margin="0,190,0,0" Orientation="Vertical" Visibility="{Binding DescriptionStreamingModeVisibility, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+      <TextBlock HorizontalAlignment="Center" VerticalAlignment="Top" FontFamily="{DynamicResource MuseoSans500FontFamily}" FontSize="18" Foreground="{DynamicResource White}" Opacity="1" Text="Please restart the VPN service or check your network settings" TextAlignment="Center" TextWrapping="Wrap" />
+    </StackPanel>
+    <b:Interaction.Triggers>
+      <b:EventTrigger EventName="MouseLeftButtonUp">
+        <b:InvokeCommandAction Command="{Binding MainGridMouseDownCommand}" />
+      </b:EventTrigger>
+    </b:Interaction.Triggers>
+  </Grid>
+</UserControl>

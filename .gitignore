@@ -1,0 +1,55 @@
+# ==============================================================================
+# .gitignore - NextAI VPN Platform & Residential Gateway Mesh
+# ==============================================================================
+
+# Build results and compilation output
+[Bb]in/
+[Oo]bj/
+[Pp]ublish/
+**/[Bb]in/
+**/[Oo]bj/
+**/[Pp]ublish/
+
+# Visual Studio & IDE local caches
+.vs/
+**/.vs/
+*.user
+*.userosv
+*.userprefs
+*.suo
+*.sln.docstates
+.vscode/
+
+# Runtime and execution logs
+*.log
+corehost.log
+app_run.log
+crash.log
+scratch/*.log
+
+# Temporary files and test artifacts
+*.tmp
+*.bak
+*.swp
+*~
+screen_check.png
+
+# Large pre-built installers (> 100MB exceeding GitHub push limits)
+# Note: Use scripts/package_installer.ps1 to build NextAiVPN_Setup.exe
+NextAiVPN_Setup.exe
+NextAiVPN_Setup.pdb
+installer/NextAiVPN_Setup.exe
+installer/NextAiVPN_Setup.pdb
+installer/NextAiVPN_Installer.msi
+*.msi
+*.pdb
+
+# Node modules
+node_modules/
+
+# OS generated files
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+.DS_Store

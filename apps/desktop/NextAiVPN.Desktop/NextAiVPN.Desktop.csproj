@@ -1,0 +1,135 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <AssemblyName>NextAiVPN.Desktop</AssemblyName>
+    <RootNamespace>NextAiVPN</RootNamespace>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>14.0</LangVersion>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <UseWPF>True</UseWPF>
+    <UseWindowsForms>True</UseWindowsForms>
+    <ApplicationIcon>vpn_icon.ico</ApplicationIcon>
+    <GenerateAssemblyInfo>False</GenerateAssemblyInfo>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ApplicationDefinition Include="NextAiVPN.App.xaml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Assets\**\*.*" />
+    <None Remove="fonts\**\*.*" />
+    <None Remove="resources\flags\*.png" />
+    <Resource Include="Assets\**\*.*" />
+    <Resource Include="fonts\**\*.*" />
+    <Resource Include="resources\flags\*.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\NextAiVPN.Common\NextAiVPN.Common.csproj" />
+    <ProjectReference Include="..\NextAiVPN.Streaming\NextAiVPN.Streaming.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.141" />
+    <PackageReference Include="System.Management" Version="9.0.0" />
+    <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.2903.40" />
+    <PackageReference Include="System.Reactive" Version="6.0.1" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="Serilog" Version="4.0.0" />
+    <PackageReference Include="Serilog.Sinks.Console" Version="6.0.0" />
+    <PackageReference Include="Serilog.Sinks.File" Version="6.0.0" />
+    <PackageReference Include="DynamicData" Version="9.0.4" />
+    <PackageReference Include="Dapper" Version="2.1.35" />
+    <PackageReference Include="System.Data.SQLite" Version="1.0.119.0" />
+    <PackageReference Include="HtmlAgilityPack" Version="1.11.71" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="8.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="GeoCoordinate.NetStandard1">
+      <HintPath>..\extracted\PFiles64\FastVPN\GeoCoordinate.NetStandard1.dll</HintPath>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Reference>
+    <Reference Include="VpnSDK">
+      <HintPath>..\extracted\PFiles64\FastVPN\VpnSDK.dll</HintPath>
+    </Reference>
+    <Reference Include="VpnSDK.Common">
+      <HintPath>..\extracted\PFiles64\FastVPN\VpnSDK.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="VpnSDK.Core">
+      <HintPath>..\extracted\PFiles64\FastVPN\VpnSDK.Core.dll</HintPath>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Reference>
+    <Reference Include="VpnSDK.NetFilter">
+      <HintPath>..\extracted\PFiles64\FastVPN\VpnSDK.NetFilter.dll</HintPath>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Reference>
+    <Reference Include="VpnSDK.Private.API">
+      <HintPath>..\extracted\PFiles64\FastVPN\VpnSDK.Private.API.dll</HintPath>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Reference>
+    <Reference Include="VpnSDK.Private.Ras">
+      <HintPath>..\extracted\PFiles64\FastVPN\VpnSDK.Private.Ras.dll</HintPath>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Reference>
+    <Reference Include="VpnSDK.Private.WFP">
+      <HintPath>..\extracted\PFiles64\FastVPN\VpnSDK.Private.WFP.dll</HintPath>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Reference>
+    <Reference Include="VpnSDK.DnsResolver">
+      <HintPath>..\extracted\PFiles64\FastVPN\VpnSDK.DnsResolver.dll</HintPath>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Reference>
+    <Reference Include="UACHelper">
+      <HintPath>..\extracted\PFiles64\FastVPN\UACHelper.dll</HintPath>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Reference>
+    <Reference Include="VpnSDK.TrafficOptimizer">
+      <HintPath>..\extracted\PFiles64\FastVPN\VpnSDK.TrafficOptimizer.dll</HintPath>
+    </Reference>
+    <Reference Include="VpnSDK.DnsMonitor">
+      <HintPath>..\extracted\PFiles64\FastVPN\VpnSDK.DnsMonitor.dll</HintPath>
+    </Reference>
+    <Reference Include="VpnSDK.Private.OpenVpn">
+      <HintPath>..\extracted\PFiles64\FastVPN\VpnSDK.Private.OpenVpn.dll</HintPath>
+    </Reference>
+    <Reference Include="H.NotifyIcon.Wpf">
+      <HintPath>..\extracted\PFiles64\FastVPN\H.NotifyIcon.Wpf.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Win32.TaskScheduler">
+      <HintPath>..\extracted\PFiles64\FastVPN\Microsoft.Win32.TaskScheduler.dll</HintPath>
+    </Reference>
+    <Reference Include="Bugsnag">
+      <HintPath>..\extracted\PFiles64\FastVPN\Bugsnag.dll</HintPath>
+    </Reference>
+    <Reference Include="RestSharp">
+      <HintPath>..\extracted\PFiles64\FastVPN\RestSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="RestSharp.Serializers.NewtonsoftJson">
+      <HintPath>..\extracted\PFiles64\FastVPN\RestSharp.Serializers.NewtonsoftJson.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\extracted\PFiles64\FastVPN\AppLogsDB.db">
+      <Link>AppLogsDB.db</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\extracted\PFiles64\FastVPN\WebView2Loader.dll">
+      <Link>WebView2Loader.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="NextAiVPN.ResourceFile.resx">
+      <ManifestResourceName>NextAiVPN.ResourceFile</ManifestResourceName>
+    </EmbeddedResource>
+    <EmbeddedResource Update="NextAiVPN.Properties.Resources.resx">
+      <ManifestResourceName>NextAiVPN.Properties.Resources</ManifestResourceName>
+    </EmbeddedResource>
+  </ItemGroup>
+</Project>

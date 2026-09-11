@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<UserControl x:Class="NextAiVPN.UI.Streaming.NoLocation.NoStreamingLocations" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:nolocation="clr-namespace:NextAiVPN.UI.Streaming.NoLocation;assembly=NextAiVPN">
+  <StackPanel Orientation="Vertical">
+    <Grid Width="285" Margin="0,131,0,0" HorizontalAlignment="Center" VerticalAlignment="Center">
+      <Grid.RowDefinitions>
+        <RowDefinition />
+        <RowDefinition />
+        <RowDefinition />
+      </Grid.RowDefinitions>
+      <Image Grid.Row="0" Width="16.67" Height="16.67" Style="{DynamicResource NoStreamingLocationImageStyle}" />
+      <TextBlock Grid.Row="1" Margin="0,9,0,0" HorizontalAlignment="Center" Style="{DynamicResource NoStreamingLocationDescriptionTextBlockStyle}" Text="Location fetch failed!" />
+      <Grid Row="2" Margin="0,24,0,0">
+        <Button Name="TryAgainButton" Width="83" Height="32" Content="Try again" Style="{DynamicResource OkButtonBindingTextStyle}" />
+        <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
+          <Image Name="SpinnerImage" Width="13.3" Height="13.3" HorizontalAlignment="Left" VerticalAlignment="Top" Style="{DynamicResource UpdateButtonSpinnerImageStyle}" Visibility="Collapsed" />
+        </Grid>
+      </Grid>
+    </Grid>
+  </StackPanel>
+</UserControl>

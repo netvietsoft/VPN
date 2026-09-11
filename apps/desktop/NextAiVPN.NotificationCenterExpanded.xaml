@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<UserControl x:Class="NextAiVPN.NotificationCenterExpanded" 
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:nextaivpn="clr-namespace:NextAiVPN;assembly=NextAiVPN"
+             Focusable="True" 
+             FontFamily="{DynamicResource MuseoSans500FontFamily}"
+             FontSize="12"
+             Foreground="{DynamicResource Color2E2E33}"
+             Background="{DynamicResource BrushBgSubtle}">
+  <Grid Margin="20,16,20,16">
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto" />
+      <RowDefinition Height="*" />
+    </Grid.RowDefinitions>
+
+    <!-- HEADER BANNER CARD -->
+    <Border Grid.Row="0" Background="#FFFFFF" BorderBrush="{DynamicResource BrushBorderEmerald}" BorderThickness="1.5" CornerRadius="12" Padding="18" Margin="0,0,0,16">
+      <Grid>
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="*" />
+          <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+
+        <StackPanel Grid.Column="0">
+          <StackPanel Orientation="Horizontal" Margin="0,0,0,4">
+            <TextBlock Text="🔔 System &amp; Security Notifications" FontFamily="{DynamicResource MuseoSans700FontFamily}" FontSize="18" FontWeight="Bold" Foreground="{DynamicResource BrushEmerald900}" />
+            <Border Margin="10,0,0,0" Padding="6,2" Background="{DynamicResource BrushEmerald100}" CornerRadius="6" VerticalAlignment="Center">
+              <TextBlock Text="SECURITY ALERTS" FontFamily="{DynamicResource MuseoSans700FontFamily}" FontSize="10" FontWeight="Bold" Foreground="{DynamicResource BrushEmerald700}" />
+            </Border>
+          </StackPanel>
+          <TextBlock Text="Real-time account security advisories, software version releases, and server maintenance." FontSize="12" Foreground="{DynamicResource Color6D6E70}" />
+        </StackPanel>
+
+        <!-- Notification Status Badge -->
+        <Border Grid.Column="1" Background="{DynamicResource BrushEmerald50}" BorderBrush="{DynamicResource BrushBorderEmerald}" BorderThickness="1" CornerRadius="8" Padding="12,6" VerticalAlignment="Center">
+          <TextBlock Text="All Systems Normal" FontFamily="{DynamicResource MuseoSans700FontFamily}" FontSize="12" FontWeight="Bold" Foreground="{DynamicResource BrushEmerald700}" />
+        </Border>
+      </Grid>
+    </Border>
+
+    <!-- MAIN NOTIFICATIONS LIST CONTAINER -->
+    <Border Grid.Row="1" Background="#FFFFFF" BorderBrush="{DynamicResource BrushBorderSubtle}" BorderThickness="1" CornerRadius="12" Padding="16">
+      <Grid>
+        <ListView Name="notificationslist" Background="Transparent" BorderThickness="0" ScrollViewer.CanContentScroll="False" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.VerticalScrollBarVisibility="Auto" VirtualizingPanel.IsVirtualizing="False" SelectionChanged="Notificationslist_SelectionChanged">
+          <ItemsControl.ItemsPanel>
+            <ItemsPanelTemplate>
+              <StackPanel />
+            </ItemsPanelTemplate>
+          </ItemsControl.ItemsPanel>
+          <ItemsControl.ItemContainerStyle>
+            <Style TargetType="{x:Type ListViewItem}">
+              <Setter Property="Height" Value="auto" />
+              <Setter Property="Width" Value="auto" />
+              <Setter Property="Margin" Value="0,0,0,8" />
+              <Setter Property="Template">
+                <Setter.Value>
+                  <ControlTemplate TargetType="{x:Type ListViewItem}">
+                    <ContentPresenter />
+                  </ControlTemplate>
+                </Setter.Value>
+              </Setter>
+            </Style>
+          </ItemsControl.ItemContainerStyle>
+          <ItemsControl.ItemTemplate>
+            <DataTemplate>
+              <Border Background="{DynamicResource BrushBgSubtle}" BorderBrush="{DynamicResource BrushBorderSubtle}" BorderThickness="1" CornerRadius="10" Padding="14">
+                <Grid Margin="0">
+                  <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                  </Grid.ColumnDefinitions>
+                  <Image Grid.Column="0" Width="28" Height="28" Margin="0,0,12,0" VerticalAlignment="Top" RenderOptions.BitmapScalingMode="HighQuality" Stretch="Uniform" Source="{Binding ImageSource}" />
+                  <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                    <DockPanel Margin="0,0,0,4">
+                      <TextBlock Text="{Binding Title}" FontFamily="{DynamicResource MuseoSans700FontFamily}" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource Color2A2A2C}" VerticalAlignment="Center" />
+                      <TextBlock Name="NotificationDate" HorizontalAlignment="Right" DockPanel.Dock="Right" FontFamily="{DynamicResource MuseoSans500FontFamily}" FontSize="11" Foreground="{DynamicResource Color6D6E70}" Text="{Binding Path=Date, Converter={StaticResource NotificationDateConverter}}" VerticalAlignment="Center" />
+                    </DockPanel>
+                    <TextBlock Name="NotificationDescription" FontFamily="{DynamicResource MuseoSans500FontFamily}" FontSize="12" LineHeight="18" Foreground="{DynamicResource Color3A3B40}" TextWrapping="Wrap" Text="{Binding Description}" />
+                  </StackPanel>
+                  <Grid Grid.Column="2" Margin="12,0,0,0" VerticalAlignment="Center">
+                    <Button Name="GoToAccountButton" Height="32" Padding="12,4" Background="{DynamicResource BrushEmerald600}" Foreground="#FFFFFF" FontWeight="Bold" FontSize="11" BorderThickness="0" Cursor="Hand" Content="Go to account" Visibility="{Binding GoToAccountCTAVisibility}" Click="GoToAccountButton_OnClick" />
+                    <Button Name="UpdateBtn" Height="32" Padding="12,4" Background="{DynamicResource BrushEmerald600}" Foreground="#FFFFFF" FontWeight="Bold" FontSize="11" BorderThickness="0" Cursor="Hand" Content="Update" Visibility="{Binding UpdateCTAVisibility}" Click="UpdateBtn_OnClick" />
+                  </Grid>
+                </Grid>
+              </Border>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ListView>
+
+        <!-- RICH CLEAN EMERALD EMPTY STATE -->
+        <StackPanel Name="EmptyState" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="20">
+          <Border Width="64" Height="64" CornerRadius="32" Background="{DynamicResource BrushEmerald100}" HorizontalAlignment="Center" Margin="0,0,0,16">
+            <TextBlock Text="🛡️" FontSize="28" HorizontalAlignment="Center" VerticalAlignment="Center" />
+          </Border>
+          <TextBlock Text="All Caught Up!" FontFamily="{DynamicResource MuseoSans700FontFamily}" FontSize="18" FontWeight="Bold" Foreground="{DynamicResource BrushEmerald900}" HorizontalAlignment="Center" Margin="0,0,0,6" />
+          <TextBlock Text="There are no pending alerts. Your NextAiVPN tunnel, DNS shield, and Residential Gateway are operating securely." FontFamily="{DynamicResource MuseoSans500FontFamily}" FontSize="12" Foreground="{DynamicResource Color6D6E70}" TextAlignment="Center" MaxWidth="460" TextWrapping="Wrap" LineHeight="18" Margin="0,0,0,16" />
+          <Border Background="{DynamicResource BrushEmerald50}" BorderBrush="{DynamicResource BrushBorderEmerald}" BorderThickness="1" CornerRadius="8" Padding="14,6" HorizontalAlignment="Center">
+            <StackPanel Orientation="Horizontal">
+              <TextBlock Text="● " Foreground="{DynamicResource BrushEmerald600}" FontWeight="Bold" FontSize="11" />
+              <TextBlock Text="NextAi Security Shield Active • Zero Leaks Detected" FontFamily="{DynamicResource MuseoSans700FontFamily}" FontSize="11" FontWeight="Bold" Foreground="{DynamicResource BrushEmerald700}" />
+            </StackPanel>
+          </Border>
+        </StackPanel>
+
+        <!-- LOADING STATE -->
+        <StackPanel Name="LoadingState" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="Collapsed">
+          <TextBlock FontFamily="{DynamicResource MuseoSans500FontFamily}" FontSize="14" Foreground="{DynamicResource Color3A3B40}" Text="Loading notifications..." TextAlignment="Center" />
+        </StackPanel>
+      </Grid>
+    </Border>
+
+    <!-- Legacy Hidden Controls for Event Wiring Compatibility -->
+    <DockPanel Name="SortPanel" Visibility="Collapsed">
+      <ComboBox Name="sorting" SelectionChanged="ComboBox_SelectionChanged" Visibility="Collapsed" />
+    </DockPanel>
+  </Grid>
+</UserControl>

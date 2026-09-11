@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<UserControl x:Class="NextAiVPN.FeedbackThankYou" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" Style="{DynamicResource FeedbackDefaultBackgroundUserControlStyle}" xmlns:nextaivpn="clr-namespace:NextAiVPN;assembly=NextAiVPN">
+  <Grid>
+    <Border Style="{DynamicResource FeedbackBorderBackgroundStyle}" />
+    <StackPanel Orientation="Vertical">
+      <StackPanel Orientation="Horizontal">
+        <TextBlock Width="232" Height="24" Margin="12,12,0,0" FontFamily="{DynamicResource MuseoSans700FontFamily}" FontSize="16" Style="{DynamicResource FeedbackDefaultTextblockHeaderForegroundStyle}" Text="Thank you for your feedback!" />
+        <Image Width="25" Height="25" Margin="6,12,0,0" Style="{DynamicResource XCloseButtonWindowImageStyle}" Visibility="Collapsed" />
+      </StackPanel>
+      <StackPanel Margin="12,0,0,0" Orientation="Horizontal">
+        <TextBlock Name="Description" Width="232" Height="37" FontFamily="{DynamicResource MuseoSans500FontFamily}" FontSize="12" LineHeight="16" Style="{DynamicResource FeedbackDefaultTextblockForegroundStyle}" Text="Your feedback helps us make NextAiVPN work better for you." TextWrapping="Wrap" />
+      </StackPanel>
+    </StackPanel>
+  </Grid>
+</UserControl>

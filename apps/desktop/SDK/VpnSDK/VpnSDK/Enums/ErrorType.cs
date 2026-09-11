@@ -1,0 +1,35 @@
+namespace VpnSDK.Enums;
+
+public enum ErrorType
+{
+	Unknown = -1,
+	None,
+	VpnAlreadyConnected,
+	VpnConnectionError,
+	VpnConnectionUnexpectedlyDisconnected,
+	VpnAuthenticationError,
+	VpnUnsupportedProtocolError,
+	TAPAdapterError,
+	VpnLocationIsNull,
+	ApiTimeout,
+	ApiError,
+	ApiOAuthError,
+	ApiAuthenticationError,
+	ApiFetchLocationsError,
+	ApiNotAuthorizedError,
+	CoreInvalidConfiguration,
+	CoreNoAvailableProtocols,
+	CoreNotElevated,
+	ReconnectOnPowerEventException,
+	ServerListError,
+	WireGuardApiError,
+	DnsConfigurationError,
+	AccountMetadataError,
+	InvalidAccountError,
+	InvalidServerError,
+	ServerUnhealthy,
+	InvalidDoubleHopConfiguration,
+	VpnHostServiceFileNotFound,
+	DoublehopNotAvailable,
+	AllApiEndpointsUnreachable
+}

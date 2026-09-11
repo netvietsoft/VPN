@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Window x:Class="NextAiVPN.MessageWindow" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:local="clr-namespace:NextAiVPN" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" Title="" Width="386" Height="435" Icon="/Assets/vpn_icon.ico" ResizeMode="NoResize" Style="{DynamicResource NewUserWindowForegroundStyle}" WindowStartupLocation="CenterScreen" WindowState="Normal" Closing="Window_Closing" Loaded="MessageWindow_OnLoaded">
+  <WindowChrome.WindowChrome>
+    <WindowChrome CaptionHeight="34" />
+  </WindowChrome.WindowChrome>
+  <DockPanel>
+    <local:WindowHeader x:Name="WindowHeader" Panel.ZIndex="99" DockPanel.Dock="Top" />
+    <Grid>
+      <local:NoSubscriptionControl x:Name="NoSubscription" Margin="0,-25,0,0" Visibility="Collapsed" />
+      <local:SubscriptionExpiredControl x:Name="SubscriptionExpired" Margin="0,-40,0,0" Visibility="Collapsed" />
+      <local:NewUserControl x:Name="NewUser" Margin="0,-70,0,0" VerticalAlignment="Center" Visibility="Collapsed" />
+    </Grid>
+  </DockPanel>
+</Window>

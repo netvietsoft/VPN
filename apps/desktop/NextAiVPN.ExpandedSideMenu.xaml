@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<UserControl x:Class="NextAiVPN.ExpandedSideMenu" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" Focusable="True" Background="{DynamicResource White}" Width="236" xmlns:nextaivpn="clr-namespace:NextAiVPN;assembly=NextAiVPN">
+  <Border BorderBrush="{DynamicResource BrushBorderSubtle}" BorderThickness="0,0,1,0" Background="{DynamicResource White}" Padding="10,12,10,12">
+    <DockPanel LastChildFill="True">
+      <!-- Bottom: Free Quota Box (300 MB/Day) -->
+      <Border DockPanel.Dock="Bottom" Margin="0,10,0,0" Padding="12,10" Background="{DynamicResource White}" BorderBrush="{DynamicResource BrushBorderEmerald}" BorderThickness="1" CornerRadius="10">
+        <Border.Effect>
+          <DropShadowEffect Color="#059669" Opacity="0.08" ShadowDepth="2" BlurRadius="6"/>
+        </Border.Effect>
+        <StackPanel>
+          <DockPanel Margin="0,0,0,6">
+            <TextBlock DockPanel.Dock="Left" Text="Daily Quota (Free)" FontFamily="{DynamicResource MuseoSans700FontFamily}" FontSize="11" FontWeight="Bold" Foreground="{DynamicResource BrushEmerald900}"/>
+            <TextBlock DockPanel.Dock="Right" Text="300 MB" TextAlignment="Right" FontFamily="{DynamicResource MuseoSans700FontFamily}" FontSize="11" FontWeight="Bold" Foreground="{DynamicResource BrushEmerald700}"/>
+          </DockPanel>
+          <!-- Progress Track -->
+          <Border Height="6" Background="{DynamicResource ColorE5E5E5}" CornerRadius="3" Margin="0,0,0,6" ClipToBounds="True">
+            <ProgressBar Name="QuotaProgressBar" Height="6" Minimum="0" Maximum="300" Value="185" BorderThickness="0" Background="Transparent" Foreground="{DynamicResource BrushEmerald500}"/>
+          </Border>
+          <DockPanel Margin="0,0,0,8">
+            <TextBlock DockPanel.Dock="Left" Name="QuotaUsedText" Text="185.4 MB" FontSize="10" Foreground="{DynamicResource Color6D6E70}"/>
+            <TextBlock DockPanel.Dock="Right" Text="300.0 MB (61.8%)" TextAlignment="Right" FontSize="10" Foreground="{DynamicResource Color6D6E70}"/>
+          </DockPanel>
+          <!-- Upgrade VIP Button -->
+          <Button Name="UpgradeVipButton" Height="28" Background="#D97706" Foreground="{DynamicResource White}" FontWeight="Bold" FontSize="11" Cursor="Hand" BorderThickness="0" Click="UpgradeVipButton_Click">
+            <Button.Template>
+              <ControlTemplate TargetType="{x:Type Button}">
+                <Border CornerRadius="6" Background="#D97706" Padding="4,0">
+                  <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <TextBlock Text="⚡" Margin="0,0,4,0"/>
+                    <TextBlock Text="Upgrade to VIP" Foreground="{DynamicResource White}" FontWeight="Bold" FontSize="11"/>
+                  </StackPanel>
+                </Border>
+              </ControlTemplate>
+            </Button.Template>
+          </Button>
+        </StackPanel>
+      </Border>
+
+      <!-- Scrollable Navigation Tabs List -->
+      <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Focusable="False">
+        <StackPanel>
+          <!-- GROUP 1: CORE FEATURES -->
+          <TextBlock Text="CORE FEATURES" FontFamily="{DynamicResource MuseoSans700FontFamily}" FontSize="10" FontWeight="Bold" Foreground="{DynamicResource Color3A3B40}" Margin="8,4,0,6"/>
+
+          <!-- 1. Dashboard / Connect -->
+          <Border Name="DashboardSideMenu" Margin="0,1" Padding="10,8" CornerRadius="8" Cursor="Hand" Background="{DynamicResource BrushEmerald100}" MouseEnter="DashboardSideMenu_MouseEnter" MouseLeave="DashboardSideMenu_MouseLeave" MouseLeftButtonUp="DashboardSideMenu_MouseLeftButtonUp">
+            <DockPanel>
+              <Path Name="DashboardIcon" Width="16" Height="16" Margin="0,0,10,0" Fill="{DynamicResource BrushEmerald700}" Data="M7,2V13H10V22L17,10H13L17,2H7Z" Stretch="Uniform" VerticalAlignment="Center"/>
+              <Border DockPanel.Dock="Right" Padding="6,1" Background="{DynamicResource BrushEmerald100}" CornerRadius="8" VerticalAlignment="Center">
+                <TextBlock Text="LIVE" FontSize="9" FontWeight="Bold" Foreground="{DynamicResource BrushEmerald700}"/>
+              </Border>
+              <TextBlock Name="DashboardTitle" Text="Connect / Live" FontFamily="{DynamicResource MuseoSans700FontFamily}" FontSize="13" FontWeight="Bold" Foreground="{DynamicResource BrushEmerald700}" VerticalAlignment="Center"/>
+            </DockPanel>
+          </Border>
+
+          <!-- 2. Server Locations -->
+          <Border Name="LocationsSideMenu" Margin="0,1" Padding="10,8" CornerRadius="8" Cursor="Hand" Background="Transparent" MouseEnter="LocationsSideMenu_MouseEnter" MouseLeave="LocationsSideMenu_MouseLeave" MouseLeftButtonUp="LocationsSideMenu_MouseLeftButtonUp">
+            <DockPanel>
+              <Path Name="LocationsIcon" Width="16" Height="16" Margin="0,0,10,0" Fill="{DynamicResource Color6D6E70}" Data="M12,2C8.13,2 5,5.13 5,9C5,14.25 12,22 12,22C12,22 19,14.25 19,9C19,5.13 15.87,2 12,2M12,11.5A2.5,2.5 0 0,1 9.5,9A2.5,2.5 0 0,1 12,6.5A2.5,2.5 0 0,1 14.5,9A2.5,2.5 0 0,1 12,11.5Z" Stretch="Uniform" VerticalAlignment="Center"/>
+              <Border DockPanel.Dock="Right" Padding="5,1" Background="{DynamicResource ColorE5E5E5}" CornerRadius="8" VerticalAlignment="Center">
+                <TextBlock Text="234" FontSize="9" FontWeight="Bold" Foreground="{DynamicResource Color6D6E70}"/>
+              </Border>
+              <TextBlock Name="LocationsTitle" Text="Server Locations" FontFamily="{DynamicResource MuseoSans500FontFamily}" FontSize="13" Foreground="{DynamicResource Color2A2A2C}" VerticalAlignment="Center"/>
+            </DockPanel>
+          </Border>
+
+          <!-- 3. Residential Mesh -->
+          <Border Name="ResidentialMeshSideMenu" Margin="0,1" Padding="10,8" CornerRadius="8" Cursor="Hand" Background="Transparent" MouseEnter="ResidentialMeshSideMenu_MouseEnter" MouseLeave="ResidentialMeshSideMenu_MouseLeave" MouseLeftButtonUp="ResidentialMeshSideMenu_MouseLeftButtonUp">
+            <DockPanel>
+              <Path Name="ResidentialMeshIcon" Width="16" Height="16" Margin="0,0,10,0" Fill="{DynamicResource Color6D6E70}" Data="M17,19H7V5H17M17,1H7C5.89,1 5,1.89 5,3V21A2,2 0 0,0 7,23H17A2,2 0 0,0 19,21V3C19,1.89 18.1,1 17,1Z" Stretch="Uniform" VerticalAlignment="Center"/>
+              <Border DockPanel.Dock="Right" Padding="5,1" Background="{DynamicResource ColorE5E5E5}" CornerRadius="8" VerticalAlignment="Center">
+                <TextBlock Text="10000" FontSize="9" FontWeight="Bold" Foreground="{DynamicResource BrushEmerald700}"/>
+              </Border>
+              <TextBlock Name="ResidentialMeshTitle" Text="Residential Mesh" FontFamily="{DynamicResource MuseoSans500FontFamily}" FontSize="13" Foreground="{DynamicResource Color2A2A2C}" VerticalAlignment="Center"/>
+            </DockPanel>
+          </Border>
+
+          <!-- 4. Speed Test -->
+          <Border Name="SpeedTestSideMenu" Margin="0,1" Padding="10,8" CornerRadius="8" Cursor="Hand" Background="Transparent" MouseEnter="SpeedTestSideMenu_MouseEnter" MouseLeave="SpeedTestSideMenu_MouseLeave" MouseLeftButtonUp="SpeedTestSideMenu_MouseLeftButtonUp">
+            <DockPanel>
+              <Path Name="SpeedTestIcon" Width="16" Height="16" Margin="0,0,10,0" Fill="{DynamicResource Color6D6E70}" Data="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,4A8,8 0 0,1 20,12C20,14.4 18.9,16.5 17.2,18L15.8,16.6C17.1,15.4 18,13.8 18,12A6,6 0 0,0 12,6V4M12,8A4,4 0 0,1 16,12C16,13.1 15.5,14.1 14.8,14.8L10.5,10.5C10.8,9.6 11.3,8.8 12,8Z" Stretch="Uniform" VerticalAlignment="Center"/>
+              <TextBlock Name="SpeedTestTitle" Text="Speed Test" FontFamily="{DynamicResource MuseoSans500FontFamily}" FontSize="13" Foreground="{DynamicResource Color2A2A2C}" VerticalAlignment="Center"/>
+            </DockPanel>
+          </Border>
+
+          <!-- GROUP 2: SECURITY & RULES -->
+          <TextBlock Text="SECURITY &amp; RULES" FontFamily="{DynamicResource MuseoSans700FontFamily}" FontSize="10" FontWeight="Bold" Foreground="{DynamicResource Color3A3B40}" Margin="8,12,0,6"/>
+
+          <!-- 5. Protocols & Split -->
+          <Border Name="ProtocolSideMenu" Margin="0,1" Padding="10,8" CornerRadius="8" Cursor="Hand" Background="Transparent" MouseEnter="ProtocolSideMenu_MouseEnter" MouseLeave="ProtocolSideMenu_MouseLeave" MouseLeftButtonUp="ProtocolSideMenu_MouseLeftButtonUp">
+            <DockPanel>
+              <Path Name="ProtocolIcon" Width="16" Height="16" Margin="0,0,10,0" Fill="{DynamicResource Color6D6E70}" Data="M12,1L3,5V11C3,16.55 6.84,21.74 12,23C17.16,21.74 21,16.55 21,11V5L12,1Z" Stretch="Uniform" VerticalAlignment="Center"/>
+              <TextBlock Name="SettingsProtocolOption" Text="Protocols &amp; Split" FontFamily="{DynamicResource MuseoSans500FontFamily}" FontSize="13" Foreground="{DynamicResource Color2A2A2C}" VerticalAlignment="Center"/>
+            </DockPanel>
+          </Border>
+
+          <!-- 6. Security & KillSwitch -->
+          <Border Name="SecuritySideMenu" Margin="0,1" Padding="10,8" CornerRadius="8" Cursor="Hand" Background="Transparent" MouseEnter="SecuritySideMenu_MouseEnter" MouseLeave="SecuritySideMenu_MouseLeave" MouseLeftButtonUp="SecuritySideMenu_MouseLeftButtonUp">
+            <DockPanel>
+              <Path Name="SecurityIcon" Width="16" Height="16" Margin="0,0,10,0" Fill="{DynamicResource Color6D6E70}" Data="M18,8H17V6A5,5 0 0,0 7,6V8H6A2,2 0 0,0 4,10V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V10A2,2 0 0,0 18,8M12,17A2,2 0 0,1 10,15A2,2 0 0,1 12,13A2,2 0 0,1 14,15A2,2 0 0,1 12,17M9,8V6A3,3 0 0,1 15,6V8H9Z" Stretch="Uniform" VerticalAlignment="Center"/>
+              <TextBlock Name="SecurityTitle" Text="Security &amp; KillSwitch" FontFamily="{DynamicResource MuseoSans500FontFamily}" FontSize="13" Foreground="{DynamicResource Color2A2A2C}" VerticalAlignment="Center"/>
+            </DockPanel>
+          </Border>
+
+          <!-- GROUP 3: ACCOUNT & APP -->
+          <TextBlock Text="ACCOUNT &amp; APP" FontFamily="{DynamicResource MuseoSans700FontFamily}" FontSize="10" FontWeight="Bold" Foreground="{DynamicResource Color3A3B40}" Margin="8,12,0,6"/>
+
+          <!-- 7. Account & License -->
+          <Border Name="AccountSideMenu" Margin="0,1" Padding="10,8" CornerRadius="8" Cursor="Hand" Background="Transparent" MouseEnter="AccountSideMenu_OnMouseEnter" MouseLeave="AccountSideMenu_OnMouseLeave" MouseLeftButtonUp="AccountSideMenu_OnMouseLeftButtonUp">
+            <DockPanel>
+              <Path Name="AccountIcon" Width="16" Height="16" Margin="0,0,10,0" Fill="{DynamicResource Color6D6E70}" Data="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z" Stretch="Uniform" VerticalAlignment="Center"/>
+              <Border DockPanel.Dock="Right" Padding="4,1" Background="{DynamicResource BrushEmerald100}" CornerRadius="6" VerticalAlignment="Center">
+                <TextBlock Text="1 PC+1 MOB" FontSize="8" FontWeight="Bold" Foreground="{DynamicResource BrushEmerald700}"/>
+              </Border>
+              <TextBlock Name="AccountTextBlock" Text="Account &amp; License" FontFamily="{DynamicResource MuseoSans500FontFamily}" FontSize="13" Foreground="{DynamicResource Color2A2A2C}" VerticalAlignment="Center"/>
+            </DockPanel>
+          </Border>
+
+          <!-- 8. Settings & Diagnostics -->
+          <Border Name="GeneralSideMenu" Margin="0,1" Padding="10,8" CornerRadius="8" Cursor="Hand" Background="Transparent" MouseEnter="GeneralSideMenu_MouseEnter" MouseLeave="GeneralSideMenu_MouseLeave" MouseLeftButtonUp="GeneralSideMenu_MouseLeftButtonUp">
+            <DockPanel>
+              <Path Name="GeneralIcon" Width="16" Height="16" Margin="0,0,10,0" Fill="{DynamicResource Color6D6E70}" Data="M19.14,12.94C19.18,12.63 19.2,12.32 19.2,12C19.2,11.68 19.18,11.37 19.14,11.06L21.16,9.48C21.34,9.34 21.39,9.08 21.28,8.87L19.36,5.55C19.25,5.34 19,5.26 18.79,5.34L16.42,6.3C15.93,5.92 15.39,5.61 14.8,5.38L14.44,2.86C14.41,2.62 14.21,2.45 13.97,2.45H10.13C9.89,2.45 9.69,2.62 9.66,2.86L9.3,5.38C8.71,5.61 8.17,5.92 7.68,6.3L5.31,5.34C5.1,5.26 4.85,5.34 4.74,5.55L2.82,8.87C2.71,9.08 2.76,9.34 2.94,9.48L4.96,11.06C4.92,11.37 4.9,11.68 4.9,12C4.9,12.32 4.92,12.63 4.96,12.94L2.94,14.52C2.76,14.66 2.71,14.92 2.82,15.13L4.74,18.45C4.85,18.66 5.1,18.74 5.31,18.66L7.68,17.7C8.17,18.08 8.71,18.39 9.3,18.62L9.66,21.14C9.69,21.38 9.89,21.55 10.13,21.55H13.97C14.21,21.55 14.41,21.38 14.44,21.14L14.8,18.62C15.39,18.39 15.93,18.08 16.42,17.7L18.79,18.66C19,18.74 19.25,18.66 19.36,18.45L21.28,15.13C21.39,14.92 21.34,14.66 21.16,14.52L19.14,12.94M12,15.6C10.01,15.6 8.4,13.99 8.4,12C8.4,10.01 10.01,8.4 12,8.4C13.99,8.4 15.6,10.01 15.6,12C15.6,13.99 13.99,15.6 12,15.6Z" Stretch="Uniform" VerticalAlignment="Center"/>
+              <TextBlock Name="SettingsGeneralOption" Text="Settings &amp; Diagnostics" FontFamily="{DynamicResource MuseoSans500FontFamily}" FontSize="13" Foreground="{DynamicResource Color2A2A2C}" VerticalAlignment="Center"/>
+            </DockPanel>
+          </Border>
+
+          <!-- 9. Notifications -->
+          <Border Name="NotificationsMenu" Margin="0,1" Padding="10,8" CornerRadius="8" Cursor="Hand" Background="Transparent" MouseEnter="NotificationsSideMenu_MouseEnter" MouseLeave="NotificationsSideMenu_MouseLeave" MouseLeftButtonUp="NotificationsMenu_OnMouseLeftButtonUp">
+            <DockPanel>
+              <Path Name="NotificationsIcon" Width="16" Height="16" Margin="0,0,10,0" Fill="{DynamicResource Color6D6E70}" Data="M12,22A2,2 0 0,0 14,20H10A2,2 0 0,0 12,22M18,16V11C18,7.93 16.36,5.36 13.5,4.68V4A1.5,1.5 0 0,0 12,2.5A1.5,1.5 0 0,0 10.5,4V4.68C7.63,5.36 6,7.92 6,11V16L4,18V19H20V18L18,16Z" Stretch="Uniform" VerticalAlignment="Center"/>
+              <Image Name="NewNotificationsAlertImage" Width="8" Height="8" Margin="0,0,6,0" Source="/Assets/NotificationsExpandedAlert.png" Visibility="Collapsed" VerticalAlignment="Center"/>
+              <TextBlock Name="NotificationsTextBlock" Text="Notifications" FontFamily="{DynamicResource MuseoSans500FontFamily}" FontSize="13" Foreground="{DynamicResource Color2A2A2C}" VerticalAlignment="Center"/>
+            </DockPanel>
+          </Border>
+
+          <!-- 10. Get Help & Legal -->
+          <Border Name="GetHelpMenu" Margin="0,1" Padding="10,8" CornerRadius="8" Cursor="Hand" Background="Transparent" MouseEnter="GetHelpMenu_MouseEnter" MouseLeave="GetHelpMenu_MouseLeave" MouseLeftButtonUp="GetHelpMenu_MouseLeftButtonUp">
+            <DockPanel>
+              <Path Name="GetHelpIcon" Width="16" Height="16" Margin="0,0,10,0" Fill="{DynamicResource Color6D6E70}" Data="M11,18H13V16H11V18M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,20C7.59,20 4,16.41 4,12C4,7.59 7.59,4 12,4C16.41,4 20,7.59 20,12C20,16.41 16.41,20 12,20M12,6A4,4 0 0,0 8,10H10A2,2 0 0,1 12,8A2,2 0 0,1 14,10C14,12 11,11.75 11,15H13C13,12.75 16,12.5 16,10A4,4 0 0,0 12,6Z" Stretch="Uniform" VerticalAlignment="Center"/>
+              <TextBlock Name="GetHelpTextBlock" Text="Get Help &amp; Legal" FontFamily="{DynamicResource MuseoSans500FontFamily}" FontSize="13" Foreground="{DynamicResource Color2A2A2C}" VerticalAlignment="Center"/>
+            </DockPanel>
+          </Border>
+        </StackPanel>
+      </ScrollViewer>
+    </DockPanel>
+  </Border>
+</UserControl>

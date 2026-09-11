@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Window x:Class="NextAiVPN.UI.Feedback.FeedbackWindow" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:local="clr-namespace:NextAiVPN.UI.Feedback" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:nextaitechnologyVpn="clr-namespace:NextAiVPN" x:Name="FeedbackMainWindow" Title="Feedback Window" Icon="/Assets/NextAiVPN/vpn_icon.ico" ResizeMode="NoResize" Style="{DynamicResource {x:Type Window}}" WindowStartupLocation="CenterScreen" Width="{Binding Path=WindowWidth, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Height="{Binding Path=WindowHeight, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Closing="FeedbackWindow_OnClosing">
+  <WindowChrome.WindowChrome>
+    <WindowChrome CaptionHeight="34" />
+  </WindowChrome.WindowChrome>
+  <StackPanel Orientation="Vertical">
+    <nextaitechnologyVpn:WindowHeader x:Name="WindowHeader" />
+    <local:FeedbackControl x:Name="FeedbackControl" Visibility="{Binding Path=FeedbackControlVisibility, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+  </StackPanel>
+</Window>

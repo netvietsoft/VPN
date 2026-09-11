@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<UserControl x:Class="NextAiVPN.UI.LocationsListHeader" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:ui="clr-namespace:NextAiVPN.UI;assembly=NextAiVPN">
+  <Grid Name="LocationListHeader" Height="25">
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition Width="48" />
+      <ColumnDefinition Width="250" />
+      <ColumnDefinition Width="54" />
+      <ColumnDefinition Width="89" />
+      <ColumnDefinition Width="107" />
+    </Grid.ColumnDefinitions>
+    <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
+      <Ellipse Name="SearchEllipseHover" Width="27" Height="27" HorizontalAlignment="Center" VerticalAlignment="Center" Fill="#00FFFFFF" MouseDown="SearchEllipse_OnMouseDown" MouseEnter="SearchEllipse_OnMouseEnter" MouseLeave="SearchEllipse_OnMouseLeave" />
+      <Image Name="SearchLocations" Width="16" Height="16" Opacity="0.3" Style="{DynamicResource IconSearchLoopHeaderImageStyle}" MouseDown="SearchLocations_OnMouseDown" MouseEnter="SearchEllipse_OnMouseEnter" />
+    </Grid>
+    <StackPanel Name="SearchStackPanel" Grid.Column="1" Orientation="Horizontal" Visibility="Collapsed">
+      <TextBox Name="SearchTextBlock" Width="180" VerticalAlignment="Center" BorderBrush="#00FFFFFF" BorderThickness="0" FontFamily="{DynamicResource MuseoSans700FontFamily}" FontSize="12" Style="{DynamicResource SearchPlaceholderTextBoxStyle}" MouseDown="Country_OnMouseDown" TextChanged="SearchTextBlock_OnTextChanged" />
+      <Image Name="SearchClose" Width="13.33" Height="13.33" HorizontalAlignment="Stretch" Style="{DynamicResource XCircleCloseImageStyle}" MouseDown="SearchClose_OnMouseDown" />
+    </StackPanel>
+    <StackPanel Name="LocationHeaderStackPanel" Grid.Column="1" Orientation="Horizontal">
+      <TextBlock Name="Country" VerticalAlignment="Center" FontFamily="{DynamicResource MuseoSans700FontFamily}" FontSize="12" Opacity="0.4" Style="{DynamicResource DefaultTextBlockForegroundStyle}" Text="LOCATION" MouseDown="Country_OnMouseDown" />
+      <Image Name="LocationSortDirection" Style="{DynamicResource ArrowDownSortImageStyle}" Visibility="Collapsed" />
+    </StackPanel>
+    <StackPanel Name="LoadStackPanel" Grid.Column="2" Orientation="Horizontal">
+      <TextBlock Name="Load" VerticalAlignment="Center" FontFamily="{DynamicResource MuseoSans700FontFamily}" FontSize="12" Opacity="0.4" Style="{DynamicResource DefaultTextBlockForegroundStyle}" Text="LOAD" MouseDown="Load_OnMouseDown" />
+      <Image Name="LoadSortDirection" Style="{DynamicResource ArrowDownSortImageStyle}" Visibility="Collapsed" />
+    </StackPanel>
+    <StackPanel Grid.Column="3" Orientation="Horizontal">
+      <TextBlock Name="PingMs" Margin="17,0,0,0" VerticalAlignment="Center" FontFamily="{DynamicResource MuseoSans700FontFamily}" FontSize="12" Opacity="0.4" Style="{DynamicResource DefaultTextBlockForegroundStyle}" Text="PING" MouseDown="PingMs_OnMouseDown" />
+      <Image Name="PingSortDirection" Style="{DynamicResource ArrowDownSortImageStyle}" Visibility="Collapsed" />
+    </StackPanel>
+    <StackPanel Name="FavoritesStackPanel" Grid.Column="4" Orientation="Horizontal">
+      <TextBlock Name="Favorites" VerticalAlignment="Center" FontFamily="{DynamicResource MuseoSans700FontFamily}" FontSize="12" Opacity="0.4" Style="{DynamicResource DefaultTextBlockForegroundStyle}" Text="FAVORITE" MouseDown="Favorites_OnMouseDown" />
+      <Image Name="FavoritesSortDirection" Style="{DynamicResource ArrowDownSortImageStyle}" Visibility="Collapsed" />
+    </StackPanel>
+  </Grid>
+</UserControl>

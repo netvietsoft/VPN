@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Window x:Class="NextAiVPN.UI.SignInCommonWindow" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:nextaitechnologyVpn="clr-namespace:NextAiVPN" Title="NextAiVPN" Width="425" Height="675" FontFamily="{DynamicResource MuseoSans500FontFamily}" FontSize="12" Icon="/Assets/NextAiVPN/vpn_icon.ico" ResizeMode="CanMinimize" Style="{DynamicResource {x:Type Window}}" WindowStartupLocation="CenterScreen" xmlns:ui="clr-namespace:NextAiVPN.UI" Closing="SignInCommonWindow_OnClosing">
+  <WindowChrome.WindowChrome>
+    <WindowChrome CaptionHeight="34" />
+  </WindowChrome.WindowChrome>
+  <Grid>
+    <StackPanel Orientation="Vertical">
+      <nextaitechnologyVpn:WindowHeader x:Name="WindowHeader" />
+      <Grid>
+        <Grid.RowDefinitions>
+          <RowDefinition Height="50" />
+          <RowDefinition Height="350" />
+          <RowDefinition Height="250*" />
+        </Grid.RowDefinitions>
+        <Image Name="Tools" Grid.Row="0" Width="23px" Height="23px" Margin="0,20,22,0" HorizontalAlignment="Right" VerticalAlignment="Top" Opacity="1" Source="/Assets/i-icon.png" Stretch="Fill">
+          <FrameworkElement.ContextMenu>
+            <ContextMenu Name="ContextMenuSettings" Placement="Left">
+              <MenuItem>
+                <HeaderedItemsControl.Header>
+                  <TextBlock Name="CustSupport" Style="{DynamicResource SettingsContextMenuTextBlockStyle}" Text="Customer Support" />
+                </HeaderedItemsControl.Header>
+              </MenuItem>
+              <MenuItem>
+                <HeaderedItemsControl.Header>
+                  <TextBlock Name="ToSMenu" Style="{DynamicResource SettingsContextMenuTextBlockStyle}" Text="Terms of Service" />
+                </HeaderedItemsControl.Header>
+              </MenuItem>
+              <MenuItem>
+                <HeaderedItemsControl.Header>
+                  <TextBlock Name="PrivacyPolicy" Style="{DynamicResource SettingsContextMenuTextBlockStyle}" Text="Privacy Policy" />
+                </HeaderedItemsControl.Header>
+              </MenuItem>
+              <Separator />
+              <MenuItem>
+                <HeaderedItemsControl.Header>
+                  <TextBlock Name="quit" Style="{DynamicResource SettingsContextMenuTextBlockStyle}" Text="Quit" />
+                </HeaderedItemsControl.Header>
+              </MenuItem>
+            </ContextMenu>
+          </FrameworkElement.ContextMenu>
+        </Image>
+        <Image Grid.Row="1" Width="150" Height="138" HorizontalAlignment="Center" VerticalAlignment="Center" RenderOptions.BitmapScalingMode="HighQuality" Source="/Assets/NextAiVPN/nextaivpn_loginlogo.png" Stretch="Uniform" />
+        <StackPanel Grid.Row="2" Orientation="Vertical">
+          <TextBlock HorizontalAlignment="Center" FontFamily="{DynamicResource MuseoSans500FontFamily}" FontSize="16" Foreground="#FFFFFFFF" Text="Start with:" />
+          <Button Name="NextAiGlobalButton" Width="272" Height="52" Margin="0,12,0,0" HorizontalAlignment="Center" VerticalAlignment="Center" Background="#2c2c2c" BorderThickness="0" Click="NextAiGlobalButton_OnClick">
+            <Control.Template>
+              <ControlTemplate TargetType="{x:Type Button}">
+                <Border Background="{TemplateBinding Control.Background}" CornerRadius="25">
+                  <Grid>
+                    <Grid.ColumnDefinitions>
+                      <ColumnDefinition />
+                      <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <Image Width="26" Height="14" Source="/Assets/NextAiTechnologyLogo.png" />
+                    <TextBlock Grid.Column="1" Margin="-25,0,0,0" VerticalAlignment="Center" FontFamily="{DynamicResource MuseoSans500FontFamily}" FontSize="16" Foreground="#FFFFFFFF" Text="NextAiGlobal" />
+                  </Grid>
+                </Border>
+              </ControlTemplate>
+            </Control.Template>
+          </Button>
+          <Button Name="NextAiTechnologyButton" Width="272" Height="52" Margin="0,8,0,0" HorizontalAlignment="Center" VerticalAlignment="Center" Background="#2c2c2c" BorderThickness="0" Click="NextAiTechnologyButton_OnClick">
+            <Control.Template>
+              <ControlTemplate TargetType="{x:Type Button}">
+                <Border Background="{TemplateBinding Control.Background}" CornerRadius="25">
+                  <Grid>
+                    <Grid.ColumnDefinitions>
+                      <ColumnDefinition />
+                      <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <Image Width="26" Height="14" Source="/Assets/NextAiTechnologyLogo.png" />
+                    <TextBlock Grid.Column="1" Margin="-30,0,0,0" VerticalAlignment="Center" FontFamily="{DynamicResource MuseoSans500FontFamily}" FontSize="16" Foreground="#FFFFFFFF" Text="NextAiTechnology" />
+                  </Grid>
+                </Border>
+              </ControlTemplate>
+            </Control.Template>
+          </Button>
+        </StackPanel>
+      </Grid>
+    </StackPanel>
+    <Panel.Background>
+      <ImageBrush ImageSource="/Assets/SignInBackground.png" Opacity="0.08" Stretch="UniformToFill" />
+    </Panel.Background>
+  </Grid>
+</Window>

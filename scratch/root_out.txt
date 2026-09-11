@@ -1,0 +1,1764 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NextAI Residential Gateway & VPN Management Portal</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-base: #0a0e17;
+            --bg-surface: #111827;
+            --bg-surface-elevated: #1e293b;
+            --border-color: rgba(255, 255, 255, 0.08);
+            --primary: #3b82f6;
+            --primary-glow: rgba(59, 130, 246, 0.25);
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent-cyan: #06b6d4;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
+        body { background: var(--bg-base); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; }
+
+        header {
+            background: rgba(17, 24, 39, 0.85);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border-color);
+            padding: 16px 32px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+
+        .brand { display: flex; align-items: center; gap: 12px; }
+        .brand-logo { width: 40px; height: 40px; border-radius: 12px; background: linear-gradient(135deg, #2563eb, #06b6d4); display: flex; align-items: center; justify-content: center; font-size: 22px; box-shadow: 0 0 20px var(--primary-glow); }
+        .brand-title { font-size: 18px; font-weight: 700; letter-spacing: -0.02em; }
+        .brand-sub { font-size: 12px; color: var(--text-muted); font-weight: 500; }
+
+        .header-stats { display: flex; align-items: center; gap: 20px; font-size: 13px; }
+        .status-pill { display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px; border-radius: 999px; background: rgba(16, 185, 129, 0.12); color: var(--success); font-weight: 600; border: 1px solid rgba(16, 185, 129, 0.25); }
+        .status-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--success); box-shadow: 0 0 10px var(--success); }
+
+        .container { max-width: 1420px; margin: 0 auto; padding: 28px 24px; flex: 1; width: 100%; }
+
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 18px; margin-bottom: 28px; }
+        .stat-card {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        }
+        .stat-card::after {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+            background: linear-gradient(90deg, transparent, var(--primary), transparent);
+        }
+        .stat-label { font-size: 12px; color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 6px; }
+        .stat-value { font-size: 26px; font-weight: 800; letter-spacing: -0.03em; }
+
+        .tabs { display: flex; gap: 8px; margin-bottom: 24px; border-bottom: 1px solid var(--border-color); padding-bottom: 12px; overflow-x: auto; }
+        .tab-btn {
+            background: transparent; border: none; color: var(--text-muted);
+            padding: 10px 18px; border-radius: 10px; font-size: 14px; font-weight: 600;
+            cursor: pointer; transition: all 0.2s; white-space: nowrap;
+        }
+        .tab-btn:hover { color: var(--text-main); background: rgba(255, 255, 255, 0.04); }
+        .tab-btn.active { color: #fff; background: var(--primary); box-shadow: 0 4px 14px var(--primary-glow); }
+
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+
+        .card {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            border-radius: 18px;
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 12px; }
+        .card-title { font-size: 17px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+
+        .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; margin-bottom: 18px; }
+        .form-group { display: flex; flex-direction: column; gap: 6px; }
+        label { font-size: 12px; font-weight: 600; color: var(--text-muted); }
+        select, input, textarea {
+            background: var(--bg-surface-elevated);
+            border: 1px solid var(--border-color);
+            padding: 10px 14px; border-radius: 10px;
+            color: #fff; font-size: 13px; outline: none; transition: border-color 0.2s;
+        }
+        select:focus, input:focus, textarea:focus { border-color: var(--primary); }
+
+        .btn {
+            background: var(--primary); color: #fff; border: none;
+            padding: 9px 18px; border-radius: 10px; font-weight: 600; font-size: 13px;
+            cursor: pointer; transition: all 0.2s; display: inline-flex; align-items: center; gap: 6px;
+        }
+        .btn:hover { filter: brightness(1.15); box-shadow: 0 4px 16px var(--primary-glow); }
+        .btn-sm { padding: 5px 10px; font-size: 12px; border-radius: 6px; }
+        .btn-success { background: var(--success); }
+        .btn-danger { background: var(--danger); }
+        .btn-warning { background: var(--warning); color: #000; }
+        .btn-outline { background: transparent; border: 1px solid var(--border-color); color: var(--text-muted); }
+        .btn-outline:hover { color: #fff; background: rgba(255, 255, 255, 0.05); }
+
+        textarea {
+            width: 100%; height: 200px; font-family: 'Consolas', 'Courier New', monospace; font-size: 12px; line-height: 1.6;
+            resize: vertical; color: #38bdf8;
+        }
+
+        table { width: 100%; border-collapse: collapse; text-align: left; font-size: 13px; }
+        th { padding: 12px 14px; color: var(--text-muted); font-weight: 600; border-bottom: 1px solid var(--border-color); background: rgba(0,0,0,0.15); }
+        td { padding: 12px 14px; border-bottom: 1px solid rgba(255, 255, 255, 0.04); vertical-align: middle; }
+        tr:hover td { background: rgba(255, 255, 255, 0.02); }
+
+        .badge { display: inline-flex; align-items: center; gap: 4px; padding: 3px 8px; border-radius: 6px; font-size: 11px; font-weight: 700; text-transform: uppercase; }
+        .badge-live { background: rgba(16, 185, 129, 0.15); color: var(--success); border: 1px solid rgba(16, 185, 129, 0.3); }
+        .badge-offline { background: rgba(239, 68, 68, 0.15); color: var(--danger); border: 1px solid rgba(239, 68, 68, 0.3); }
+        .badge-unchecked { background: rgba(148, 163, 184, 0.15); color: var(--text-muted); border: 1px solid rgba(148, 163, 184, 0.3); }
+        .badge-vpn-active { background: linear-gradient(135deg, rgba(37, 99, 235, 0.3), rgba(6, 182, 212, 0.3)); color: #67e8f9; border: 1px solid var(--accent-cyan); font-weight: 800; }
+        .badge-proto { background: rgba(59, 130, 246, 0.15); color: #93c5fd; font-family: monospace; }
+
+        .code-pill { font-family: monospace; background: rgba(0,0,0,0.3); padding: 2px 6px; border-radius: 4px; color: #f472b6; font-size: 12px; }
+
+        .ping-tag { font-family: monospace; font-weight: 700; font-size: 12px; }
+        .ping-fast { color: var(--success); }
+        .ping-medium { color: var(--warning); }
+        .ping-slow { color: var(--danger); }
+
+        .flag-icon { font-size: 16px; margin-right: 4px; vertical-align: middle; }
+        .copy-btn { cursor: pointer; opacity: 0.7; transition: opacity 0.2s; }
+        .copy-btn:hover { opacity: 1; }
+
+        .collapsible-box {
+            background: rgba(0, 0, 0, 0.25); border: 1px solid var(--border-color); border-radius: 14px;
+            padding: 20px; margin-bottom: 20px; display: none;
+        }
+        .collapsible-box.show { display: block; }
+
+        /* Country Filter Pills */
+        .country-pills-bar {
+            display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; padding: 12px 14px;
+            background: rgba(0, 0, 0, 0.2); border-radius: 12px; border: 1px solid var(--border-color);
+            align-items: center;
+        }
+        .country-pill {
+            background: var(--bg-surface-elevated); border: 1px solid var(--border-color); color: var(--text-muted);
+            padding: 6px 14px; border-radius: 999px; font-size: 12px; font-weight: 600; cursor: pointer;
+            transition: all 0.2s; display: inline-flex; align-items: center; gap: 6px;
+        }
+        .country-pill:hover { color: #fff; background: rgba(255, 255, 255, 0.08); border-color: rgba(255,255,255,0.2); }
+        .country-pill.active {
+            background: linear-gradient(135deg, #2563eb, #06b6d4); color: #fff; font-weight: 700;
+            border-color: var(--accent-cyan); box-shadow: 0 2px 10px rgba(6, 182, 212, 0.3);
+        }
+        .country-pill-count {
+            background: rgba(0, 0, 0, 0.3); padding: 1px 6px; border-radius: 10px; font-size: 11px;
+        }
+
+        /* Search & Pagination Bar */
+        .filter-controls-bar {
+            display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;
+            gap: 12px; margin-bottom: 16px;
+        }
+        .pagination-container {
+            display: flex; justify-content: space-between; align-items: center; margin-top: 16px;
+            padding-top: 14px; border-top: 1px solid var(--border-color); font-size: 13px; color: var(--text-muted);
+        }
+        .pagination-btns { display: flex; gap: 6px; align-items: center; }
+
+        .import-result-banner {
+            background: rgba(16, 185, 129, 0.12); border: 1px solid rgba(16, 185, 129, 0.3);
+            border-radius: 12px; padding: 14px 18px; margin-top: 12px; display: none;
+        }
+
+        /* Batch Actions Bar */
+        .batch-actions-bar {
+            background: linear-gradient(135deg, rgba(30, 41, 59, 0.98), rgba(15, 23, 42, 0.98));
+            border: 1px solid rgba(56, 189, 248, 0.4);
+            border-radius: 10px; padding: 10px 16px; margin-bottom: 14px;
+            display: flex; justify-content: space-between; align-items: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            animation: slideDown 0.2s ease-out;
+        }
+
+        /* Health Check Widget */
+        .health-check-widget {
+            background: rgba(15, 23, 42, 0.7); border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px; padding: 10px 16px; margin-bottom: 14px;
+            display: flex; justify-content: space-between; align-items: center;
+            flex-wrap: wrap; gap: 10px;
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="brand">
+            <div class="brand-logo">🛡️</div>
+            <div>
+                <div class="brand-title">NextAI Residential Gateway & VPN Portal</div>
+                <div class="brand-sub">Universal Proxy Engine (Port 10000) & CMS (Port 6033)</div>
+            </div>
+        </div>
+        <div class="header-stats">
+            <div>Gateway: <span class="code-pill">127.0.0.1:10000</span> (SOCKS5/HTTP)</div>
+            <div class="status-pill"><span class="status-dot"></span> GATEWAY ONLINE</div>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Stats Row -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-label">Tổng Proxy Thật Trong Kho</div>
+                <div class="stat-value" id="valTotalRealProxies" style="color: var(--accent-cyan);">0 Nodes</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Proxy Hoạt Động (LIVE)</div>
+                <div class="stat-value" id="valLiveProxies" style="color: var(--success);">0 Live</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Proxy Active Cho Desktop VPN</div>
+                <div class="stat-value" id="valActiveVpnProxy" style="font-size: 18px; color: #fbcfe8; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Chưa chọn</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Lưu Lượng Gateway Đã Chuyển</div>
+                <div class="stat-value" id="valTotalServed" style="color: #a78bfa;">0 MB</div>
+            </div>
+        </div>
+
+        <!-- Navigation Tabs -->
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab('tabRealProxies')">🌐 Quản Lý Proxy Thật (Real Proxies)</button>
+            <button class="tab-btn" onclick="switchTab('tabXrayVpn')">⚡ Máy Chủ Xray VPN (Reality Nodes)</button>
+            <button class="tab-btn" onclick="switchTab('tabGenerator')">⚡ Trình Xuất Proxy (Generator)</button>
+            <button class="tab-btn" onclick="switchTab('tabTenants')">👥 Quản Lý Khách Hàng & Gói Thuê</button>
+            <button class="tab-btn" onclick="switchTab('tabNodes')">🌍 Kho IP Cư Dân (Pool Nodes)</button>
+            <button class="tab-btn" onclick="switchTab('tabApiDocs')">📖 Tài Liệu Kết Nối API</button>
+        </div>
+
+        <!-- TAB 0: REAL PROXIES -->
+        <div id="tabRealProxies" class="tab-content active">
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="card-title">🌐 Kho Upstream Proxy Thật & Phân Tách VPN Quốc Gia</div>
+                        <span style="font-size: 12px; color: var(--text-muted);">
+                            Hỗ trợ dán 1 lần hàng nghìn proxy dạng <code>ip:port:user:pass</code>. Hệ thống tự động nhận diện GeoIP và phân nhóm theo từng quốc gia.
+                        </span>
+                    </div>
+                    <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                        <button class="btn" onclick="toggleBox('boxBulkImport')" style="background: linear-gradient(135deg, #2563eb, #06b6d4);">
+                            📋 Nhập Hàng Nghìn Proxy (Super Form)
+                        </button>
+                        <button class="btn btn-outline" onclick="toggleBox('boxSingleAdd')">+ Thêm 1 Proxy</button>
+                        <button class="btn btn-success" onclick="testAllProxies()">⚡ Kiểm Tra Ping Toàn Bộ</button>
+                        <button class="btn btn-danger btn-sm" onclick="deleteOfflineProxies()" title="Xóa các proxy không kết nối được">🗑️ Xóa Offline</button>
+                        <button class="btn btn-outline btn-sm" onclick="clearAllProxies()" title="Xóa toàn bộ kho">🗑️ Xóa Sạch Kho</button>
+                    </div>
+                </div>
+
+                <!-- SIÊU FORM NHẬP HÀNG NGHÌN PROXY (BULK IMPORT SUPER FORM) -->
+                <div id="boxBulkImport" class="collapsible-box show">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                        <div style="font-size: 15px; font-weight: 800; color: #38bdf8; display: flex; align-items: center; gap: 8px;">
+                            📋 Siêu Form Nhập Hàng Nghìn Bản Ghi (Hỗ Trợ 10,000+ Proxy)
+                        </div>
+                        <div style="display: flex; gap: 8px; align-items: center;">
+                            <span class="badge" style="background: rgba(56, 189, 248, 0.15); color: #38bdf8; font-family: monospace;" id="bulkStatsBadge">
+                                0 dòng | 0 IP duy nhất
+                            </span>
+                            <button class="btn btn-sm btn-outline" onclick="pasteSampleData()">📝 Dán Dữ Liệu Mẫu Của Bạn</button>
+                            <button class="btn btn-sm btn-outline" onclick="clearBulkText()">🧹 Xóa Trắng</button>
+                            <button class="btn btn-sm btn-outline" onclick="toggleBox('boxBulkImport')">✕ Đóng</button>
+                        </div>
+                    </div>
+
+                    <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 12px; line-height: 1.6;">
+                        📌 <strong>Định dạng hỗ trợ:</strong> <code>ip:port:user:pass</code> (như bạn cung cấp), <code>ip:port</code>, <code>user:pass@ip:port</code>, <code>socks5://...</code> hoặc <code>http://...</code>. Mỗi proxy 1 dòng.<br>
+                        🌍 <strong>Tự động phân tách:</strong> Hệ thống tự động giải mã IP ra Quốc gia (Việt Nam 🇻🇳, Mỹ 🇺🇸, Nhật 🇯🇵, v.v.), Thành phố và Nhà mạng ISP.
+                    </div>
+
+                    <div class="form-grid" style="grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); margin-bottom: 12px;">
+                        <div class="form-group">
+                            <label>Loại Giao Thức Mặc Định</label>
+                            <select id="bulkDefaultType">
+                                <option value="socks5">SOCKS5 (Mặc định cho Proxy dân cư / Antidetect)</option>
+                                <option value="http">HTTP / HTTPS Connect</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Tự Động Nhận Diện Quốc Gia (GeoIP)</label>
+                            <select id="bulkAutoGeoIp">
+                                <option value="true">✅ Bật (Tự động tách theo Quốc gia & ISP)</option>
+                                <option value="false">Tắt (Mặc định gán Việt Nam)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Chế Độ Nhập Kho</label>
+                            <select id="bulkReplaceMode">
+                                <option value="false">➕ Thêm vào danh sách hiện tại (Append)</option>
+                                <option value="true">⚠️ Xóa sạch kho cũ và thay thế toàn bộ (Replace All)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <textarea id="bulkText" oninput="updateBulkStats()" placeholder="Dán danh sách hàng nghìn proxy của bạn vào đây...
+Ví dụ:
+103.82.24.174:46517:huyhuyz:huyhuyz
+103.82.24.174:50799:huyhuyz:huyhuyz
+103.82.24.174:26820:huyhuyz:huyhuyz
+103.166.184.5:11896:huyhuyz:huyhuyz
+103.82.25.114:34685:huyhuyz:huyhuyz"></textarea>
+
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 12px; flex-wrap: wrap; gap: 10px;">
+                        <button class="btn btn-success" id="btnExecuteBulkImport" onclick="executeBulkImport()" style="padding: 10px 24px; font-size: 14px;">
+                            🚀 Xử Lý & Nhập Kho Ngay Lập Tức
+                        </button>
+                        <span id="bulkProgressStatus" style="font-size: 13px; color: var(--accent-cyan); font-weight: 600;"></span>
+                    </div>
+
+                    <!-- Banner hiển thị kết quả phân tách quốc gia -->
+                    <div id="importResultBanner" class="import-result-banner">
+                        <div style="font-size: 14px; font-weight: 700; color: var(--success); margin-bottom: 6px;" id="importResultTitle">
+                            🎉 Nhập dữ liệu thành công!
+                        </div>
+                        <div style="font-size: 13px; color: var(--text-main); margin-bottom: 8px;" id="importResultSummary"></div>
+                        <div style="display: flex; gap: 6px; flex-wrap: wrap;" id="importResultPills"></div>
+                    </div>
+                </div>
+
+                <!-- Form Thêm 1 Proxy Lẻ -->
+                <div id="boxSingleAdd" class="collapsible-box">
+                    <div style="font-size: 14px; font-weight: 700; margin-bottom: 12px;">+ Thêm 1 Proxy Thật Mới</div>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Loại Proxy</label>
+                            <select id="singleType">
+                                <option value="socks5">SOCKS5</option>
+                                <option value="http">HTTP / HTTPS</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Địa Chỉ Host / IP (*)</label>
+                            <input type="text" id="singleHost" placeholder="VD: 103.82.24.174">
+                        </div>
+                        <div class="form-group">
+                            <label>Cổng (Port) (*)</label>
+                            <input type="number" id="singlePort" value="1080" placeholder="VD: 46517">
+                        </div>
+                        <div class="form-group">
+                            <label>Tài Khoản (Username)</label>
+                            <input type="text" id="singleUser" placeholder="VD: huyhuyz">
+                        </div>
+                        <div class="form-group">
+                            <label>Mật Khẩu (Password)</label>
+                            <input type="password" id="singlePass" placeholder="VD: huyhuyz">
+                        </div>
+                        <div class="form-group">
+                            <label>Quốc Gia (Country)</label>
+                            <select id="singleCountry">
+                                <option value="VN">🇻🇳 Việt Nam (VN)</option>
+                                <option value="US">🇺🇸 Hoa Kỳ (US)</option>
+                                <option value="SG">🇸🇬 Singapore (SG)</option>
+                                <option value="JP">🇯🇵 Nhật Bản (JP)</option>
+                                <option value="GB">🇬🇧 Vương Quốc Anh (GB)</option>
+                                <option value="DE">🇩🇪 Đức (DE)</option>
+                                <option value="FR">🇫🇷 Pháp (FR)</option>
+                                <option value="CA">🇨🇦 Canada (CA)</option>
+                                <option value="AU">🇦🇺 Úc (AU)</option>
+                                <option value="KR">🇰🇷 Hàn Quốc (KR)</option>
+                                <option value="HK">🇭🇰 Hồng Kông (HK)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Thành Phố (City)</label>
+                            <input type="text" id="singleCity" placeholder="VD: Hanoi, Da Nang...">
+                        </div>
+                        <div class="form-group">
+                            <label>Nhà Mạng / Ghi chú (ISP)</label>
+                            <input type="text" id="singleIsp" placeholder="VD: Phong Thuy, Viettel...">
+                        </div>
+                    </div>
+                    <div style="display: flex; gap: 8px;">
+                        <button class="btn" onclick="addSingleProxy()">💾 Lưu Proxy Vào Kho</button>
+                        <button class="btn btn-outline" onclick="toggleBox('boxSingleAdd')">Đóng</button>
+                    </div>
+                </div>
+
+                <!-- WIDGET TỰ ĐỘNG HEALTH CHECK 10 PHÚT -->
+                <div class="health-check-widget">
+                    <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+                        <span style="font-size: 13px; font-weight: 700; color: #f8fafc;">⏱️ TỰ ĐỘNG ĐO PING (10 PHÚT/LẦN):</span>
+                        <span class="badge" style="background: rgba(34, 197, 94, 0.15); color: #22c55e; border: 1px solid rgba(34, 197, 94, 0.3);" id="healthStatusBadge">🟢 Đang chạy</span>
+                        <span style="font-size: 13px; color: var(--text-muted);">
+                            Lần kiểm tra tới: <strong id="healthCountdown" style="color: #38bdf8; font-family: monospace; font-size: 14px;">10:00</strong>
+                        </span>
+                        <span id="healthLastSummaryText" style="font-size: 12px; color: #a3e635; font-weight: 600;"></span>
+                    </div>
+                    <div style="display: flex; gap: 8px;">
+                        <button class="btn btn-sm btn-outline" id="btnManualHealthCheck" onclick="triggerManualHealthCheck()">
+                            ⚡ Chạy Đo Ping Ngay
+                        </button>
+                    </div>
+                </div>
+
+                <!-- THANH TÁCH QUỐC GIA (DYNAMIC COUNTRY FILTER PILLS) -->
+                <div style="font-size: 13px; font-weight: 700; color: var(--text-muted); margin-bottom: 8px;">
+                    🌍 PHÂN TÁCH VPN THEO QUỐC GIA (Bấm để lọc):
+                </div>
+                <div id="countryPillsBar" class="country-pills-bar">
+                    <button class="country-pill active" onclick="setCountryFilter('ALL')">
+                        🌐 Tất Cả <span class="country-pill-count" id="pillCountAll">0</span>
+                    </button>
+                </div>
+
+                <!-- THANH THAO TÁC HÀNG LOẠT (BATCH ACTIONS BAR - KHI TICK CHỌN) -->
+                <div id="batchActionsBar" class="batch-actions-bar" style="display: none;">
+                    <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+                        <span style="font-weight: 800; color: #fff; display: flex; align-items: center; gap: 6px;">
+                            ☑️ Đã chọn: <span id="batchSelectedCount" style="color: #38bdf8; font-size: 16px; font-weight: 900;">0</span> proxy
+                        </span>
+                        <button class="btn btn-sm btn-danger" onclick="executeBatchDelete()" style="padding: 6px 14px; font-weight: 700;">
+                            🗑️ Xóa Các Proxy Đã Chọn
+                        </button>
+                        <button class="btn btn-sm btn-success" onclick="executeBatchTest()" style="padding: 6px 14px; font-weight: 700;">
+                            ⚡ Kiểm Tra Ping Đã Chọn
+                        </button>
+                        <button class="btn btn-sm btn-outline" onclick="clearSelectedRows()" style="padding: 6px 12px;">
+                            ✕ Bỏ Chọn
+                        </button>
+                    </div>
+                    <span id="batchActionStatus" style="font-size: 13px; color: #38bdf8; font-weight: 600;"></span>
+                </div>
+
+                <!-- THANH TÌM KIẾM & PHÂN TRANG -->
+                <div class="filter-controls-bar">
+                    <div style="display: flex; gap: 8px; flex: 1; max-width: 500px;">
+                        <input type="text" id="proxySearchInput" oninput="onSearchOrFilterChange()" placeholder="🔍 Tìm kiếm IP, Port, Thành phố, ISP, User..." style="width: 100%;">
+                    </div>
+                    <div style="display: flex; gap: 8px; align-items: center;">
+                        <select id="proxyStatusFilter" onchange="onSearchOrFilterChange()" style="width: 150px;">
+                            <option value="ALL">Tất cả trạng thái</option>
+                            <option value="LIVE">🟢 Chỉ LIVE</option>
+                            <option value="OFFLINE">🔴 Chỉ OFFLINE</option>
+                            <option value="UNCHECKED">⚪ Chưa kiểm tra</option>
+                        </select>
+                        <select id="proxyPageSize" onchange="onPageSizeChange()" style="width: 130px;">
+                            <option value="25">25 dòng/trang</option>
+                            <option value="50" selected>50 dòng/trang</option>
+                            <option value="100">100 dòng/trang</option>
+                            <option value="250">250 dòng/trang</option>
+                            <option value="99999">Tất cả</option>
+                        </select>
+                        <button class="btn btn-outline btn-sm" onclick="exportCurrentView()">📥 Xuất Text</button>
+                    </div>
+                </div>
+
+                <!-- BẢNG DANH SÁCH PROXY THẬT -->
+                <div style="overflow-x: auto;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th style="width: 44px; text-align: center;">
+                                    <input type="checkbox" id="chkSelectAll" onchange="toggleSelectAll(this)" title="Chọn tất cả proxy trên trang này" style="cursor: pointer; width: 16px; height: 16px;">
+                                </th>
+                                <th>Trạng Thái</th>
+                                <th>Giao Thức</th>
+                                <th>Quốc Gia / Thành Phố</th>
+                                <th>Địa Chỉ Upstream</th>
+                                <th>Độ Trễ (Ping)</th>
+                                <th>Nhà Mạng (ISP)</th>
+                                <th>Chế Độ VPN</th>
+                                <th>Thao Tác</th>
+                            </tr>
+                        </thead>
+                        <tbody id="realProxiesTableBody">
+                            <tr><td colspan="9" style="text-align: center; color: var(--text-muted);">Đang tải danh sách proxy...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- THANH ĐIỀU HƯỚNG PHÂN TRANG -->
+                <div class="pagination-container">
+                    <div id="paginationInfo">Hiển thị 0 - 0 của 0 proxy</div>
+                    <div class="pagination-btns">
+                        <button class="btn btn-outline btn-sm" id="btnPrevPage" onclick="changePage(-1)">← Trang trước</button>
+                        <span id="paginationPageCurrent" style="font-weight: 700; color: #fff; padding: 0 8px;">Trang 1 / 1</span>
+                        <button class="btn btn-outline btn-sm" id="btnNextPage" onclick="changePage(1)">Trang sau →</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- TAB 1: PROXY GENERATOR -->
+        <div id="tabGenerator" class="tab-content">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">Cấu Hình Sinh Proxy (Universal Proxy Generator)</div>
+                    <span style="font-size: 12px; color: var(--text-muted);">Cắm được vào KikiLogin, AdsPower, Gologin, Bot, Tool nuôi nick</span>
+                </div>
+
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Tài Khoản Khách Hàng (Tenant)</label>
+                        <select id="genTenantSelect"></select>
+                    </div>
+                    <div class="form-group">
+                        <label>Quốc Gia (Country)</label>
+                        <select id="genCountry">
+                            <option value="ALL">Toàn cầu ngẫu nhiên (Random Global)</option>
+                            <option value="US">Hoa Kỳ (United States - US)</option>
+                            <option value="VN">Việt Nam (VN)</option>
+                            <option value="JP">Nhật Bản (Japan - JP)</option>
+                            <option value="DE">Đức (Germany - DE)</option>
+                            <option value="GB">Vương quốc Anh (UK - GB)</option>
+                            <option value="SG">Singapore (SG)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Chế Độ IP (Mode)</label>
+                        <select id="genMode">
+                            <option value="rotating">Xoay IP mỗi yêu cầu (Rotating IP)</option>
+                            <option value="sticky">Cố định IP cho Profile (Sticky 30 phút)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Giao Thức (Protocol)</label>
+                        <select id="genProtocol">
+                            <option value="socks5">SOCKS5 (Khuyên dùng cho Antidetect)</option>
+                            <option value="http">HTTP / HTTPS Connect</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Số Lượng Dòng Proxy Cần Sinh</label>
+                        <input type="number" id="genQuantity" value="10" min="1" max="500">
+                    </div>
+                </div>
+
+                <button class="btn" onclick="generateProxies()">🚀 Xuất Danh Sách Proxy</button>
+
+                <div style="margin-top: 18px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <label>Danh sách Proxy kết quả (Copy và dán trực tiếp vào phần mềm):</label>
+                        <button class="btn btn-success btn-sm" onclick="copyResult()">📋 Copy Toàn Bộ</button>
+                    </div>
+                    <textarea id="genResult" readonly placeholder="Bấm 'Xuất Danh Sách Proxy' để tạo..."></textarea>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 2: TENANTS & BILLING -->
+        <div id="tabTenants" class="tab-content">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">Danh Sách Đối Tác & Khách Thuê Băng Thông</div>
+                    <button class="btn btn-sm" onclick="showAddTenantModal()">+ Thêm Khách Hàng Mới</button>
+                </div>
+
+                <div style="overflow-x: auto;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Tên Khách Hàng</th>
+                                <th>Username</th>
+                                <th>Password</th>
+                                <th>Hạn Mức (Quota)</th>
+                                <th>Đã Sử Dụng</th>
+                                <th>Còn Lại</th>
+                                <th>Hạn Sử Dụng</th>
+                                <th>Trạng Thái</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tenantsTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 3: RESIDENTIAL POOL -->
+        <div id="tabNodes" class="tab-content">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">Danh Sách Các Điểm Mạng Cư Dân (Seed Nodes)</div>
+                </div>
+
+                <div style="overflow-x: auto;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Quốc Gia</th>
+                                <th>Thành Phố / Vùng</th>
+                                <th>Địa Chỉ IP</th>
+                                <th>Nhà Mạng (ISP)</th>
+                                <th>Múi Giờ (IANA)</th>
+                                <th>Độ Sạch (Fraud Score)</th>
+                                <th>Đã Phục Vụ</th>
+                            </tr>
+                        </thead>
+                        <tbody id="nodesTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB XRAY VPN: REALITY NODES -->
+        <div id="tabXrayVpn" class="tab-content">
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="card-title">⚡ Máy Chủ VPN Xray Reality (VLESS Stealth Mesh)</div>
+                        <span style="font-size: 12px; color: var(--text-muted);">
+                            Chỉ nạp và hiển thị các máy chủ đã kiểm định <strong>100% hoạt động</strong> làm VPN với TLS 1.3 Reality & XTLS-Vision.
+                        </span>
+                    </div>
+                    <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                        <button class="btn btn-success" onclick="testLiveXrayServers()">⚡ Kiểm Tra Ping Toàn Bộ Node</button>
+                        <button class="btn" onclick="copyAllVlessUrls()" style="background: linear-gradient(135deg, #2563eb, #06b6d4);">📋 Copy Tất Cả Link VLESS</button>
+                        <button class="btn btn-outline" onclick="syncXrayToProxies()">🔄 Đồng Bộ Vào Kho Proxy Thật</button>
+                    </div>
+                </div>
+
+                <!-- Info Notice on Usable VPN Rule & DNS Fallback -->
+                <div style="background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.3); border-radius: 12px; padding: 14px 18px; margin-bottom: 20px; font-size: 13px; line-height: 1.6;">
+                    <div style="font-weight: 700; color: #67e8f9; margin-bottom: 4px; display: flex; align-items: center; gap: 6px;">
+                        <span>🛡️</span> QUY CHUẨN NẠP MÁY CHỦ VPN: CHỈ NẠP SERVER SỬ DỤNG ĐƯỢC
+                    </div>
+                    <div style="color: #cbd5e1;">
+                        • <strong>Server 1 & 2 (Bulgaria - Sofia):</strong> Kết nối qua <code>bg.bsdup.com:63821</code> (Port mở, TLS Reality handshake www.microsoft.com OK).<br>
+                        • <strong>Server 3 (Đức - Frankfurt):</strong> Tên miền <code>de-d.bsdup.com</code> bị lỗi DNS không phân giải được. CMS đã <strong>tự động cấu hình kết nối trực tiếp qua IP <code>77.90.188.26:63821</code></strong> (TLS Reality handshake www.tiktok.com OK), giúp kết nối VPN thành công 100%.<br>
+                        • Các máy chủ ngoại tuyến hoặc lỗi bắt tay TLS sẽ bị từ chối/loại bỏ khỏi danh sách VPN hoạt động.
+                    </div>
+                </div>
+
+                <!-- Mini Stats Row -->
+                <div class="stats-grid" style="margin-bottom: 20px;">
+                    <div class="stat-card" style="padding: 14px 18px;">
+                        <div class="stat-label">Máy Chủ Sẵn Sàng Làm VPN</div>
+                        <div class="stat-value" id="valXrayUsableCount" style="color: var(--success); font-size: 22px;">3 / 3 Online (100%)</div>
+                    </div>
+                    <div class="stat-card" style="padding: 14px 18px;">
+                        <div class="stat-label">Giao Thức Bảo Mật</div>
+                        <div class="stat-value" style="color: #67e8f9; font-size: 15px; font-weight: 700; padding-top: 4px;">VLESS + XTLS-Vision + Reality</div>
+                    </div>
+                    <div class="stat-card" style="padding: 14px 18px;">
+                        <div class="stat-label">Độ Trễ Trung Bình (Ping)</div>
+                        <div class="stat-value" id="valXrayAvgPing" style="color: #fde047; font-size: 22px;">~225 ms</div>
+                    </div>
+                </div>
+
+                <!-- Servers Table -->
+                <div style="overflow-x: auto; margin-bottom: 28px;">
+                    <table style="width: 100%;">
+                        <thead>
+                            <tr>
+                                <th style="width: 50px;">ID</th>
+                                <th>Quốc Gia & Khu Vực</th>
+                                <th>Địa Chỉ Kết Nối</th>
+                                <th>Port</th>
+                                <th>Bảo Mật / SNI Masquerade</th>
+                                <th>Độ Trễ</th>
+                                <th>Trạng Thái VPN</th>
+                                <th style="text-align: right;">Thao Tác</th>
+                            </tr>
+                        </thead>
+                        <tbody id="xrayServersTableBody">
+                            <tr><td colspan="8" style="text-align: center; padding: 24px; color: var(--text-muted);">Đang tải danh sách máy chủ Xray VPN...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- User Accounts Table for VLESS Credentials -->
+                <div class="card-header" style="margin-top: 10px; margin-bottom: 12px;">
+                    <div class="card-title" style="font-size: 15px;">👥 Danh Sách Tài Khoản & UUID Kết Nối (Users Credential)</div>
+                    <span style="font-size: 12px; color: var(--text-muted);">Dùng các UUID này để xác thực vào VLESS Reality Server</span>
+                </div>
+                <div style="overflow-x: auto;">
+                    <table style="width: 100%;">
+                        <thead>
+                            <tr>
+                                <th>User ID</th>
+                                <th>Email / Tài Khoản</th>
+                                <th>Phân Hạng</th>
+                                <th>Trạng Thái</th>
+                                <th>Xray UUID</th>
+                                <th>Gói Dịch Vụ</th>
+                                <th>Hạn Dùng</th>
+                                <th style="text-align: right;">Sao Chép</th>
+                            </tr>
+                        </thead>
+                        <tbody id="xrayUsersTableBody">
+                            <tr><td colspan="8" style="text-align: center; padding: 20px; color: var(--text-muted);">Đang tải danh sách tài khoản...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 4: API DOCS -->
+        <div id="tabApiDocs" class="tab-content">
+            <div class="card">
+                <div class="card-title" style="margin-bottom: 12px;">Cú Pháp Kết Nối Trực Tiếp (Universal Gateway Syntax)</div>
+                <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 16px;">
+                    Cổng Gateway chạy trên cổng <strong>10000</strong>. Hỗ trợ mọi phần mềm SOCKS5 / HTTP Proxy:
+                </p>
+
+                <div style="background: var(--bg-surface-elevated); padding: 18px; border-radius: 12px; font-family: monospace; font-size: 13px; color: #a5f3fc; line-height: 1.8;">
+                    <strong>1. Kết Nối Trực Tiếp Qua Proxy Thật Active:</strong><br>
+                    127.0.0.1:10000 (Không cần User/Pass nếu kết nối nội bộ)<br><br>
+
+                    <strong>2. Chỉ định Quốc Gia (Targeting Country qua Gateway):</strong><br>
+                    127.0.0.1:10000:username-country-us:password<br>
+                    127.0.0.1:10000:username-country-vn:password<br><br>
+
+                    <strong>3. API Lấy Danh Sách Máy Chủ Cho Desktop Client:</strong><br>
+                    GET http://127.0.0.1:6033/api/v1/locations
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        let cachedProxies = [];
+        let cachedTenants = [];
+        let cachedNodes = [];
+
+        // Tập hợp các ID proxy được người dùng tick chọn (Batch Selection)
+        const selectedProxyIds = new Set();
+
+        // Trạng thái đếm ngược chu kỳ Health Check 10 phút (600 giây)
+        let healthCheckCountdownSec = 600;
+        let healthCheckIntervalTimer = null;
+        let isHealthCheckRunning = false;
+
+        // Trạng thái lọc và phân trang cho Real Proxies
+        let currentCountryFilter = 'ALL';
+        let currentSearchTerm = '';
+        let currentStatusFilter = 'ALL';
+        let currentPage = 1;
+        let pageSize = 50;
+
+        const flagMap = {
+            'VN': '🇻🇳', 'US': '🇺🇸', 'SG': '🇸🇬', 'JP': '🇯🇵', 'GB': '🇬🇧',
+            'DE': '🇩🇪', 'FR': '🇫🇷', 'CA': '🇨🇦', 'AU': '🇦🇺', 'KR': '🇰🇷',
+            'HK': '🇭🇰', 'TW': '🇹🇼', 'TH': '🇹🇭', 'MY': '🇲🇾', 'PH': '🇵🇭',
+            'IN': '🇮🇳', 'RU': '🇷🇺', 'NL': '🇳🇱', 'BR': '🇧🇷', 'ID': '🇮🇩'
+        };
+
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+
+            const activeBtn = Array.from(document.querySelectorAll('.tab-btn')).find(b => b.getAttribute('onclick').includes(tabId));
+            if (activeBtn) activeBtn.classList.add('active');
+
+            const content = document.getElementById(tabId);
+            if (content) content.classList.add('active');
+        }
+
+        function toggleBox(boxId) {
+            const el = document.getElementById(boxId);
+            if (el) {
+                el.classList.toggle('show');
+            }
+        }
+
+        // Cập nhật số dòng & số IP duy nhất theo thời gian thực
+        function updateBulkStats() {
+            const text = document.getElementById('bulkText').value;
+            const lines = text.split('\n').map(l => l.trim()).filter(l => l.length > 0 && !l.startsWith('#'));
+            const count = lines.length;
+
+            const ips = new Set();
+            for (const l of lines) {
+                let clean = l.replace(/^https?:\/\//i, '').replace(/^socks5:\/\//i, '');
+                if (clean.includes('@')) clean = clean.split('@')[1];
+                const host = clean.split(':')[0];
+                if (host) ips.add(host);
+            }
+
+            document.getElementById('bulkStatsBadge').innerText = `${count.toLocaleString()} dòng | ${ips.size.toLocaleString()} IP duy nhất`;
+        }
+
+        function clearBulkText() {
+            document.getElementById('bulkText').value = '';
+            updateBulkStats();
+            document.getElementById('importResultBanner').style.display = 'none';
+        }
+
+        // Dán dữ liệu mẫu từ người dùng cung cấp
+        function pasteSampleData() {
+            const sample = `103.82.24.174:46517:huyhuyz:huyhuyz
+103.82.24.174:50799:huyhuyz:huyhuyz
+103.82.24.174:26820:huyhuyz:huyhuyz
+103.82.24.174:34009:huyhuyz:huyhuyz
+103.82.24.174:13130:huyhuyz:huyhuyz
+103.166.184.5:11896:huyhuyz:huyhuyz
+103.166.184.5:14939:huyhuyz:huyhuyz
+103.82.25.114:34685:huyhuyz:huyhuyz
+103.82.24.174:34224:huyhuyz:huyhuyz
+103.82.24.174:29691:huyhuyz:huyhuyz
+103.82.24.174:18295:huyhuyz:huyhuyz
+103.82.24.174:14350:huyhuyz:huyhuyz
+103.82.24.174:25908:huyhuyz:huyhuyz
+103.82.24.174:21366:huyhuyz:huyhuyz
+103.82.24.174:25683:huyhuyz:huyhuyz`;
+            document.getElementById('bulkText').value = sample;
+            updateBulkStats();
+        }
+
+        async function fetchSystemData() {
+            try {
+                const [healthRes, proxiesRes, nodesRes, tenantsRes] = await Promise.all([
+                    fetch('/api/v1/health').then(r => r.json()).catch(() => null),
+                    fetch('/api/v1/proxies').then(r => r.json()).catch(() => null),
+                    fetch('/api/v1/residential/nodes').then(r => r.json()).catch(() => null),
+                    fetch('/api/v1/tenants').then(r => r.json()).catch(() => null)
+                ]);
+
+                if (healthRes && healthRes.success) {
+                    document.getElementById('valTotalServed').innerText = (healthRes.data.totalBytesServed / (1024 * 1024)).toFixed(2) + ' MB';
+                }
+
+                if (proxiesRes && proxiesRes.success) {
+                    cachedProxies = proxiesRes.data;
+                    updateProxyStats(cachedProxies);
+                    renderCountryPills(cachedProxies);
+                    filterAndRenderTable();
+                }
+
+                if (nodesRes && nodesRes.success) {
+                    cachedNodes = nodesRes.data.nodes;
+                    renderNodesTable(cachedNodes);
+                }
+
+                if (tenantsRes && tenantsRes.success) {
+                    cachedTenants = tenantsRes.data;
+                    renderTenantsTable(cachedTenants);
+                    populateTenantSelect(cachedTenants);
+                }
+            } catch (err) {
+                console.error("Lỗi cập nhật dữ liệu:", err);
+            }
+        }
+
+        function updateProxyStats(proxies) {
+            document.getElementById('valTotalRealProxies').innerText = proxies.length.toLocaleString() + ' Nodes';
+            const live = proxies.filter(p => p.status === 'LIVE').length;
+            document.getElementById('valLiveProxies').innerText = live.toLocaleString() + ' Live';
+
+            const activeVpn = proxies.find(p => p.isActiveVpn) || proxies[0];
+            if (activeVpn) {
+                const flag = flagMap[activeVpn.country] || '🌐';
+                document.getElementById('valActiveVpnProxy').innerText = `${flag} ${activeVpn.countryName} - ${activeVpn.city} (${activeVpn.host}:${activeVpn.port})`;
+            } else {
+                document.getElementById('valActiveVpnProxy').innerText = 'Chưa chọn';
+            }
+        }
+
+        // Tự động phân tách và vẽ các Pills lọc theo Quốc gia
+        function renderCountryPills(proxies) {
+            const countryCounts = {};
+            for (const p of proxies) {
+                const cCode = p.country || 'VN';
+                const cName = p.countryName || 'Vietnam';
+                if (!countryCounts[cCode]) {
+                    countryCounts[cCode] = { code: cCode, name: cName, count: 0 };
+                }
+                countryCounts[cCode].count++;
+            }
+
+            const sortedCountries = Object.values(countryCounts).sort((a, b) => b.count - a.count);
+
+            let html = `
+                <button class="country-pill ${currentCountryFilter === 'ALL' ? 'active' : ''}" onclick="setCountryFilter('ALL')">
+                    🌐 Tất Cả <span class="country-pill-count">${proxies.length.toLocaleString()}</span>
+                </button>
+            `;
+
+            for (const c of sortedCountries) {
+                const flag = flagMap[c.code] || '🌐';
+                const isActive = currentCountryFilter === c.code ? 'active' : '';
+                html += `
+                    <button class="country-pill ${isActive}" onclick="setCountryFilter('${c.code}')">
+                        ${flag} ${c.name} <span class="country-pill-count">${c.count.toLocaleString()}</span>
+                    </button>
+                `;
+            }
+
+            document.getElementById('countryPillsBar').innerHTML = html;
+        }
+
+        function setCountryFilter(countryCode) {
+            currentCountryFilter = countryCode;
+            currentPage = 1;
+            renderCountryPills(cachedProxies);
+            filterAndRenderTable();
+        }
+
+        function onSearchOrFilterChange() {
+            currentSearchTerm = document.getElementById('proxySearchInput').value.trim().toLowerCase();
+            currentStatusFilter = document.getElementById('proxyStatusFilter').value;
+            currentPage = 1;
+            filterAndRenderTable();
+        }
+
+        function onPageSizeChange() {
+            pageSize = parseInt(document.getElementById('proxyPageSize').value);
+            currentPage = 1;
+            filterAndRenderTable();
+        }
+
+        function changePage(delta) {
+            currentPage += delta;
+            filterAndRenderTable();
+        }
+
+        // Lọc, tìm kiếm, phân trang và render bảng proxy
+        function filterAndRenderTable() {
+            let filtered = cachedProxies.slice();
+
+            // 1. Lọc theo Quốc gia
+            if (currentCountryFilter !== 'ALL') {
+                filtered = filtered.filter(p => p.country === currentCountryFilter);
+            }
+
+            // 2. Lọc theo Trạng thái
+            if (currentStatusFilter !== 'ALL') {
+                filtered = filtered.filter(p => p.status === currentStatusFilter);
+            }
+
+            // 3. Tìm kiếm theo từ khóa
+            if (currentSearchTerm) {
+                filtered = filtered.filter(p =>
+                    (p.host && p.host.toLowerCase().includes(currentSearchTerm)) ||
+                    (p.port && p.port.toString().includes(currentSearchTerm)) ||
+                    (p.countryName && p.countryName.toLowerCase().includes(currentSearchTerm)) ||
+                    (p.city && p.city.toLowerCase().includes(currentSearchTerm)) ||
+                    (p.isp && p.isp.toLowerCase().includes(currentSearchTerm)) ||
+                    (p.username && p.username.toLowerCase().includes(currentSearchTerm))
+                );
+            }
+
+            const totalFiltered = filtered.length;
+            const totalPages = Math.ceil(totalFiltered / pageSize) || 1;
+            if (currentPage > totalPages) currentPage = totalPages;
+            if (currentPage < 1) currentPage = 1;
+
+            const startIndex = (currentPage - 1) * pageSize;
+            const endIndex = Math.min(startIndex + pageSize, totalFiltered);
+            const pageItems = filtered.slice(startIndex, endIndex);
+
+            // Cập nhật thông tin phân trang
+            document.getElementById('paginationInfo').innerText = totalFiltered === 0
+                ? 'Không tìm thấy proxy nào phù hợp'
+                : `Hiển thị ${(startIndex + 1).toLocaleString()} - ${endIndex.toLocaleString()} của ${totalFiltered.toLocaleString()} proxy`;
+
+            document.getElementById('paginationPageCurrent').innerText = `Trang ${currentPage} / ${totalPages}`;
+            document.getElementById('btnPrevPage').disabled = currentPage <= 1;
+            document.getElementById('btnNextPage').disabled = currentPage >= totalPages;
+
+            const tbody = document.getElementById('realProxiesTableBody');
+            if (pageItems.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="9" style="text-align: center; color: var(--text-muted); padding: 24px;">Không có dữ liệu proxy phù hợp với bộ lọc hiện tại.</td></tr>';
+                updateMasterCheckbox();
+                updateBatchActionsBar();
+                return;
+            }
+
+            tbody.innerHTML = pageItems.map(p => {
+                const flag = flagMap[p.country] || '🌐';
+                const isSelected = selectedProxyIds.has(p.id);
+
+                let statusBadge = `<span class="badge badge-unchecked">⚪ Chưa test</span>`;
+                if (p.status === 'LIVE') {
+                    statusBadge = `<span class="badge badge-live">🟢 LIVE</span>`;
+                } else if (p.status === 'OFFLINE') {
+                    statusBadge = `<span class="badge badge-offline">🔴 OFFLINE</span>`;
+                }
+
+                let pingHtml = '<span style="color: var(--text-muted);">-</span>';
+                if (p.status === 'OFFLINE') {
+                    pingHtml = `<span class="ping-tag ping-offline" style="background: rgba(239,68,68,0.2); color: #f87171; border: 1px solid rgba(239,68,68,0.4);">DIE</span>`;
+                } else if (p.pingMs) {
+                    let pingClass = p.pingMs < 100 ? 'ping-fast' : (p.pingMs < 250 ? 'ping-medium' : 'ping-slow');
+                    pingHtml = `<span class="ping-tag ${pingClass}">${p.pingMs} ms</span>`;
+                }
+
+                const vpnActiveBadge = p.isActiveVpn
+                    ? `<span class="badge badge-vpn-active">🎯 ĐANG CHẠY VPN</span>`
+                    : `<button class="btn btn-outline btn-sm" onclick="selectVpnProxy('${p.id}')">Dùng cho VPN</button>`;
+
+                const displayAddr = p.username ? `${p.host}:${p.port}:${p.username}:${p.password}` : `${p.host}:${p.port}`;
+
+                return `
+                    <tr class="${isSelected ? 'selected-row' : ''}">
+                        <td style="text-align: center;">
+                            <input type="checkbox" class="proxy-row-chk" data-id="${p.id}" ${isSelected ? 'checked' : ''} onchange="toggleSelectRow('${p.id}', this.checked)" style="cursor: pointer; width: 16px; height: 16px;">
+                        </td>
+                        <td>${statusBadge}</td>
+                        <td><span class="badge badge-proto">${p.type.toUpperCase()}</span></td>
+                        <td><strong>${flag} ${p.countryName}</strong> <span style="color: var(--text-muted); font-size: 12px;">(${p.city})</span></td>
+                        <td>
+                            <span class="code-pill">${displayAddr}</span>
+                            <span class="copy-btn" title="Sao chép địa chỉ" onclick="navigator.clipboard.writeText('${displayAddr}')"> 📋</span>
+                        </td>
+                        <td>${pingHtml}</td>
+                        <td style="color: var(--text-muted); font-size: 12px; max-width: 180px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${p.isp || 'Residential'}</td>
+                        <td>${vpnActiveBadge}</td>
+                        <td>
+                            <div style="display: flex; gap: 4px;">
+                                <button class="btn btn-sm btn-outline" onclick="testSingleProxy('${p.id}')">⚡ Test</button>
+                                <button class="btn btn-sm btn-danger" onclick="deleteProxy('${p.id}')">🗑️</button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+
+            updateMasterCheckbox();
+            updateBatchActionsBar();
+        }
+
+        // ==================== BATCH SELECTION & ACTIONS ====================
+        function toggleSelectRow(id, isChecked) {
+            if (isChecked) {
+                selectedProxyIds.add(id);
+            } else {
+                selectedProxyIds.delete(id);
+            }
+            updateMasterCheckbox();
+            updateBatchActionsBar();
+        }
+
+        function toggleSelectAll(masterEl) {
+            const isChecked = masterEl.checked;
+            const checkboxes = document.querySelectorAll('.proxy-row-chk');
+            checkboxes.forEach(cb => {
+                cb.checked = isChecked;
+                const id = cb.getAttribute('data-id');
+                if (id) {
+                    if (isChecked) selectedProxyIds.add(id);
+                    else selectedProxyIds.delete(id);
+                }
+            });
+            updateBatchActionsBar();
+        }
+
+        function clearSelectedRows() {
+            selectedProxyIds.clear();
+            const chkAll = document.getElementById('chkSelectAll');
+            if (chkAll) chkAll.checked = false;
+            document.querySelectorAll('.proxy-row-chk').forEach(cb => cb.checked = false);
+            updateBatchActionsBar();
+        }
+
+        function updateMasterCheckbox() {
+            const master = document.getElementById('chkSelectAll');
+            if (!master) return;
+            const checkboxes = Array.from(document.querySelectorAll('.proxy-row-chk'));
+            if (checkboxes.length === 0) {
+                master.checked = false;
+                master.indeterminate = false;
+            } else {
+                const checkedCount = checkboxes.filter(cb => cb.checked).length;
+                master.checked = checkedCount === checkboxes.length;
+                master.indeterminate = checkedCount > 0 && checkedCount < checkboxes.length;
+            }
+        }
+
+        function updateBatchActionsBar() {
+            const bar = document.getElementById('batchActionsBar');
+            const countEl = document.getElementById('batchSelectedCount') || document.getElementById('selectedBatchCount');
+            if (!bar) return;
+            const count = selectedProxyIds.size;
+            if (countEl) countEl.innerText = count.toLocaleString();
+            if (count > 0) {
+                bar.style.display = 'flex';
+                bar.classList.add('active');
+            } else {
+                bar.style.display = 'none';
+                bar.classList.remove('active');
+            }
+        }
+
+        async function executeBatchDelete() {
+            const count = selectedProxyIds.size;
+            if (count === 0) return;
+            if (!confirm(`Bạn có chắc chắn muốn xóa ${count} proxy đã chọn? Thao tác này không thể hoàn tác!`)) return;
+
+            try {
+                const ids = Array.from(selectedProxyIds);
+                const res = await fetch('/api/v1/proxies/batch-delete', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ ids: ids })
+                }).then(r => r.json());
+
+                if (res.success) {
+                    const deletedCount = res.data ? res.data.deleted : count;
+                    cachedProxies = cachedProxies.filter(p => !selectedProxyIds.has(p.id));
+                    selectedProxyIds.clear();
+                    updateMasterCheckbox();
+                    updateBatchActionsBar();
+                    updateProxyStats(cachedProxies);
+                    renderCountryPills(cachedProxies);
+                    filterAndRenderTable();
+                    alert(`✅ Đã xóa thành công ${deletedCount} proxy khỏi kho!`);
+                } else {
+                    alert('Lỗi: ' + (res.message || 'Không thể xóa proxy.'));
+                }
+            } catch (err) {
+                alert('Lỗi kết nối khi xóa hàng loạt: ' + err.message);
+            }
+        }
+
+        async function executeBatchTest() {
+            const count = selectedProxyIds.size;
+            if (count === 0) return;
+
+            try {
+                const ids = Array.from(selectedProxyIds);
+                const res = await fetch('/api/v1/proxies/batch-test', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ ids: ids })
+                }).then(r => r.json());
+
+                if (res.success && res.data) {
+                    const updatedMap = new Map(res.data.map(p => [p.id, p]));
+                    for (let i = 0; i < cachedProxies.length; i++) {
+                        if (updatedMap.has(cachedProxies[i].id)) {
+                            cachedProxies[i] = updatedMap.get(cachedProxies[i].id);
+                        }
+                    }
+                    updateProxyStats(cachedProxies);
+                    filterAndRenderTable();
+                    alert(`✅ Đã hoàn tất đo ping cho ${res.data.length} proxy!`);
+                } else {
+                    alert('Lỗi: ' + (res.message || 'Không thể test ping.'));
+                }
+            } catch (err) {
+                alert('Lỗi kết nối khi test ping hàng loạt: ' + err.message);
+            }
+        }
+
+        // ==================== AUTO HEALTH-CHECK (10 PHÚT) ====================
+        function initHealthCheckPolling() {
+            pollHealthCheckStatus();
+            // Polling trạng thái mỗi 10 giây để đồng bộ
+            setInterval(pollHealthCheckStatus, 10000);
+            // Tick đếm ngược mỗi giây
+            if (healthCheckIntervalTimer) clearInterval(healthCheckIntervalTimer);
+            healthCheckIntervalTimer = setInterval(tickHealthCountdown, 1000);
+        }
+
+        async function pollHealthCheckStatus() {
+            try {
+                const res = await fetch('/api/v1/proxies/health-check/status').then(r => r.json());
+                if (res && res.success && res.data) {
+                    const data = res.data;
+                    isHealthCheckRunning = data.isRunning;
+                    healthCheckCountdownSec = Math.max(0, Math.floor(data.secondsUntilNextCheck));
+                    updateHealthCheckWidget(data);
+                }
+            } catch (err) {
+                console.warn("Không thể lấy trạng thái Health Check:", err);
+            }
+        }
+
+        function tickHealthCountdown() {
+            if (healthCheckCountdownSec > 0 && !isHealthCheckRunning) {
+                healthCheckCountdownSec--;
+            }
+            const mins = Math.floor(healthCheckCountdownSec / 60);
+            const secs = healthCheckCountdownSec % 60;
+            const timeStr = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+            const timerEl = document.getElementById('healthCheckTimer');
+            if (timerEl) {
+                timerEl.innerText = isHealthCheckRunning ? 'Đang ping...' : timeStr;
+            }
+        }
+
+        function updateHealthCheckWidget(data) {
+            const statusEl = document.getElementById('healthCheckStatusText');
+            const btnEl = document.getElementById('btnManualHealthCheck');
+            const summaryEl = document.getElementById('healthCheckSummary');
+
+            if (data.isRunning) {
+                if (statusEl) statusEl.innerText = 'Đang quét tự động...';
+                if (btnEl) {
+                    btnEl.disabled = true;
+                    btnEl.innerText = '⏳ Đang quét...';
+                }
+            } else {
+                if (statusEl) statusEl.innerText = 'Tự động (Chu kỳ 10 phút)';
+                if (btnEl) {
+                    btnEl.disabled = false;
+                    btnEl.innerText = '⚡ Ping Ngay';
+                }
+            }
+
+            if (summaryEl) {
+                const live = data.lastLiveCount || 0;
+                const offline = data.lastOfflineCount || 0;
+                const total = data.totalMonitored || (live + offline);
+                summaryEl.innerText = `Sống: ${live.toLocaleString()} | Chết: ${offline.toLocaleString()} / Tổng: ${total.toLocaleString()}`;
+            }
+        }
+
+        async function triggerManualHealthCheck() {
+            const btn = document.getElementById('btnManualHealthCheck');
+            if (btn) {
+                btn.disabled = true;
+                btn.innerText = '⏳ Đang khởi chạy...';
+            }
+            try {
+                const res = await fetch('/api/v1/proxies/health-check/run', { method: 'POST' }).then(r => r.json());
+                if (res && res.success) {
+                    alert('Đã kích hoạt quét ping toàn bộ kho proxy! Hệ thống đang kiểm tra ngầm.');
+                    await pollHealthCheckStatus();
+                    setTimeout(fetchSystemData, 3000);
+                } else {
+                    alert('Thông báo: ' + (res.message || 'Không thể kích hoạt.'));
+                }
+            } catch (err) {
+                alert('Lỗi kích hoạt health check: ' + err.message);
+            } finally {
+                if (btn) {
+                    btn.disabled = false;
+                    btn.innerText = '⚡ Ping Ngay';
+                }
+            }
+        }
+
+        // Thực thi nhập hàng loạt siêu tốc (hỗ trợ hàng nghìn bản ghi)
+        async function executeBulkImport() {
+            const text = document.getElementById('bulkText').value.trim();
+            if (!text) {
+                alert('Vui lòng dán danh sách proxy vào ô trước khi bấm Nhập!');
+                return;
+            }
+
+            const btn = document.getElementById('btnExecuteBulkImport');
+            const statusEl = document.getElementById('bulkProgressStatus');
+            btn.disabled = true;
+            btn.innerText = '⏳ Đang phân tích GeoIP & Nhập kho...';
+            statusEl.innerText = 'Đang xử lý dữ liệu và nhận diện quốc gia...';
+
+            const payload = {
+                text: text,
+                defaultType: document.getElementById('bulkDefaultType').value,
+                replaceExisting: document.getElementById('bulkReplaceMode').value === 'true',
+                autoGeoIp: document.getElementById('bulkAutoGeoIp').value === 'true'
+            };
+
+            try {
+                const res = await fetch('/api/v1/proxies/bulk', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                }).then(r => r.json());
+
+                if (res.success && res.data) {
+                    const result = res.data;
+                    statusEl.innerText = `✅ Đã nhập thành công ${result.added.toLocaleString()} proxy!`;
+
+                    // Hiển thị kết quả chi tiết
+                    const banner = document.getElementById('importResultBanner');
+                    banner.style.display = 'block';
+                    document.getElementById('importResultTitle').innerText = `🎉 Đã nhập thành công ${result.added.toLocaleString()} proxy từ ${Object.keys(result.countryBreakdown).length} quốc gia!`;
+                    document.getElementById('importResultSummary').innerText = `Tổng số dòng xử lý: ${result.totalLines.toLocaleString()} | IP duy nhất: ${result.uniqueIps.toLocaleString()}`;
+
+                    const pillsContainer = document.getElementById('importResultPills');
+                    pillsContainer.innerHTML = Object.entries(result.countryBreakdown)
+                        .map(([cName, count]) => `<span class="badge badge-proto" style="padding: 4px 10px; font-size: 12px;">${cName}: ${count.toLocaleString()} proxy</span>`)
+                        .join('');
+
+                    await fetchSystemData();
+                } else {
+                    alert('Lỗi: ' + (res.message || 'Không thể nhập proxy.'));
+                    statusEl.innerText = 'Có lỗi xảy ra.';
+                }
+            } catch (err) {
+                alert('Lỗi kết nối máy chủ: ' + err.message);
+                statusEl.innerText = 'Lỗi kết nối.';
+            } finally {
+                btn.disabled = false;
+                btn.innerText = '🚀 Xử Lý & Nhập Kho Ngay Lập Tức';
+            }
+        }
+
+        async function addSingleProxy() {
+            const host = document.getElementById('singleHost').value.trim();
+            const port = parseInt(document.getElementById('singlePort').value.trim());
+            if (!host || !port) {
+                alert('Vui lòng nhập Host và Port hợp lệ!');
+                return;
+            }
+
+            const payload = {
+                type: document.getElementById('singleType').value,
+                host: host,
+                port: port,
+                username: document.getElementById('singleUser').value.trim() || null,
+                password: document.getElementById('singlePass').value.trim() || null,
+                country: document.getElementById('singleCountry').value,
+                city: document.getElementById('singleCity').value.trim() || 'Hanoi',
+                isp: document.getElementById('singleIsp').value.trim() || 'Residential'
+            };
+
+            try {
+                const res = await fetch('/api/v1/proxies', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                }).then(r => r.json());
+
+                if (res.success) {
+                    alert('Đã thêm proxy thành công!');
+                    toggleBox('boxSingleAdd');
+                    document.getElementById('singleHost').value = '';
+                    fetchSystemData();
+                } else {
+                    alert('Lỗi: ' + res.message);
+                }
+            } catch (err) {
+                alert('Lỗi kết nối: ' + err.message);
+            }
+        }
+
+        async function testSingleProxy(id) {
+            try {
+                const res = await fetch(`/api/v1/proxies/${id}/test`, { method: 'POST' }).then(r => r.json());
+                if (res.success) {
+                    const idx = cachedProxies.findIndex(p => p.id === id);
+                    if (idx >= 0) {
+                        cachedProxies[idx] = res.data;
+                        updateProxyStats(cachedProxies);
+                        filterAndRenderTable();
+                    }
+                }
+            } catch (err) {
+                console.error("Test proxy error:", err);
+            }
+        }
+
+        async function testAllProxies() {
+            if (!confirm('Kiểm tra ping toàn bộ proxy trong kho? Thao tác có thể mất một vài giây.')) return;
+            try {
+                const res = await fetch('/api/v1/proxies/test-all', { method: 'POST' }).then(r => r.json());
+                if (res.success) {
+                    cachedProxies = res.data;
+                    updateProxyStats(cachedProxies);
+                    filterAndRenderTable();
+                    alert(`Đã kiểm tra xong ${cachedProxies.length} proxy!`);
+                }
+            } catch (err) {
+                alert('Lỗi kiểm tra ping: ' + err.message);
+            }
+        }
+
+        async function deleteProxy(id) {
+            if (!confirm('Bạn có chắc muốn xóa proxy này?')) return;
+            try {
+                const res = await fetch(`/api/v1/proxies/${id}`, { method: 'DELETE' }).then(r => r.json());
+                if (res.success) {
+                    cachedProxies = cachedProxies.filter(p => p.id !== id);
+                    selectedProxyIds.delete(id);
+                    updateMasterCheckbox();
+                    updateBatchActionsBar();
+                    updateProxyStats(cachedProxies);
+                    renderCountryPills(cachedProxies);
+                    filterAndRenderTable();
+                }
+            } catch (err) {
+                alert('Lỗi xóa: ' + err.message);
+            }
+        }
+
+        async function deleteOfflineProxies() {
+            if (!confirm('Bạn có chắc muốn xóa toàn bộ proxy bị lỗi (OFFLINE)?')) return;
+            try {
+                const res = await fetch('/api/v1/proxies/delete-offline', { method: 'POST' }).then(r => r.json());
+                if (res.success) {
+                    alert(res.message);
+                    selectedProxyIds.clear();
+                    updateMasterCheckbox();
+                    updateBatchActionsBar();
+                    fetchSystemData();
+                }
+            } catch (err) {
+                alert('Lỗi: ' + err.message);
+            }
+        }
+
+        async function clearAllProxies() {
+            if (!confirm('CẢNH BÁO: Thao tác này sẽ xóa sạch toàn bộ proxy trong kho! Bạn có chắc chắn không?')) return;
+            try {
+                const res = await fetch('/api/v1/proxies/clear', { method: 'POST' }).then(r => r.json());
+                if (res.success) {
+                    alert(res.message);
+                    selectedProxyIds.clear();
+                    updateMasterCheckbox();
+                    updateBatchActionsBar();
+                    fetchSystemData();
+                }
+            } catch (err) {
+                alert('Lỗi: ' + err.message);
+            }
+        }
+
+        async function selectVpnProxy(id) {
+            try {
+                const res = await fetch(`/api/v1/proxies/${id}/select`, { method: 'POST' }).then(r => r.json());
+                if (res.success) {
+                    for (const p of cachedProxies) {
+                        p.isActiveVpn = (p.id === id);
+                    }
+                    updateProxyStats(cachedProxies);
+                    filterAndRenderTable();
+                }
+            } catch (err) {
+                alert('Lỗi chọn proxy: ' + err.message);
+            }
+        }
+
+        // Xuất danh sách proxy đang lọc thành file text
+        function exportCurrentView() {
+            let filtered = cachedProxies.slice();
+            if (currentCountryFilter !== 'ALL') {
+                filtered = filtered.filter(p => p.country === currentCountryFilter);
+            }
+            if (currentStatusFilter !== 'ALL') {
+                filtered = filtered.filter(p => p.status === currentStatusFilter);
+            }
+
+            if (filtered.length === 0) {
+                alert('Không có proxy nào để xuất!');
+                return;
+            }
+
+            const lines = filtered.map(p => p.username ? `${p.host}:${p.port}:${p.username}:${p.password}` : `${p.host}:${p.port}`).join('\n');
+            navigator.clipboard.writeText(lines).then(() => {
+                alert(`Đã sao chép ${filtered.length.toLocaleString()} dòng proxy vào Clipboard!`);
+            });
+        }
+
+        // Generator functions
+        function populateTenantSelect(tenants) {
+            const sel = document.getElementById('genTenantSelect');
+            sel.innerHTML = tenants.map(t => `<option value="${t.username}">${t.name} (${t.username})</option>`).join('');
+        }
+
+        function generateProxies() {
+            const tenant = document.getElementById('genTenantSelect').value;
+            const country = document.getElementById('genCountry').value;
+            const mode = document.getElementById('genMode').value;
+            const proto = document.getElementById('genProtocol').value;
+            const qty = parseInt(document.getElementById('genQuantity').value) || 10;
+
+            const results = [];
+            const gwHost = "127.0.0.1";
+            const gwPort = 10000;
+
+            for (let i = 0; i < qty; i++) {
+                let userStr = tenant;
+                if (country !== 'ALL') userStr += `-country-${country.toLowerCase()}`;
+                if (mode === 'sticky') {
+                    const sess = Math.random().toString(36).substring(2, 8);
+                    userStr += `-session-${sess}-time-30`;
+                }
+                const pass = "nextaipass";
+                results.push(`${proto}://${userStr}:${pass}@${gwHost}:${gwPort}`);
+            }
+
+            document.getElementById('genResult').value = results.join('\n');
+        }
+
+        function copyResult() {
+            const text = document.getElementById('genResult').value;
+            if (!text) return;
+            navigator.clipboard.writeText(text).then(() => alert('Đã sao chép danh sách vào bộ nhớ tạm!'));
+        }
+
+        function renderTenantsTable(tenants) {
+            const tbody = document.getElementById('tenantsTableBody');
+            tbody.innerHTML = tenants.map(t => {
+                const usedMb = (t.usedBytes / (1024 * 1024)).toFixed(1);
+                const quotaMb = (t.quotaBytes / (1024 * 1024)).toFixed(0);
+                const remainMb = (t.remainingBytes / (1024 * 1024)).toFixed(1);
+                return `
+                    <tr>
+                        <td><strong>${t.name}</strong></td>
+                        <td><code>${t.username}</code></td>
+                        <td><code>••••••••</code></td>
+                        <td>${(t.quotaBytes / (1024*1024*1024)).toFixed(1)} GB</td>
+                        <td>${usedMb} MB</td>
+                        <td style="color: var(--success); font-weight: 600;">${remainMb} MB</td>
+                        <td>${new Date(t.expiresAt).toLocaleDateString('vi-VN')}</td>
+                        <td><span class="badge badge-live">ĐANG HOẠT ĐỘNG</span></td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function renderNodesTable(nodes) {
+            const tbody = document.getElementById('nodesTableBody');
+            tbody.innerHTML = nodes.map(n => `
+                <tr>
+                    <td><strong>${n.countryName} (${n.country})</strong></td>
+                    <td>${n.city}</td>
+                    <td><span class="code-pill">${n.ip}</span></td>
+                    <td>${n.isp}</td>
+                    <td>${n.timezone}</td>
+                    <td><span class="badge badge-live">${n.fraudScore}/100 Clean</span></td>
+                    <td>${(n.bytesServed / (1024 * 1024)).toFixed(2)} MB</td>
+                </tr>
+            `).join('');
+        }
+
+        function showAddTenantModal() {
+            const name = prompt('Nhập tên đối tác / khách hàng mới:');
+            if (!name) return;
+            const quota = parseFloat(prompt('Hạn mức Quota (GB):', '20')) || 20;
+
+            fetch('/api/v1/tenants', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name: name, quotaGb: quota })
+            }).then(r => r.json()).then(res => {
+                if (res.success) {
+                    alert('Đã tạo khách hàng: ' + res.data.username);
+                    fetchSystemData();
+                }
+            });
+        }
+
+        let cachedXrayServers = [];
+        let cachedXrayUsers = [];
+
+        async function fetchXrayVpnData() {
+            try {
+                const [serversRes, usersRes] = await Promise.all([
+                    fetch('/api/xray/servers').then(r => r.json()).catch(() => null),
+                    fetch('/api/xray/users').then(r => r.json()).catch(() => null)
+                ]);
+
+                if (serversRes) {
+                    cachedXrayServers = Array.isArray(serversRes) ? serversRes : (serversRes.value || []);
+                    renderXrayServersTable(cachedXrayServers);
+                }
+
+                if (usersRes) {
+                    cachedXrayUsers = Array.isArray(usersRes) ? usersRes : (usersRes.value || []);
+                    renderXrayUsersTable(cachedXrayUsers);
+                }
+            } catch (err) {
+                console.error("Lỗi nạp dữ liệu Xray VPN:", err);
+            }
+        }
+
+        function renderXrayServersTable(servers) {
+            const tbody = document.getElementById('xrayServersTableBody');
+            if (!tbody) return;
+
+            // Chỉ nạp và hiển thị những server có thể dùng làm VPN
+            const usableServers = servers.filter(s => s.vpn_usable === 1 || s.vpn_usable === true || s.status === 'ONLINE');
+            
+            const total = servers.length;
+            const usable = usableServers.length;
+            const usableEl = document.getElementById('valXrayUsableCount');
+            if (usableEl) usableEl.innerText = `${usable} / ${total} Online (${total > 0 ? Math.round((usable/total)*100) : 0}%)`;
+
+            const pings = usableServers.map(s => s.ping_ms).filter(p => p > 0);
+            const avg = pings.length > 0 ? Math.round(pings.reduce((a,b)=>a+b,0)/pings.length) : 0;
+            const pingEl = document.getElementById('valXrayAvgPing');
+            if (pingEl) pingEl.innerText = avg > 0 ? `~${avg} ms` : 'N/A';
+
+            if (usableServers.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="8" style="text-align: center; padding: 24px; color: var(--danger);">Không có máy chủ nào đủ điều kiện hoạt động làm VPN.</td></tr>`;
+                return;
+            }
+
+            const flagIcons = { 'bg': '🇧🇬', 'de': '🇩🇪', 'vn': '🇻🇳', 'us': '🇺🇸', 'sg': '🇸🇬' };
+
+            tbody.innerHTML = usableServers.map(s => {
+                const flag = flagIcons[s.country_code.toLowerCase()] || '🌐';
+                const connectAddr = s.connect_address || s.host || s.ip;
+                const isDnsBypass = s.dns_status === 'DNS_FAILED_USE_DIRECT_IP' || s.id === 3;
+                
+                return `
+                    <tr>
+                        <td><strong>#${s.id}</strong></td>
+                        <td>
+                            <span style="font-size: 18px; vertical-align: middle; margin-right: 6px;">${flag}</span>
+                            <strong>${s.country_name || s.country_code.toUpperCase()}</strong> - ${s.city || 'Default'}
+                        </td>
+                        <td>
+                            <span class="code-pill" style="font-weight: 700; color: #38bdf8;">${connectAddr}</span>
+                            ${isDnsBypass ? '<br><span style="font-size: 10px; color: #f59e0b;">⚠️ IP Trực Tiếp (Bypass DNS lỗi)</span>' : ''}
+                        </td>
+                        <td><span class="code-pill">${s.vless_port}</span></td>
+                        <td>
+                            <span class="badge badge-proto">VLESS Reality</span>
+                            <div style="font-size: 11px; color: var(--text-muted); margin-top: 2px;">SNI: <span style="color: #67e8f9;">${s.xsni}</span></div>
+                        </td>
+                        <td>
+                            <span class="ping-tag ${s.ping_ms < 100 ? 'ping-fast' : s.ping_ms < 300 ? 'ping-medium' : 'ping-slow'}">
+                                ⚡ ${s.ping_ms} ms
+                            </span>
+                        </td>
+                        <td>
+                            <span class="badge badge-live">🟢 SẴN SÀNG LÀM VPN</span>
+                        </td>
+                        <td style="text-align: right; white-space: nowrap;">
+                            <button class="btn btn-sm" onclick="copyVlessUrl('${s.vless_url}')" style="background: linear-gradient(135deg, #2563eb, #06b6d4);">
+                                📋 Copy Link
+                            </button>
+                            <button class="btn btn-outline btn-sm" onclick="testSingleServer(${s.id})">
+                                ⚡ Test
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function renderXrayUsersTable(users) {
+            const tbody = document.getElementById('xrayUsersTableBody');
+            if (!tbody) return;
+
+            if (users.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="8" style="text-align: center; padding: 20px; color: var(--text-muted);">Không có tài khoản nào.</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = users.map(u => `
+                <tr>
+                    <td><strong>#${u.id}</strong></td>
+                    <td><strong>${u.email}</strong></td>
+                    <td>
+                        <span class="badge ${u.is_premium ? 'badge-vpn-active' : 'badge-unchecked'}">
+                            ${u.is_premium ? '⭐ VIP PREMIUM' : 'FREE TRIAL'}
+                        </span>
+                    </td>
+                    <td>
+                        <span class="badge ${u.account_status === 'active' ? 'badge-live' : 'badge-offline'}">
+                            ${u.account_status.toUpperCase()}
+                        </span>
+                    </td>
+                    <td><span class="code-pill" style="color: #f472b6;">${u.xray_uuid}</span></td>
+                    <td><span class="badge badge-proto">${(u.subscription_plan || 'none').toUpperCase()}</span></td>
+                    <td><span style="color: var(--text-muted); font-size: 12px;">${u.paid_until ? new Date(u.paid_until).toLocaleDateString('vi-VN') : 'Không thời hạn'}</span></td>
+                    <td style="text-align: right;">
+                        <button class="btn btn-outline btn-sm" onclick="copyTextToClipboard('${u.xray_uuid}', 'Đã copy UUID của ' + '${u.email}')">
+                            📋 Copy UUID
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function copyVlessUrl(url) {
+            if (!url) {
+                alert('Không có link VLESS khả dụng.');
+                return;
+            }
+            navigator.clipboard.writeText(url).then(() => {
+                alert('✅ Đã sao chép link VLESS Reality vào bộ nhớ tạm!\nBạn có thể dán vào KikiLogin, V2RayN, Shadowrocket, Clash Meta để kết nối.');
+            }).catch(() => {
+                prompt('Copy link VLESS tại đây:', url);
+            });
+        }
+
+        function copyAllVlessUrls() {
+            if (!cachedXrayServers || cachedXrayServers.length === 0) return;
+            const usable = cachedXrayServers.filter(s => s.vpn_usable === 1 || s.vpn_usable === true);
+            const urls = usable.map(s => s.vless_url).filter(Boolean);
+            if (urls.length === 0) {
+                alert('Không có link VLESS nào khả dụng.');
+                return;
+            }
+            const text = urls.join('\n');
+            navigator.clipboard.writeText(text).then(() => {
+                alert(`✅ Đã sao chép toàn bộ ${urls.length} link VLESS Reality vào bộ nhớ tạm!`);
+            }).catch(() => {
+                prompt('Copy các link VLESS tại đây:', text);
+            });
+        }
+
+        function copyTextToClipboard(text, msg) {
+            navigator.clipboard.writeText(text).then(() => {
+                alert('✅ ' + (msg || 'Đã sao chép vào bộ nhớ tạm!'));
+            });
+        }
+
+        async function testLiveXrayServers() {
+            const btn = event?.target;
+            if (btn) { btn.disabled = true; btn.innerText = '⏳ Đang kiểm tra...'; }
+            try {
+                const res = await fetch('/api/xray/test-live', { method: 'POST' }).then(r => r.json());
+                if (res && res.success) {
+                    cachedXrayServers = res.data;
+                    renderXrayServersTable(cachedXrayServers);
+                    alert('✅ ' + res.message);
+                } else {
+                    alert('⚠️ Có lỗi xảy ra khi kiểm tra.');
+                }
+            } catch (e) {
+                alert('Lỗi kiểm tra live: ' + e.message);
+            } finally {
+                if (btn) { btn.disabled = false; btn.innerText = '⚡ Kiểm Tra Ping Toàn Bộ Node'; }
+            }
+        }
+
+        async function syncXrayToProxies() {
+            try {
+                const res = await fetch('/api/xray/sync-to-proxies', { method: 'POST' }).then(r => r.json());
+                if (res && res.success) {
+                    alert('✅ ' + res.message);
+                    fetchSystemData();
+                }
+            } catch (e) {
+                alert('Lỗi đồng bộ: ' + e.message);
+            }
+        }
+
+        function testSingleServer(id) {
+            testLiveXrayServers();
+        }
+
+        // Tự động tải dữ liệu ban đầu và đếm số dòng mẫu
+        window.addEventListener('DOMContentLoaded', () => {
+            fetchSystemData();
+            fetchXrayVpnData();
+            updateBulkStats();
+            initHealthCheckPolling();
+            setInterval(() => {
+                fetchSystemData();
+                fetchXrayVpnData();
+            }, 15000);
+        });
+    </script>
+</body>
+</html>

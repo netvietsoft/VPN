@@ -1,0 +1,34 @@
+Thực hiện các việc sau
+
+0. Convert file java code sang C++,C#, WPF .NET 10 Windows 11
+1. Các công nghệ core viết bằng C++,cocos,unity,go,php... hoặc ngôn khác thì convert lại đúng ngôn ngữ đó
+1a. Code phải viết đẹp có trích dẫn, commnent bằng tiếng việt và tiếng anh.
+1b. Không dùng cấu trúc tên của packet hoặc tên nhà phát hành cũ hãy đổi thành tên : nextaitechnology
+1c. Packet name: không dùng Paket name cũ thay bằng : com.+tên loại app
+2. Các thư viện SDK đang sử dụng vẫn giữ nguyên không thay bằng thư viện khác
+3. List danh sách các đầu danh sách API : chức năng, nhiệm vụ ,Các API này sử dụng sẵn luôn được không? endpoint list, model list chi tiết, báo cáo dưới dạng bảng.
+4. Vẫn sử dụng các API cũ từ decompier để lấy dữ liệu , List các đầu API endpoind đó để sau này dựng API mới và Backend mới.
+4. Gọi những domain ở ngoài, List danh sách địa chỉ IP và cổng
+5. List các SDK, Libery bên ngoài được sử dụng,chức năng nhiệm vụ
+8. Các tài nguyên Asset: ảnh, âm thanh, hiệu ứng, icon... hãy sử dụng để đúng như thiết kế trước
+9. Vẽ cấu trúc thu mục Code : chức năng nhiệm vụ từng thư mục
+10. Phân tích các vấn đề bảo mật từ ứng dụng này để tôi có thể tránh/chặn trong tương lai, list danh sách các trường hợp sẽ bị tấn công vào bằng phương pháp nào. Hãy khắc phục các điểm yếu đó ngay và luôn
+11. Phân tích đánh giá tái dựng lại app này từ code decompile và tái dựng hiểu biết để làm sản phẩm tương đương 
+12. Tìm File để đào sâu tiếp liệt kê mọi key tìm thấy kèm mức độ nhạy cảm
+13. Làm blueprint server/backend/cms, độ chính xác 100% So với bản  gốc. 
+14. Dựng Backend ở thư mục Backend gồm API,cms,server,Relational & OLAP Schema... nếu có, dùng typescrip + Golang, dùng dữ liệu mẫu và Chạy trên cổng : 6033
+15. Web dựng phải chuẩn đẹp ko xô lệch gọi agent design để thiết kế: theme sáng/Tối, Cấu trúc URL: domain.com/Menu cha/menu con. Responsive trên mobile, 1 dòng nhiều dữ liệu sẽ thiết kế hiển thị dưới dạng card
+15a. - Có login/logout admin, quản lý user hệ thống : Thêm sửa xóa
+15b. - Quản lý user/ thiết bị đăng ký, có API swagger
+15c. - Quản lý âm thanh, hình ảnh, video, tệp : sẽ dùng cloudflare (thêm sửa xóa, xóa phải xóa cả trên cloudflare tránh để file mồ côi) đợi kết nối hoặc cấp key sau.
+16. Phân tích payment wall kịch bản các gói sub : map perchase, maps ads, list link,file chứa key ads => sẽ thay sau.
+17. List cấu trúc Flow màn hình ứng dụng.
+18. List danh sách các menu, tab, chức năng của menu, tab từ cha xuống con
+19. list các màn hình, nội dung, chức năng của màn hình, câu trúc của màn hình
+20. Build lại app lên máy test, test tất cả các function, chức năng... nếu có bug thì phải fix bug
+21. Các tài nguyên cần cung cấp : key firebase, admob, .... Thống kê báo cáo dưới dạng bảng cho tôi chuẩn bị
+22. File báo cáo handoff (Layouts XML,Html, mã màu, vị trí ...) để AI dùng thiết kế lại giao diện
+23. Viêt unit test, test case.
+24. Tự động cài lên máy test android qua adb test nhiều lần triệt fix để lỗi
+25. Tự động chạy playwright test giao diện web: backend/fondend cho cân đối / đẹp chuẩn thiết pro
+26. Các file báo cáo được xuất vào thư mục : Report

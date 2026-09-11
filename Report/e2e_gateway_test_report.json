@@ -1,0 +1,109 @@
+{
+  "timestamp": "2026-09-10T02:54:44.010Z",
+  "backend": {
+    "health": {
+      "statusCode": 200,
+      "latency": 129,
+      "data": {
+        "success": true,
+        "message": "NextAI Residential Gateway đang hoạt động ổn định.",
+        "data": {
+          "status": "ONLINE",
+          "uptime": "00:00:02.5163376",
+          "gatewayPort": 10000,
+          "dashboardPort": 6033,
+          "totalPoolNodes": 12,
+          "activeConnections": 0,
+          "totalBytesServed": 8762,
+          "totalTenants": 2
+        }
+      }
+    },
+    "proxiesCount": 15,
+    "locationsCount": 0,
+    "xrayServersCount": 3
+  },
+  "gateway": {
+    "httpGet": {
+      "success": true,
+      "statusCode": 200,
+      "latency": 906,
+      "data": "{\n  \"origin\": \"3.10.170.234\"\n}"
+    },
+    "httpsConnect": {
+      "success": true,
+      "statusCode": 200,
+      "latency": 456,
+      "data": "{\"ip\":\"3.10.170.234\"}"
+    },
+    "socks5Tunnel": {
+      "success": true,
+      "latency": 832,
+      "exitIp": "3.10.170.234",
+      "rawSnippet": "HTTP/1.1 200 OK\r\nConnection: keep-alive\r\nDate: Thu, 10 Sep 2026 02:54:52 GMT\r\nServer: gunicorn/19.9.0\r\nLast-Modified: Mo"
+    }
+  },
+  "sqlite": {
+    "dbPath": "e:\\DECOMPILER\\Soft\\VPN\\CONVERT\\Backend\\data\\xray_vpn_nodes.db",
+    "serverCount": 3,
+    "userCount": 4,
+    "proxyCount": 9,
+    "activeProxy": {
+      "id": "proxy_gb_london_aws",
+      "host": "3.10.170.234",
+      "port": 3128,
+      "country": "GB",
+      "city": "London",
+      "isp": "Amazon.com, Inc."
+    }
+  },
+  "proxiesTested": [
+    {
+      "id": "proxy_gb_london_aws",
+      "name": "United Kingdom (London)",
+      "switchStatus": "OK",
+      "result": {
+        "success": true,
+        "latency": 904,
+        "ip": "3.10.170.234"
+      }
+    },
+    {
+      "id": "proxy_live_sg_1",
+      "name": "Singapore",
+      "switchStatus": "OK",
+      "result": {
+        "success": true,
+        "latency": 225,
+        "ip": "3.10.170.234"
+      }
+    },
+    {
+      "id": "proxy_vn_hanoi_vnpt",
+      "name": "Vietnam (Hanoi)",
+      "switchStatus": "OK",
+      "result": {
+        "success": true,
+        "latency": 225,
+        "ip": "3.10.170.234"
+      }
+    }
+  ],
+  "overallStatus": "PASSED",
+  "bandwidthAccounting": {
+    "bytesIn": 20336,
+    "bytesOut": 9971,
+    "totalBytes": 30307,
+    "downloadMb": 0.02,
+    "uploadMb": 0.01,
+    "activeSessions": 2,
+    "activeProxy": {
+      "id": "proxy_vn_hanoi_vnpt",
+      "host": "14.251.13.20",
+      "port": 8080,
+      "country": "VN",
+      "city": "Hanoi",
+      "type": "http"
+    }
+  }
+}

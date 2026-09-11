@@ -1,0 +1,3670 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NextAiVPN Desktop Client - Clean Emerald Edition</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* Clean Light Theme Palette with Emerald Accents */
+            --bg-window: #f8fafc;
+            --bg-sidebar: #ffffff;
+            --bg-card: #ffffff;
+            --bg-card-hover: #f0fdf4;
+            --bg-card-subtle: #f1f5f9;
+            --bg-input: #f8fafc;
+            
+            --border-subtle: #e2e8f0;
+            --border-emerald: #bbf7d0;
+            --border-focus: #10b981;
+            
+            /* Emerald Brand Colors */
+            --emerald-900: #064e3b;
+            --emerald-800: #065f46;
+            --emerald-700: #047857;
+            --emerald-600: #059669;
+            --emerald-500: #10b981;
+            --emerald-400: #34d399;
+            --emerald-100: #dcfce7;
+            --emerald-50: #f0fdf4;
+            
+            /* Typography Colors */
+            --text-primary: #0f172a;
+            --text-secondary: #334155;
+            --text-muted: #64748b;
+            --text-emerald: #047857;
+            
+            /* Status & Highlights */
+            --accent-gold: #d97706;
+            --accent-gold-bg: #fef3c7;
+            --accent-gold-border: #fde68a;
+            --accent-red: #dc2626;
+            --accent-red-bg: #fee2e2;
+            --accent-cyan: #0284c7;
+            --accent-cyan-bg: #e0f2fe;
+            
+            /* Fonts */
+            --font-main: 'Plus Jakarta Sans', -apple-system, sans-serif;
+            --font-heading: 'Outfit', sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+            
+            /* Elevation & Shadows */
+            --shadow-window: 0 25px 60px -15px rgba(15, 23, 42, 0.18), 0 0 0 1px rgba(15, 23, 42, 0.08);
+            --shadow-card: 0 4px 14px -2px rgba(15, 23, 42, 0.05), 0 0 0 1px rgba(226, 232, 240, 0.8);
+            --shadow-btn: 0 4px 14px 0 rgba(5, 150, 105, 0.35);
+            --shadow-btn-gold: 0 4px 14px 0 rgba(217, 119, 6, 0.35);
+            --shadow-dropdown: 0 12px 30px -4px rgba(15, 23, 42, 0.15), 0 0 0 1px rgba(226, 232, 240, 0.9);
+            
+            --radius-window: 18px;
+            --radius-card: 14px;
+            --radius-btn: 9px;
+            --radius-inner: 8px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            user-select: none;
+            /* STRICT NO HORIZONTAL OR ACCIDENTAL SCROLLBARS */
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+        *::-webkit-scrollbar {
+            display: none;
+            width: 0;
+            height: 0;
+        body {
+            background: var(--bg-window);
+            min-height: 100vh;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--font-main);
+            color: var(--text-primary);
+            padding: 0;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        /* 960x640 Fixed Frame WPF Application Window */
+        .wpf-window-container {
+            width: 100vw;
+            height: 100vh;
+            background: var(--bg-window);
+            border-radius: 0;
+            box-shadow: none;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+            border: none;
+        }
+
+        /* Title Bar */
+        .wpf-title-bar {
+            height: 46px;
+            background: #ffffff;
+            border-bottom: 1px solid var(--border-subtle);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 16px;
+            flex-shrink: 0;
+        }
+
+        .title-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .app-logo-badge {
+            width: 26px;
+            height: 26px;
+            background: linear-gradient(135deg, var(--emerald-600), var(--emerald-800));
+            border-radius: 7px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 6px rgba(5, 150, 105, 0.3);
+        }
+
+        .app-logo-badge svg {
+            width: 15px;
+            height: 15px;
+            fill: #ffffff;
+        }
+
+        .app-name-title {
+            font-family: var(--font-heading);
+            font-size: 14px;
+            font-weight: 800;
+            color: var(--emerald-900);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* Edition Switcher Pills (Free vs Premium) */
+        .edition-switcher-bar {
+            display: flex;
+            align-items: center;
+            background: var(--bg-card-subtle);
+            padding: 3px;
+            border-radius: 8px;
+            border: 1px solid var(--border-subtle);
+            gap: 2px;
+        }
+
+        .edition-btn {
+            padding: 3px 10px;
+            border-radius: 6px;
+            border: none;
+            background: transparent;
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .edition-btn.active.free {
+            background: #ffffff;
+            color: var(--emerald-800);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .edition-btn.active.premium {
+            background: linear-gradient(135deg, var(--accent-gold), #b45309);
+            color: #ffffff;
+            box-shadow: 0 2px 6px rgba(217, 119, 6, 0.35);
+        }
+
+        .title-center-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            background: var(--bg-input);
+            padding: 4px 12px;
+            border-radius: 99px;
+            border: 1px solid var(--border-subtle);
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--emerald-500);
+            box-shadow: 0 0 6px var(--emerald-500);
+        }
+
+        .status-dot.disconnected {
+            background: var(--accent-red);
+            box-shadow: 0 0 6px var(--accent-red);
+        }
+
+        .status-dot.connecting {
+            background: var(--accent-gold);
+            box-shadow: 0 0 6px var(--accent-gold);
+            animation: pulse-gold 1.2s infinite;
+        }
+
+        @keyframes pulse-gold {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.2); }
+        }
+
+        /* Top Right Window Tools */
+        .title-right-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .icon-tool-btn {
+            width: 30px;
+            height: 30px;
+            border-radius: 8px;
+            border: 1px solid var(--border-subtle);
+            background: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.2s;
+            color: var(--text-secondary);
+        }
+
+        .icon-tool-btn:hover {
+            background: var(--emerald-50);
+            color: var(--emerald-700);
+            border-color: var(--border-emerald);
+        }
+
+        .icon-tool-btn svg {
+            width: 15px;
+            height: 15px;
+            fill: currentColor;
+        }
+
+        .unread-badge {
+            position: absolute;
+            top: -3px;
+            right: -3px;
+            width: 14px;
+            height: 14px;
+            background: var(--accent-red);
+            color: #ffffff;
+            font-size: 9px;
+            font-weight: 800;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid #ffffff;
+        }
+
+        .user-avatar-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 3px 10px 3px 3px;
+            background: var(--bg-input);
+            border: 1px solid var(--border-subtle);
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .user-avatar-btn:hover {
+            background: var(--emerald-50);
+            border-color: var(--border-emerald);
+        }
+
+        .avatar-circle {
+            width: 22px;
+            height: 22px;
+            background: linear-gradient(135deg, var(--emerald-500), var(--emerald-700));
+            color: #ffffff;
+            font-size: 10px;
+            font-weight: 800;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .avatar-circle.premium-tag {
+            background: linear-gradient(135deg, var(--accent-gold), #b45309);
+        }
+
+        .user-name-text {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--emerald-900);
+        }
+
+        .window-controls-group {
+            display: flex;
+            align-items: center;
+            margin-left: 4px;
+            gap: 2px;
+        }
+
+        .win-btn {
+            width: 26px;
+            height: 26px;
+            border-radius: 6px;
+            border: none;
+            background: transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: var(--text-muted);
+            transition: all 0.15s;
+        }
+
+        .win-btn:hover {
+            background: #e2e8f0;
+            color: var(--text-primary);
+        }
+
+        .win-btn.close:hover {
+            background: var(--accent-red);
+            color: #ffffff;
+        }
+
+        .win-btn svg {
+            width: 11px;
+            height: 11px;
+            fill: currentColor;
+        }
+
+        /* Workspace Layout */
+        .wpf-main-body {
+            flex: 1;
+            display: flex;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Left Navigation Sidebar */
+        .app-sidebar {
+            width: 210px;
+            background: #ffffff;
+            border-right: 1px solid var(--border-subtle);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 14px 10px;
+            flex-shrink: 0;
+        }
+
+        .sidebar-menu {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .menu-label-heading {
+            font-size: 10px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+            padding: 6px 10px 2px 10px;
+        }
+
+        .nav-tab-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 9px 12px;
+            border-radius: var(--radius-inner);
+            color: var(--text-secondary);
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 1px solid transparent;
+        }
+
+        .nav-tab-item svg {
+            width: 17px;
+            height: 17px;
+            fill: currentColor;
+            transition: all 0.2s;
+        }
+
+        .nav-tab-item:hover {
+            background: var(--emerald-50);
+            color: var(--emerald-700);
+        }
+
+        .nav-tab-item.active {
+            background: var(--emerald-50);
+            color: var(--emerald-700);
+            border-color: var(--border-emerald);
+            font-weight: 700;
+        }
+
+        .nav-tab-item.active svg {
+            fill: var(--emerald-600);
+        }
+
+        .tab-badge {
+            margin-left: auto;
+            font-size: 10px;
+            font-family: var(--font-mono);
+            font-weight: 700;
+            padding: 1px 6px;
+            border-radius: 99px;
+            background: var(--bg-card-subtle);
+            color: var(--text-muted);
+        }
+
+        .nav-tab-item.active .tab-badge {
+            background: var(--emerald-100);
+            color: var(--emerald-800);
+        }
+
+        /* Free Quota Box on Sidebar */
+        .sidebar-quota-box {
+            background: #ffffff;
+            border: 1px solid var(--border-emerald);
+            border-radius: var(--radius-inner);
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            box-shadow: 0 2px 6px rgba(5, 150, 105, 0.08);
+        }
+
+        .quota-header-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--emerald-900);
+        }
+
+        .quota-progress-track {
+            width: 100%;
+            height: 6px;
+            background: var(--bg-card-subtle);
+            border-radius: 99px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .quota-progress-fill {
+            height: 100%;
+            width: 61.8%; /* 185.4MB / 300MB */
+            background: linear-gradient(90deg, var(--emerald-500), var(--accent-gold));
+            border-radius: 99px;
+            transition: width 0.4s ease;
+        }
+
+        .quota-progress-fill.full {
+            width: 100%;
+            background: var(--accent-red);
+        }
+
+        .quota-numbers-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 10px;
+            font-family: var(--font-mono);
+            color: var(--text-muted);
+        }
+
+        .btn-upgrade-sidebar {
+            width: 100%;
+            padding: 7px;
+            border-radius: 6px;
+            border: none;
+            background: linear-gradient(135deg, var(--accent-gold), #b45309);
+            color: #ffffff;
+            font-size: 11px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            box-shadow: 0 2px 8px rgba(217, 119, 6, 0.3);
+            transition: all 0.2s;
+        }
+
+        .btn-upgrade-sidebar:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(217, 119, 6, 0.4);
+        }
+
+        /* Content Viewport */
+        .content-viewport {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: var(--bg-window);
+            padding: 16px 20px;
+            position: relative;
+            overflow: hidden;
+            min-height: 0;
+        }
+
+        .view-panel {
+            display: none;
+            height: 100%;
+            flex-direction: column;
+            min-height: 0;
+            overflow: hidden;
+        }
+
+        .view-panel.active {
+            display: flex;
+        }
+
+        /* VIEW 1: DASHBOARD / CONNECT */
+        .connect-dashboard-grid {
+            display: grid;
+            grid-template-columns: 1fr 310px;
+            gap: 16px;
+            height: 100%;
+        }
+
+        .main-connect-card {
+            background: var(--bg-card);
+            border-radius: var(--radius-card);
+            border: 1px solid var(--border-subtle);
+            box-shadow: var(--shadow-card);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Server Header */
+        .selected-server-header {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .server-country-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .country-flag-icon {
+            width: 28px;
+            height: 28px;
+            min-width: 28px;
+            border-radius: 50%;
+            border: 1.5px solid rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f8fafc;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+
+        .country-flag-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+            display: block;
+        }
+
+        .country-flag-img-sm {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+            display: block;
+        }
+
+        .flag-pill-img {
+            width: 16px;
+            height: 16px;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 1px solid rgba(0,0,0,0.12);
+            box-shadow: 0 1px 2px rgba(0,0,0,0.08);
+            margin-right: 5px;
+            vertical-align: middle;
+            display: inline-block;
+            flex-shrink: 0;
+        }
+
+        .country-details h3 {
+            font-family: var(--font-heading);
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .country-details p {
+            font-size: 11px;
+            color: var(--text-muted);
+            font-family: var(--font-mono);
+        }
+
+        .btn-change-server {
+            padding: 5px 12px;
+            background: var(--emerald-50);
+            border: 1px solid var(--border-emerald);
+            color: var(--emerald-700);
+            font-size: 12px;
+            font-weight: 700;
+            border-radius: 7px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-change-server:hover {
+            background: var(--emerald-600);
+            color: #ffffff;
+        }
+
+        /* Big Power Connect Button */
+        .power-connect-area {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            margin: 10px 0;
+            position: relative;
+        }
+
+        .power-btn-ring {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            background: #ffffff;
+            border: 8px solid var(--emerald-100);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 10px 25px rgba(5, 150, 105, 0.15);
+        }
+
+        .power-btn-ring:hover {
+            transform: scale(1.03);
+            border-color: var(--emerald-400);
+        }
+
+        .power-btn-ring.connected {
+            border-color: var(--emerald-500);
+            box-shadow: 0 0 0 8px var(--emerald-100), 0 12px 30px rgba(5, 150, 105, 0.3);
+        }
+
+        .power-btn-ring.connecting {
+            border-color: var(--accent-gold);
+            box-shadow: 0 0 0 8px var(--accent-gold-bg), 0 12px 30px rgba(217, 119, 6, 0.3);
+            animation: spin-ring 2s linear infinite;
+        }
+
+        @keyframes spin-ring {
+            100% { transform: rotate(360deg); }
+        }
+
+        .power-btn-inner {
+            width: 96px;
+            height: 96px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--emerald-600), var(--emerald-800));
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #ffffff;
+            box-shadow: inset 0 2px 4px rgba(255,255,255,0.3);
+            transition: all 0.3s;
+        }
+
+        .power-btn-inner svg {
+            width: 34px;
+            height: 34px;
+            fill: #ffffff;
+        }
+
+        .power-btn-ring.disconnected .power-btn-inner {
+            background: #94a3b8;
+        }
+
+        .connect-status-text {
+            font-family: var(--font-heading);
+            font-size: 16px;
+            font-weight: 800;
+            color: var(--emerald-800);
+        }
+
+        .connect-timer-text {
+            font-family: var(--font-mono);
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-muted);
+        }
+
+        /* Bandwidth Gauges Bar */
+        .bandwidth-live-grid {
+            width: 100%;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .bw-stat-box {
+            background: var(--bg-input);
+            border: 1px solid var(--border-subtle);
+            border-radius: 10px;
+            padding: 10px 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .bw-icon-badge {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--emerald-100);
+            color: var(--emerald-700);
+        }
+
+        .bw-icon-badge.up {
+            background: var(--accent-cyan-bg);
+            color: var(--accent-cyan);
+        }
+
+        .bw-icon-badge svg {
+            width: 16px;
+            height: 16px;
+            fill: currentColor;
+        }
+
+        .bw-info-labels {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .bw-label {
+            font-size: 10px;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+        }
+
+        .bw-value {
+            font-family: var(--font-mono);
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        /* Right Telemetry Column */
+        .right-telemetry-col {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .telemetry-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-card);
+            box-shadow: var(--shadow-card);
+            padding: 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .telemetry-header {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .ip-protect-box {
+            background: var(--emerald-50);
+            border: 1px solid var(--border-emerald);
+            border-radius: 8px;
+            padding: 8px 10px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .ip-protect-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .ip-label {
+            font-size: 9px;
+            color: var(--emerald-800);
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .ip-val {
+            font-family: var(--font-mono);
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--emerald-900);
+        }
+
+        .btn-copy-mini {
+            background: var(--emerald-600);
+            border: none;
+            color: #ffffff;
+            padding: 3px 8px;
+            border-radius: 5px;
+            font-size: 10px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-copy-mini:hover {
+            background: var(--emerald-700);
+        }
+
+        .security-switches-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .switch-row-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        .emerald-toggle {
+            width: 34px;
+            height: 18px;
+            background: #cbd5e1;
+            border-radius: 99px;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.25s;
+        }
+
+        .emerald-toggle::before {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 14px;
+            height: 14px;
+            background: #ffffff;
+            border-radius: 50%;
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+        }
+
+        .emerald-toggle.on {
+            background: var(--emerald-600);
+        }
+
+        .emerald-toggle.on::before {
+            transform: translateX(16px);
+        }
+
+        /* Banner Upgrade Card on Dashboard */
+        .upgrade-banner-card {
+            background: linear-gradient(135deg, #fffbeb, #fef3c7);
+            border: 1px solid var(--accent-gold-border);
+            border-radius: 10px;
+            padding: 10px 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .upgrade-banner-header {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 11px;
+            font-weight: 800;
+            color: var(--accent-gold);
+        }
+
+        .upgrade-banner-desc {
+            font-size: 10px;
+            color: #92400e;
+            line-height: 1.35;
+        }
+
+        /* VIEW 2: SERVER & LOCATION PICKER */
+        .locations-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            height: 100%;
+            min-height: 0;
+            overflow: hidden;
+        }
+
+        .locations-toolbar {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-shrink: 0;
+        }
+
+        .search-input-wrapper {
+            flex: 1;
+            position: relative;
+        }
+
+        .search-input-wrapper svg {
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 15px;
+            height: 15px;
+            fill: var(--text-muted);
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 7px 10px 7px 32px;
+            background: #ffffff;
+            border: 1px solid var(--border-subtle);
+            border-radius: 8px;
+            font-family: var(--font-main);
+            font-size: 12px;
+            color: var(--text-primary);
+            outline: none;
+            transition: all 0.2s;
+        }
+
+        .search-input:focus {
+            border-color: var(--emerald-500);
+            box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.15);
+        }
+
+        /* NO SCROLL FILTER PILLS */
+        .region-filter-pills {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            flex-shrink: 0;
+            overflow: hidden;
+            padding: 1px 0;
+        }
+
+        .pill-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 6px 11px;
+            border-radius: 7px;
+            border: 1px solid var(--border-subtle);
+            background: #ffffff;
+            font-family: var(--font-main);
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.15s ease;
+            white-space: nowrap;
+            line-height: 1;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+        }
+
+        .pill-btn:hover {
+            background: var(--emerald-50);
+            color: var(--emerald-700);
+            border-color: var(--border-emerald);
+        }
+
+        .pill-btn.active {
+            background: var(--emerald-600);
+            color: #ffffff;
+            border-color: var(--emerald-600);
+            box-shadow: 0 2px 6px rgba(5, 150, 105, 0.25);
+        }
+
+        .flag-pill-img {
+            width: 16px;
+            height: 16px;
+            object-fit: cover;
+            border-radius: 50%;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+            border: 1px solid rgba(0,0,0,0.12);
+            display: inline-block;
+            vertical-align: middle;
+            flex-shrink: 0;
+        }
+
+        /* Locations List Scrollable View */
+        .locations-list-scroll {
+            flex: 1;
+            overflow-y: auto;
+            background: #ffffff;
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-card);
+            padding: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.02);
+            scrollbar-width: thin;
+        }
+
+        /* Country Accordion Group Card */
+        .country-group-card {
+            border: 1px solid var(--border-subtle);
+            border-radius: 9px;
+            background: #ffffff;
+            transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+            overflow: hidden;
+            box-shadow: 0 1px 2px rgba(15, 23, 42, 0.03);
+            flex-shrink: 0;
+        }
+
+        .country-group-card:hover {
+            border-color: #cbd5e1;
+            background: #fafcfb;
+            box-shadow: 0 2px 5px rgba(15, 23, 42, 0.05);
+        }
+
+        .country-group-card.expanded {
+            border-color: var(--border-emerald);
+            background: #ffffff;
+            box-shadow: 0 2px 8px rgba(16, 185, 129, 0.08);
+        }
+
+        /* Grayed-out Disabled State for Free Tier (Locked Countries) */
+        .country-group-card.locked-country-card {
+            background: #f8fafc;
+            border-color: #e2e8f0;
+            opacity: 0.55;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .country-group-card.locked-country-card .country-flag-wrapper {
+            filter: grayscale(85%);
+            opacity: 0.65;
+        }
+
+        .country-group-card.locked-country-card .country-name-title {
+            color: #64748b;
+        }
+
+        .country-group-card.locked-country-card .country-meta-subtitle {
+            color: #94a3b8;
+        }
+
+        .country-group-card.locked-country-card:hover {
+            opacity: 0.9;
+            border-color: #f59e0b;
+            background: #fffbeb;
+        }
+
+        .country-group-card.locked-country-card .city-count-badge {
+            background: #fef3c7;
+            color: #d97706;
+            border-color: rgba(217, 119, 6, 0.3);
+            font-weight: 700;
+        }
+
+        .country-group-card.locked-country-card .accordion-chevron-box {
+            color: #d97706;
+        }
+
+        .country-group-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 9px 12px;
+            min-height: 48px;
+            cursor: pointer;
+            background: transparent;
+            transition: background 0.15s ease;
+            user-select: none;
+            box-sizing: border-box;
+        }
+
+        .country-group-header:hover {
+            background: var(--emerald-50);
+        }
+
+        .country-left-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex: 1;
+            min-width: 0;
+        }
+
+        .country-flag-wrapper {
+            width: 28px;
+            height: 28px;
+            min-width: 28px;
+            border-radius: 50%;
+            border: 1.5px solid rgba(0, 0, 0, 0.1);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            flex-shrink: 0;
+            background: #f8fafc;
+        }
+
+        .country-flag-img-sm {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+            display: block;
+        }
+
+        .country-text-box {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 2px;
+            min-width: 0;
+        }
+
+        .country-name-title {
+            font-family: var(--font-main);
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-primary);
+            line-height: 1.25;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .country-meta-subtitle {
+            font-family: var(--font-main);
+            font-size: 10.5px;
+            font-weight: 500;
+            color: var(--text-muted);
+            line-height: 1.2;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .country-right-tools {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-shrink: 0;
+            margin-left: 10px;
+        }
+
+        .city-count-badge {
+            font-family: var(--font-mono);
+            font-size: 10.5px;
+            font-weight: 700;
+            padding: 3px 8px;
+            border-radius: 99px;
+            background: var(--emerald-100);
+            color: var(--emerald-800);
+            border: 1px solid rgba(16, 185, 129, 0.25);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 1;
+            white-space: nowrap;
+        }
+
+        .accordion-chevron-box {
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted);
+            transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), color 0.2s ease;
+        }
+
+        .accordion-chevron {
+            width: 15px;
+            height: 15px;
+            fill: currentColor;
+            display: block;
+        }
+
+        .country-group-card.expanded .accordion-chevron-box {
+            transform: rotate(180deg);
+            color: var(--emerald-600);
+        }
+
+        /* Sub-Cities List (Expanded) */
+        .cities-sub-list {
+            display: none;
+            flex-direction: column;
+            padding: 6px 10px 10px 44px;
+            gap: 4px;
+            border-top: 1px dashed var(--border-subtle);
+            background: #fafcfb;
+        }
+
+        .country-group-card.expanded .cities-sub-list {
+            display: flex;
+        }
+
+        .city-row-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 7px 11px;
+            border-radius: 7px;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            border: 1px solid transparent;
+            background: #ffffff;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+        }
+
+        .city-row-item:hover {
+            background: var(--emerald-50);
+            border-color: var(--border-emerald);
+            transform: translateX(2px);
+        }
+
+        .city-row-item.selected {
+            background: var(--emerald-100);
+            border-color: var(--emerald-500);
+            box-shadow: 0 2px 6px rgba(16, 185, 129, 0.15);
+        }
+
+        .city-name-info {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            min-width: 0;
+        }
+
+        .city-name-info h5 {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            line-height: 1.25;
+        }
+
+        .city-name-info p {
+            font-size: 10px;
+            color: var(--text-muted);
+            font-family: var(--font-mono);
+            line-height: 1.2;
+        }
+
+        .city-right-meta {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+
+        .ping-pill {
+            font-family: var(--font-mono);
+            font-size: 10px;
+            font-weight: 700;
+            padding: 2px 7px;
+            border-radius: 99px;
+            background: var(--emerald-100);
+            color: var(--emerald-800);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+        }
+
+        .ping-pill.mid {
+            background: var(--accent-gold-bg);
+            color: #92400e;
+            border-color: var(--accent-gold-border);
+        }
+
+        .star-fav-btn {
+            width: 22px;
+            height: 22px;
+            border-radius: 5px;
+            border: 1px solid var(--border-subtle);
+            background: #ffffff;
+            color: #cbd5e1;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+
+        .star-fav-btn:hover {
+            background: var(--accent-gold-bg);
+            border-color: var(--accent-gold-border);
+            color: var(--accent-gold);
+        }
+
+        .star-fav-btn.active {
+            background: var(--accent-gold-bg);
+            border-color: var(--accent-gold-border);
+            color: var(--accent-gold);
+        }
+            color: var(--accent-gold);
+        }
+
+        .locked-vip-badge {
+            font-size: 9px;
+            font-weight: 800;
+            font-family: var(--font-mono);
+            background: var(--accent-gold-bg);
+            color: var(--accent-gold);
+            border: 1px solid var(--accent-gold-border);
+            padding: 1px 6px;
+            border-radius: 4px;
+        }
+
+        .star-fav-btn {
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            color: #cbd5e1;
+            transition: all 0.15s;
+        }
+
+        .star-fav-btn.active {
+            color: var(--accent-gold);
+        }
+
+        /* VIEW 3: MESH RESIDENTIAL */
+        .mesh-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            height: 100%;
+        }
+
+        .mesh-banner-card {
+            background: linear-gradient(135deg, var(--emerald-700), var(--emerald-900));
+            color: #ffffff;
+            border-radius: var(--radius-card);
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .mesh-banner-title h3 {
+            font-family: var(--font-heading);
+            font-size: 16px;
+            font-weight: 800;
+            margin-bottom: 2px;
+        }
+
+        .mesh-banner-title p {
+            font-size: 11px;
+            opacity: 0.9;
+        }
+
+        .gateway-badge-box {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            border-radius: 8px;
+            padding: 6px 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+        }
+
+        .gateway-badge-box span {
+            font-size: 9px;
+            text-transform: uppercase;
+        }
+
+        .gateway-badge-box code {
+            font-family: var(--font-mono);
+            font-size: 13px;
+            font-weight: 700;
+            color: #6ee7b7;
+        }
+
+        .mesh-devices-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+
+        .device-card-item {
+            background: #ffffff;
+            border: 1px solid var(--border-subtle);
+            border-radius: 10px;
+            padding: 12px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            box-shadow: var(--shadow-card);
+        }
+
+        .device-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .copy-syntax-box {
+            background: var(--bg-input);
+            border: 1px solid var(--border-subtle);
+            border-radius: 6px;
+            padding: 6px 8px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-family: var(--font-mono);
+            font-size: 10px;
+            color: var(--emerald-800);
+        }
+
+        /* VIEW 4: SETTINGS */
+        .settings-scroll-view {
+            overflow-y: scroll;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            height: 100%;
+        }
+
+        .settings-section-card {
+            background: #ffffff;
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-card);
+            box-shadow: var(--shadow-card);
+            padding: 14px 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .settings-section-card h4 {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--emerald-900);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .setting-item-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 6px 0;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .setting-item-row:last-child {
+            border-bottom: none;
+        }
+
+        .setting-text h5 {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .setting-text p {
+            font-size: 10px;
+            color: var(--text-muted);
+        }
+
+        /* VIEW 5: ACCOUNT & LICENSING (1 PC + 1 MOBILE ENFORCEMENT) */
+        .account-scroll-view {
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            height: 100%;
+            scrollbar-width: thin;
+        }
+
+        .account-plan-banner {
+            background: linear-gradient(135deg, #065f46, #064e3b);
+            border-radius: var(--radius-card);
+            padding: 16px 20px;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 4px 14px rgba(6, 78, 59, 0.2);
+            flex-shrink: 0;
+        }
+
+        .plan-info-left h3 {
+            font-family: var(--font-heading);
+            font-size: 16px;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .plan-info-left p {
+            font-size: 11.5px;
+            opacity: 0.9;
+            margin-top: 4px;
+            font-family: var(--font-mono);
+        }
+
+        .license-key-tag {
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px dashed rgba(255, 255, 255, 0.35);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-family: var(--font-mono);
+            font-size: 11px;
+            color: #a7f3d0;
+            display: inline-block;
+        }
+
+        .account-hwid-card {
+            background: #ffffff;
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-card);
+            padding: 14px 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            box-shadow: var(--shadow-card);
+            flex-shrink: 0;
+        }
+
+        .hwid-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .hwid-label-title {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .hwid-code-box {
+            background: var(--bg-input);
+            border: 1px solid var(--border-subtle);
+            border-radius: 8px;
+            padding: 8px 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-family: var(--font-mono);
+            font-size: 12px;
+            color: var(--emerald-800);
+            font-weight: 600;
+        }
+
+        .devices-grid-section {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            flex-shrink: 0;
+        }
+
+        .section-title-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .section-title-row h4 {
+            font-size: 13px;
+            font-weight: 800;
+            color: var(--text-primary);
+        }
+
+        .rule-badge-pill {
+            font-size: 10.5px;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 99px;
+            background: var(--emerald-100);
+            color: var(--emerald-800);
+            border: 1px solid rgba(16, 185, 129, 0.25);
+        }
+
+        .devices-cards-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .device-slot-card {
+            background: #ffffff;
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            padding: 14px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            box-shadow: var(--shadow-card);
+            position: relative;
+            transition: all 0.2s;
+        }
+
+        .device-slot-card.active-this {
+            border-color: var(--border-emerald);
+            background: #fafdfb;
+        }
+
+        .device-slot-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .device-type-badge {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            font-weight: 800;
+            color: var(--text-primary);
+        }
+
+        .device-type-badge svg {
+            width: 16px;
+            height: 16px;
+            fill: var(--emerald-600);
+        }
+
+        .device-status-tag {
+            font-size: 10px;
+            font-weight: 800;
+            font-family: var(--font-mono);
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+
+        .device-status-tag.current {
+            background: var(--emerald-100);
+            color: var(--emerald-800);
+        }
+
+        .device-status-tag.linked {
+            background: var(--accent-cyan-bg);
+            color: var(--accent-cyan);
+        }
+
+        .device-detail-list {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            font-size: 11px;
+            color: var(--text-secondary);
+        }
+
+        .device-detail-list code {
+            font-family: var(--font-mono);
+            color: var(--text-muted);
+            font-size: 10.5px;
+        }
+
+        .btn-kick-device {
+            background: #ffffff;
+            border: 1px solid rgba(220, 38, 38, 0.3);
+            color: var(--accent-red);
+            padding: 6px 10px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+        }
+
+        .btn-kick-device:hover {
+            background: var(--accent-red-bg);
+            border-color: var(--accent-red);
+        }
+
+        .btn-simulate-conflict {
+            background: var(--emerald-50);
+            border: 1px dashed var(--emerald-600);
+            color: var(--emerald-800);
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 11.5px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+        }
+
+        .btn-simulate-conflict:hover {
+            background: var(--emerald-100);
+        }
+
+        /* Device Limit Exceeded Modal */
+        .device-limit-modal-card {
+            width: 480px;
+            background: #ffffff;
+            border-radius: var(--radius-window);
+            box-shadow: var(--shadow-window);
+            border: 2px solid #f87171;
+            padding: 26px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            animation: modalScale 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .limit-header-box {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .limit-icon-circle {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: var(--accent-red-bg);
+            color: var(--accent-red);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .limit-icon-circle svg {
+            width: 24px;
+            height: 24px;
+            fill: currentColor;
+        }
+
+        .limit-header-box h3 {
+            font-family: var(--font-heading);
+            font-size: 17px;
+            font-weight: 800;
+            color: var(--accent-red);
+        }
+
+        .limit-header-box p {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-top: 2px;
+        }
+
+        .conflict-device-box {
+            background: #fff1f2;
+            border: 1px solid #fecdd3;
+            border-radius: 10px;
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            font-size: 11.5px;
+            color: #9f1239;
+        }
+
+        /* MODALS & DRAWERS */
+
+        /* 1. Notifications Dropdown */
+        .notifications-dropdown {
+            position: absolute;
+            top: 50px;
+            right: 180px;
+            width: 320px;
+            background: #ffffff;
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-card);
+            box-shadow: var(--shadow-dropdown);
+            z-index: 1000;
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+            animation: dropFade 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .notifications-dropdown.active {
+            display: flex;
+        }
+
+        @keyframes dropFade {
+            from { opacity: 0; transform: translateY(-8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .noti-header {
+            padding: 10px 14px;
+            background: var(--bg-input);
+            border-bottom: 1px solid var(--border-subtle);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .btn-clear-noti {
+            font-size: 10px;
+            color: var(--emerald-700);
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .noti-list-items {
+            max-height: 280px;
+            overflow-y: scroll;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .noti-item-box {
+            padding: 10px 14px;
+            border-bottom: 1px solid var(--border-subtle);
+            display: flex;
+            gap: 10px;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+
+        .noti-item-box:hover {
+            background: var(--emerald-50);
+        }
+
+        .noti-item-box.unread {
+            background: #f0fdf4;
+        }
+
+        .noti-icon {
+            width: 26px;
+            height: 26px;
+            border-radius: 6px;
+            background: var(--emerald-100);
+            color: var(--emerald-700);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .noti-icon.alert {
+            background: var(--accent-gold-bg);
+            color: var(--accent-gold);
+        }
+
+        .noti-icon svg {
+            width: 13px;
+            height: 13px;
+            fill: currentColor;
+        }
+
+        .noti-content h5 {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .noti-content p {
+            font-size: 10px;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        .noti-time {
+            font-size: 9px;
+            color: var(--text-muted);
+            font-family: var(--font-mono);
+            margin-top: 3px;
+        }
+
+        /* 2. Login Modal */
+        .modal-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(15, 23, 42, 0.4);
+            backdrop-filter: blur(4px);
+            z-index: 2000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .login-card-modal {
+            width: 400px;
+            background: #ffffff;
+            border-radius: var(--radius-window);
+            box-shadow: var(--shadow-window);
+            border: 1px solid var(--border-subtle);
+            padding: 28px 24px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            animation: modalScale 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes modalScale {
+            from { opacity: 0; transform: scale(0.92); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .modal-close-btn {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background: none;
+            border: none;
+            font-size: 18px;
+            color: var(--text-muted);
+            cursor: pointer;
+        }
+
+        .login-header-text {
+            text-align: center;
+        }
+
+        .login-header-text h3 {
+            font-family: var(--font-heading);
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--emerald-900);
+        }
+
+        .login-header-text p {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        .login-form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .input-field-label {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--text-secondary);
+        }
+
+        .form-input {
+            padding: 9px 12px;
+            border-radius: 8px;
+            border: 1px solid var(--border-subtle);
+            background: var(--bg-input);
+            font-family: var(--font-main);
+            font-size: 12px;
+            outline: none;
+            transition: all 0.2s;
+        }
+
+        .form-input:focus {
+            border-color: var(--emerald-500);
+            background: #ffffff;
+            box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.15);
+        }
+
+        .btn-submit-emerald {
+            padding: 10px;
+            border-radius: 8px;
+            background: linear-gradient(135deg, var(--emerald-600), var(--emerald-700));
+            color: #ffffff;
+            font-size: 13px;
+            font-weight: 700;
+            border: none;
+            cursor: pointer;
+            box-shadow: var(--shadow-btn);
+            transition: all 0.2s;
+        }
+
+        .btn-submit-emerald:hover {
+            transform: translateY(-1px);
+        }
+
+        .bypass-login-btn {
+            background: var(--emerald-50);
+            border: 1px dashed var(--emerald-500);
+            color: var(--emerald-800);
+            padding: 9px;
+            border-radius: 8px;
+            font-size: 11px;
+            font-weight: 700;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.2s;
+        }
+
+        /* 3. Paywall / Upgrade Modal */
+        .paywall-modal-card {
+            width: 520px;
+            background: #ffffff;
+            border-radius: var(--radius-window);
+            box-shadow: var(--shadow-window);
+            border: 1px solid var(--accent-gold-border);
+            padding: 28px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            animation: modalScale 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .paywall-header-box {
+            text-align: center;
+        }
+
+        .paywall-header-box h3 {
+            font-family: var(--font-heading);
+            font-size: 22px;
+            font-weight: 900;
+            color: var(--emerald-900);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .paywall-header-box p {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-top: 4px;
+        }
+
+        .pricing-cards-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .plan-card {
+            border: 2px solid var(--border-subtle);
+            border-radius: 12px;
+            padding: 16px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            background: var(--bg-card);
+        }
+
+        .plan-card:hover {
+            border-color: var(--emerald-500);
+            background: var(--emerald-50);
+        }
+
+        .plan-card.selected {
+            border-color: var(--accent-gold);
+            background: #fffbeb;
+            box-shadow: 0 4px 14px rgba(217, 119, 6, 0.15);
+        }
+
+        .plan-name {
+            font-size: 13px;
+            font-weight: 800;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .plan-price {
+            font-family: var(--font-heading);
+            font-size: 24px;
+            font-weight: 900;
+            color: var(--emerald-900);
+        }
+
+        .plan-price span {
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--text-muted);
+        }
+
+        .features-list-mini {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            font-size: 11px;
+            color: var(--text-secondary);
+        }
+
+        .features-list-mini li {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .features-list-mini li svg {
+            width: 14px;
+            height: 14px;
+            fill: var(--emerald-600);
+            flex-shrink: 0;
+        }
+
+        /* Toast Container */
+        .toast-container {
+            position: absolute;
+            bottom: 16px;
+            right: 16px;
+            z-index: 3000;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            pointer-events: none;
+        }
+
+        .toast-message {
+            background: #ffffff;
+            border: 1px solid var(--border-emerald);
+            border-left: 4px solid var(--emerald-600);
+            border-radius: 8px;
+            padding: 8px 14px;
+            box-shadow: var(--shadow-dropdown);
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            animation: toastSlide 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            pointer-events: auto;
+        }
+
+        @keyframes toastSlide {
+            from { transform: translateX(40px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 960x640 Fixed WPF Application Window -->
+    <div class="wpf-window-container">
+
+        <!-- Top Title & Tool Bar -->
+        <header class="wpf-title-bar">
+            
+            <div class="title-left">
+                <div class="app-logo-badge">
+                    <svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"/></svg>
+                </div>
+                <div class="app-name-title">
+                    NextAiVPN
+                </div>
+
+                <!-- Edition Switcher (Free 300MB vs Premium) -->
+                <div class="edition-switcher-bar">
+                    <button class="edition-btn active free" id="btnModeFree" onclick="switchEdition('free')">
+                        Free 300MB
+                    </button>
+                    <button class="edition-btn" id="btnModePremium" onclick="switchEdition('premium')">
+                        ⭐ Premium
+                    </button>
+                </div>
+            </div>
+
+            <!-- Connection Status -->
+            <div class="title-center-status">
+                <div class="status-dot" id="statusDot"></div>
+                <span id="headerStatusText">Protected (Connected)</span>
+            </div>
+
+            <!-- Right Window Actions -->
+            <div class="title-right-actions">
+                
+                <!-- Notification Bell -->
+                <button class="icon-tool-btn" id="notiBtn" title="Notifications" onclick="toggleNotifications()">
+                    <svg viewBox="0 0 24 24"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2zm-2 1H8v-6c0-2.48 1.51-4.5 4-4.5s4 2.02 4 4.5v6z"/></svg>
+                    <span class="unread-badge">2</span>
+                </button>
+
+                <!-- User Account / Login Button -->
+                <div class="user-avatar-btn" onclick="openLoginModal()" title="Account & Profile">
+                    <div class="avatar-circle" id="userAvatarBadge">Free</div>
+                    <span class="user-name-text" id="userStatusText">Free User</span>
+                </div>
+
+                <!-- Minimize / Close -->
+                <div class="window-controls-group">
+                    <button class="win-btn" title="Minimize"><svg viewBox="0 0 24 24"><path d="M19 13H5v-2h14v2z"/></svg></button>
+                    <button class="win-btn" title="Maximize"><svg viewBox="0 0 24 24"><path d="M19 4H5c-1.11 0-2 .9-2 2v12c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 14H5V8h14v10z"/></svg></button>
+                    <button class="win-btn close" title="Minimize to System Tray" onclick="showToast('Minimized to System Tray')">
+                        <svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+                    </button>
+                </div>
+
+            </div>
+
+        </header>
+
+        <!-- Main Body -->
+        <div class="wpf-main-body">
+
+            <!-- Sidebar -->
+            <aside class="app-sidebar">
+                <div class="sidebar-menu">
+                    <span class="menu-label-heading">Navigation</span>
+                    
+                    <div class="nav-tab-item active" onclick="switchNav('dashboard')">
+                        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
+                        VPN Connect
+                    </div>
+
+                    <div class="nav-tab-item" onclick="switchNav('locations')">
+                        <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+                        Server Locations
+                        <span class="tab-badge" id="sidebarLocBadge">42</span>
+                    </div>
+
+                    <div class="nav-tab-item" onclick="switchNav('mesh')">
+                        <svg viewBox="0 0 24 24"><path d="M4 6h16v10H4zM20 18H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2h16c1.1 0 2 .9 2 2v10c0 1.1-.9 2-2 2zm-6 2H10v2h4v-2z"/></svg>
+                        Residential Mesh
+                        <span class="tab-badge" style="background: var(--accent-cyan-bg); color: var(--accent-cyan);">Hub</span>
+                    </div>
+
+                    <div class="nav-tab-item" onclick="switchNav('settings')">
+                        <svg viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>
+                        Settings
+                    </div>
+
+                    <div class="nav-tab-item" onclick="switchNav('account')">
+                        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/></svg>
+                        Account & License
+                        <span class="tab-badge" style="background: var(--emerald-100); color: var(--emerald-800);">1 PC+1 Mob</span>
+                    </div>
+                </div>
+
+                <!-- Daily Free Quota Widget on Sidebar -->
+                <div class="sidebar-quota-box" id="quotaBoxSidebar">
+                    <div class="quota-header-row">
+                        <span id="quotaTitleText">Daily Free Quota</span>
+                        <span style="font-family: var(--font-mono); color: var(--accent-gold);" id="quotaPercentText">61.8%</span>
+                    </div>
+                    <div class="quota-progress-track">
+                        <div class="quota-progress-fill" id="quotaProgressFill"></div>
+                    </div>
+                    <div class="quota-numbers-row">
+                        <span id="quotaUsedText">185.4 MB</span>
+                        <span id="quotaTotalText">300.0 MB Limit</span>
+                    </div>
+                    <button class="btn-upgrade-sidebar" onclick="openPaywallModal()">
+                        🚀 Upgrade Unlimited
+                    </button>
+                </div>
+
+            </aside>
+
+            <!-- Main Content Viewport -->
+            <main class="content-viewport">
+
+                <!-- PANEL 1: DASHBOARD -->
+                <div class="view-panel active" id="view-dashboard">
+                    <div class="connect-dashboard-grid">
+                        
+                        <!-- Main Card -->
+                        <div class="main-connect-card">
+                            
+                            <!-- Selected Server -->
+                            <div class="selected-server-header">
+                                <div class="server-country-info">
+                                    <div class="country-flag-icon" id="dashFlagContainer">
+                                        <img class="country-flag-img" id="dashFlagImg" src="flags/us.png" alt="United States" onerror="this.src='flags/bestavailable.png'">
+                                    </div>
+                                    <div class="country-details">
+                                        <h3 id="dashCountryName">United States (Atlanta)</h3>
+                                        <p id="dashServerNode">192.111.130.5:17002 • SOCKS5 Residential</p>
+                                    </div>
+                                </div>
+                                <button class="btn-change-server" onclick="switchNav('locations')">Change Server</button>
+                            </div>
+
+                            <!-- Big Power Connect Button -->
+                            <div class="power-connect-area">
+                                <div class="power-btn-ring connected" id="powerBtnRing" onclick="toggleConnect()">
+                                    <div class="power-btn-inner">
+                                        <svg viewBox="0 0 24 24"><path d="M13 3h-2v10h2V3zm4.83 2.17l-1.42 1.42C17.99 7.86 19 9.81 19 12c0 3.87-3.13 7-7 7s-7-3.13-7-7c0-2.19 1.01-4.14 2.58-5.42L6.17 5.17C4.23 6.82 3 9.26 3 12c0 4.97 4.03 9 9 9s9-4.03 9-9c0-2.74-1.23-5.18-3.17-6.83z"/></svg>
+                                    </div>
+                                </div>
+                                <div class="connect-status-text" id="powerStatusText">PROTECTED & SECURED</div>
+                                <div class="connect-timer-text" id="connectTimer">Session Time: 00:18:42</div>
+                            </div>
+
+                            <!-- Live Bandwidth Counter Bar -->
+                            <div class="bandwidth-live-grid">
+                                <div class="bw-stat-box">
+                                    <div class="bw-icon-badge">
+                                        <svg viewBox="0 0 24 24"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM17 13l-5 5-5-5h3V9h4v4h3z"/></svg>
+                                    </div>
+                                    <div class="bw-info-labels">
+                                        <span class="bw-label">Download Speed / Usage</span>
+                                        <span class="bw-value" id="valDownload">24.85 MB</span>
+                                    </div>
+                                </div>
+
+                                <div class="bw-stat-box">
+                                    <div class="bw-icon-badge up">
+                                        <svg viewBox="0 0 24 24"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z"/></svg>
+                                    </div>
+                                    <div class="bw-info-labels">
+                                        <span class="bw-label">Upload Speed / Usage</span>
+                                        <span class="bw-value" id="valUpload">12.18 MB</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <!-- Right Side Telemetry Column -->
+                        <div class="right-telemetry-col">
+                            
+                            <!-- Virtual IP Card -->
+                            <div class="telemetry-card">
+                                <div class="telemetry-header">
+                                    <span>Virtual Egress IP</span>
+                                    <span class="tab-badge" style="background: var(--emerald-100); color: var(--emerald-800);">LIVE</span>
+                                </div>
+                                <div class="ip-protect-box">
+                                    <div class="ip-protect-info">
+                                        <span class="ip-label">Protected Public IP</span>
+                                        <span class="ip-val" id="telemetryIp">192.111.130.5</span>
+                                    </div>
+                                    <button class="btn-copy-mini" onclick="copyText('192.111.130.5')">Copy</button>
+                                </div>
+                            </div>
+
+                            <!-- Security Toggles -->
+                            <div class="telemetry-card">
+                                <div class="telemetry-header">
+                                    <span>Security Features</span>
+                                </div>
+                                <div class="security-switches-list">
+                                    <div class="switch-row-item">
+                                        <span>Kill-Switch Protection</span>
+                                        <div class="emerald-toggle on" onclick="this.classList.toggle('on')"></div>
+                                    </div>
+                                    <div class="switch-row-item">
+                                        <span>DNS Leak Shield</span>
+                                        <div class="emerald-toggle on" onclick="this.classList.toggle('on')"></div>
+                                    </div>
+                                    <div class="switch-row-item">
+                                        <span>IPv6 Leak Block</span>
+                                        <div class="emerald-toggle on" onclick="this.classList.toggle('on')"></div>
+                                    </div>
+                                    <div class="switch-row-item">
+                                        <span>Strict Country-Lock</span>
+                                        <div class="emerald-toggle on" onclick="this.classList.toggle('on')"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Free Quota Upgrade Banner -->
+                            <div class="upgrade-banner-card" id="dashUpgradeCard">
+                                <div class="upgrade-banner-header">
+                                    <span>⭐ FREE 300MB LIMIT ACTIVE</span>
+                                </div>
+                                <div class="upgrade-banner-desc">
+                                    You have <strong>114.6 MB</strong> remaining today. Upgrade to unlock all US city nodes & unlimited mesh.
+                                </div>
+                                <button class="btn-upgrade-sidebar" style="padding: 5px;" onclick="openPaywallModal()">
+                                    Upgrade Now ($4.99/mo)
+                                </button>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- PANEL 2: LOCATIONS (US EXPANDABLE CITIES LIST) -->
+                <div class="view-panel" id="view-locations">
+                    <div class="locations-container">
+                        
+                        <!-- Toolbar (Strictly NO Scrollbars) -->
+                        <div class="locations-toolbar">
+                            <div class="search-input-wrapper">
+                                <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+                                <input type="text" class="search-input" placeholder="Search country, city, or IP...">
+                            </div>
+
+                            <!-- Compact Filter Pills (No Scrollbar) -->
+                            <div class="region-filter-pills">
+                                <button class="pill-btn active" onclick="setRegionFilter('all', this)">All (42)</button>
+                                <button class="pill-btn" onclick="setRegionFilter('fast', this)">⚡ Fastest</button>
+                                <button class="pill-btn" onclick="setRegionFilter('us', this)"><img class="flag-pill-img" src="flags/us.png" alt="US"> United States (6)</button>
+                                <button class="pill-btn" onclick="setRegionFilter('vn', this)"><img class="flag-pill-img" src="flags/vn.png" alt="VN"> Vietnam (18)</button>
+                                <button class="pill-btn" onclick="setRegionFilter('eu', this)"><img class="flag-pill-img" src="flags/gb.png" alt="EU"> Europe (12)</button>
+                                <button class="pill-btn" onclick="setRegionFilter('asia', this)"><img class="flag-pill-img" src="flags/sg.png" alt="Asia"> Asia (8)</button>
+                                <button class="pill-btn" onclick="setRegionFilter('fav', this)">⭐ Favorites</button>
+                            </div>
+                        </div>
+
+                        <!-- Locations Scroll List -->
+                        <div class="locations-list-scroll">
+                            
+                            <!-- 1. UNITED STATES ACCORDION (6 LIVE CITIES) -->
+                            <div class="country-group-card expanded" id="usGroupCard" data-region="us">
+                                <div class="country-group-header" onclick="toggleCountryAccordion('usGroupCard')">
+                                    <div class="country-left-info">
+                                        <div class="country-flag-wrapper">
+                                            <img class="country-flag-img-sm" src="flags/us.png" alt="USA">
+                                        </div>
+                                        <div class="country-text-box">
+                                            <div class="country-name-title">United States (USA)</div>
+                                            <div class="country-meta-subtitle">6 Live City Nodes • Residential & HTTPS</div>
+                                        </div>
+                                    </div>
+                                    <div class="country-right-tools">
+                                        <span class="city-count-badge">6 Cities Live</span>
+                                        <div class="accordion-chevron-box">
+                                            <svg class="accordion-chevron" viewBox="0 0 24 24"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Sub-Cities List -->
+                                <div class="cities-sub-list">
+                                    
+                                    <!-- City 1: Atlanta, GA -->
+                                    <div class="city-row-item selected" onclick="selectCityNode('United States (Atlanta)', '192.111.130.5:17002 • SOCKS5 Residential', 'us', '192.111.130.5', this, false)">
+                                        <div class="city-name-info">
+                                            <h5>📍 Atlanta, GA - Residential Node #1</h5>
+                                            <p>192.111.130.5:17002 • SOCKS5 • Free & VIP</p>
+                                        </div>
+                                        <div class="city-right-meta">
+                                            <span class="ping-pill">38 ms</span>
+                                            <button class="star-fav-btn active" onclick="event.stopPropagation(); this.classList.toggle('active')">★</button>
+                                        </div>
+                                    </div>
+
+                                    <!-- City 2: New York, NY -->
+                                    <div class="city-row-item" onclick="selectCityNode('United States (New York)', '34.43.46.91:443 • HTTPS Tunnel', 'us', '34.43.46.91', this, false)">
+                                        <div class="city-name-info">
+                                            <h5>📍 New York, NY - Manhattan Core</h5>
+                                            <p>34.43.46.91:443 • HTTPS Tunneling</p>
+                                        </div>
+                                        <div class="city-right-meta">
+                                            <span class="ping-pill">45 ms</span>
+                                            <button class="star-fav-btn" onclick="event.stopPropagation(); this.classList.toggle('active')">★</button>
+                                        </div>
+                                    </div>
+
+                                    <!-- City 3: Los Angeles, CA -->
+                                    <div class="city-row-item" onclick="selectCityNode('United States (Los Angeles)', '64.112.184.210:3128 • HTTPS Core', 'us', '64.112.184.210', this, false)">
+                                        <div class="city-name-info">
+                                            <h5>📍 Los Angeles, CA - West Coast Hub</h5>
+                                            <p>64.112.184.210:3128 • HTTPS</p>
+                                        </div>
+                                        <div class="city-right-meta">
+                                            <span class="ping-pill">52 ms</span>
+                                            <button class="star-fav-btn" onclick="event.stopPropagation(); this.classList.toggle('active')">★</button>
+                                        </div>
+                                    </div>
+
+                                    <!-- City 4: Chicago, IL (VIP Locked for Free) -->
+                                    <div class="city-row-item" onclick="selectCityNode('United States (Chicago)', '34.44.49.215:80 • 10Gbps Dedicated', 'us', '34.44.49.215', this, true)">
+                                        <div class="city-name-info">
+                                            <h5>📍 Chicago, IL - High-Speed Egress</h5>
+                                            <p>34.44.49.215:80 • HTTP / HTTPS</p>
+                                        </div>
+                                        <div class="city-right-meta">
+                                            <span class="locked-vip-badge vip-tag">⭐ VIP LOCKED</span>
+                                            <span class="ping-pill">41 ms</span>
+                                            <button class="star-fav-btn" onclick="event.stopPropagation(); this.classList.toggle('active')">★</button>
+                                        </div>
+                                    </div>
+
+                                    <!-- City 5: Miami, FL (VIP Locked for Free) -->
+                                    <div class="city-row-item" onclick="selectCityNode('United States (Miami)', '101.32.65.42:8888 • Residential Core', 'us', '101.32.65.42', this, true)">
+                                        <div class="city-name-info">
+                                            <h5>📍 Miami, FL - Florida Egress</h5>
+                                            <p>101.32.65.42:8888 • HTTP</p>
+                                        </div>
+                                        <div class="city-right-meta">
+                                            <span class="locked-vip-badge vip-tag">⭐ VIP LOCKED</span>
+                                            <span class="ping-pill mid">65 ms</span>
+                                            <button class="star-fav-btn" onclick="event.stopPropagation(); this.classList.toggle('active')">★</button>
+                                        </div>
+                                    </div>
+
+                                    <!-- City 6: Dallas, TX (VIP Locked for Free) -->
+                                    <div class="city-row-item" onclick="selectCityNode('United States (Dallas)', '45.146.163.31:80 • Datacenter Core', 'us', '45.146.163.31', this, true)">
+                                        <div class="city-name-info">
+                                            <h5>📍 Dallas, TX - Central Hub</h5>
+                                            <p>45.146.163.31:80 • HTTP</p>
+                                        </div>
+                                        <div class="city-right-meta">
+                                            <span class="locked-vip-badge vip-tag">⭐ VIP LOCKED</span>
+                                            <span class="ping-pill">48 ms</span>
+                                            <button class="star-fav-btn" onclick="event.stopPropagation(); this.classList.toggle('active')">★</button>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            <!-- 2. VIETNAM ACCORDION -->
+                            <div class="country-group-card" id="vnGroupCard" data-region="vn">
+                                <div class="country-group-header" onclick="toggleCountryAccordion('vnGroupCard')">
+                                    <div class="country-left-info">
+                                        <div class="country-flag-wrapper">
+                                            <img class="country-flag-img-sm" src="flags/vn.png" alt="Vietnam">
+                                        </div>
+                                        <div class="country-text-box">
+                                            <div class="country-name-title">Vietnam (VN)</div>
+                                            <div class="country-meta-subtitle">18 Live Nodes • VNPT & Viettel Hub</div>
+                                        </div>
+                                    </div>
+                                    <div class="country-right-tools">
+                                        <span class="city-count-badge">18 Nodes</span>
+                                        <div class="accordion-chevron-box">
+                                            <svg class="accordion-chevron" viewBox="0 0 24 24"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="cities-sub-list">
+                                    <div class="city-row-item" onclick="selectCityNode('Vietnam (Hanoi)', '14.251.13.20:8080 • VNPT Telecom', 'vn', '14.251.13.20', this, false)">
+                                        <div class="city-name-info">
+                                            <h5>📍 Hanoi - VNPT Core Hub</h5>
+                                            <p>14.251.13.20:8080 • HTTP / HTTPS</p>
+                                        </div>
+                                        <div class="city-right-meta">
+                                            <span class="ping-pill">12 ms</span>
+                                            <button class="star-fav-btn active" onclick="event.stopPropagation(); this.classList.toggle('active')">★</button>
+                                        </div>
+                                    </div>
+                                    <div class="city-row-item" onclick="selectCityNode('Vietnam (Ho Chi Minh)', '113.161.74.88:8080 • FPT Telecom', 'vn', '113.161.74.88', this, false)">
+                                        <div class="city-name-info">
+                                            <h5>📍 Ho Chi Minh City - FPT Gateway</h5>
+                                            <p>113.161.74.88:8080 • Residential Core</p>
+                                        </div>
+                                        <div class="city-right-meta">
+                                            <span class="ping-pill">15 ms</span>
+                                            <button class="star-fav-btn" onclick="event.stopPropagation(); this.classList.toggle('active')">★</button>
+                                        </div>
+                                    </div>
+                                    <div class="city-row-item" onclick="selectCityNode('Vietnam (Da Nang)', '125.235.4.12:8888 • Viettel Central', 'vn', '125.235.4.12', this, true)">
+                                        <div class="city-name-info">
+                                            <h5>📍 Da Nang - Viettel Central Core</h5>
+                                            <p>125.235.4.12:8888 • VIP Dedicated</p>
+                                        </div>
+                                        <div class="city-right-meta">
+                                            <span class="locked-vip-badge vip-tag">⭐ VIP LOCKED</span>
+                                            <span class="ping-pill">18 ms</span>
+                                            <button class="star-fav-btn" onclick="event.stopPropagation(); this.classList.toggle('active')">★</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 3. UNITED KINGDOM ACCORDION -->
+                            <div class="country-group-card" id="ukGroupCard" data-region="eu">
+                                <div class="country-group-header" onclick="toggleCountryAccordion('ukGroupCard')">
+                                    <div class="country-left-info">
+                                        <div class="country-flag-wrapper">
+                                            <img class="country-flag-img-sm" src="flags/gb.png" alt="United Kingdom">
+                                        </div>
+                                        <div class="country-text-box">
+                                            <div class="country-name-title">United Kingdom (UK)</div>
+                                            <div class="country-meta-subtitle">Amazon AWS London • High Speed</div>
+                                        </div>
+                                    </div>
+                                    <div class="country-right-tools">
+                                        <span class="city-count-badge">4 Nodes</span>
+                                        <div class="accordion-chevron-box">
+                                            <svg class="accordion-chevron" viewBox="0 0 24 24"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="cities-sub-list">
+                                    <div class="city-row-item" onclick="selectCityNode('United Kingdom (London)', '3.10.170.234:3128 • AWS Core', 'gb', '3.10.170.234', this, false)">
+                                        <div class="city-name-info">
+                                            <h5>📍 London - Amazon AWS Egress</h5>
+                                            <p>3.10.170.234:3128 • HTTPS Proxy</p>
+                                        </div>
+                                        <div class="city-right-meta">
+                                            <span class="ping-pill mid">164 ms</span>
+                                            <button class="star-fav-btn" onclick="event.stopPropagation(); this.classList.toggle('active')">★</button>
+                                        </div>
+                                    </div>
+                                    <div class="city-row-item" onclick="selectCityNode('United Kingdom (Manchester)', '51.140.22.90:80 • Dedicated', 'gb', '51.140.22.90', this, true)">
+                                        <div class="city-name-info">
+                                            <h5>📍 Manchester - UK Core #2</h5>
+                                            <p>51.140.22.90:80 • SOCKS5</p>
+                                        </div>
+                                        <div class="city-right-meta">
+                                            <span class="locked-vip-badge vip-tag">⭐ VIP LOCKED</span>
+                                            <span class="ping-pill mid">172 ms</span>
+                                            <button class="star-fav-btn" onclick="event.stopPropagation(); this.classList.toggle('active')">★</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 4. SINGAPORE ACCORDION -->
+                            <div class="country-group-card" id="sgGroupCard" data-region="asia">
+                                <div class="country-group-header" onclick="toggleCountryAccordion('sgGroupCard')">
+                                    <div class="country-left-info">
+                                        <div class="country-flag-wrapper">
+                                            <img class="country-flag-img-sm" src="flags/sg.png" alt="Singapore">
+                                        </div>
+                                        <div class="country-text-box">
+                                            <div class="country-name-title">Singapore (SG)</div>
+                                            <div class="country-meta-subtitle">Datacenter Low-Latency Core</div>
+                                        </div>
+                                    </div>
+                                    <div class="country-right-tools">
+                                        <span class="city-count-badge">5 Nodes</span>
+                                        <div class="accordion-chevron-box">
+                                            <svg class="accordion-chevron" viewBox="0 0 24 24"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="cities-sub-list">
+                                    <div class="city-row-item" onclick="selectCityNode('Singapore (Central)', '49.13.22.249:10811 • SOCKS5', 'sg', '138.199.60.176', this, false)">
+                                        <div class="city-name-info">
+                                            <h5>📍 Singapore - Core Egress</h5>
+                                            <p>49.13.22.249:10811 • SOCKS5</p>
+                                        </div>
+                                        <div class="city-right-meta">
+                                            <span class="ping-pill">42 ms</span>
+                                            <button class="star-fav-btn" onclick="event.stopPropagation(); this.classList.toggle('active')">★</button>
+                                        </div>
+                                    </div>
+                                    <div class="city-row-item" onclick="selectCityNode('Singapore (Jurong)', '103.116.52.18:443 • VIP SuperNode', 'sg', '103.116.52.18', this, true)">
+                                        <div class="city-name-info">
+                                            <h5>📍 Singapore (Jurong) - 10Gbps VIP</h5>
+                                            <p>103.116.52.18:443 • HTTPS Tunnel</p>
+                                        </div>
+                                        <div class="city-right-meta">
+                                            <span class="locked-vip-badge vip-tag">⭐ VIP LOCKED</span>
+                                            <span class="ping-pill">39 ms</span>
+                                            <button class="star-fav-btn" onclick="event.stopPropagation(); this.classList.toggle('active')">★</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 5. GERMANY ACCORDION -->
+                            <div class="country-group-card" id="deGroupCard" data-region="eu">
+                                <div class="country-group-header" onclick="toggleCountryAccordion('deGroupCard')">
+                                    <div class="country-left-info">
+                                        <div class="country-flag-wrapper">
+                                            <img class="country-flag-img-sm" src="flags/de.png" alt="Germany">
+                                        </div>
+                                        <div class="country-text-box">
+                                            <div class="country-name-title">Germany (DE)</div>
+                                            <div class="country-meta-subtitle">Frankfurt 10Gbps Dedicated Hub</div>
+                                        </div>
+                                    </div>
+                                    <div class="country-right-tools">
+                                        <span class="city-count-badge">4 Nodes</span>
+                                        <div class="accordion-chevron-box">
+                                            <svg class="accordion-chevron" viewBox="0 0 24 24"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="cities-sub-list">
+                                    <div class="city-row-item" onclick="selectCityNode('Germany (Frankfurt)', '159.69.112.45:3128 • Core Hub', 'de', '159.69.112.45', this, false)">
+                                        <div class="city-name-info">
+                                            <h5>📍 Frankfurt - Hetzner Dedicated</h5>
+                                            <p>159.69.112.45:3128 • HTTPS Proxy</p>
+                                        </div>
+                                        <div class="city-right-meta">
+                                            <span class="ping-pill mid">178 ms</span>
+                                            <button class="star-fav-btn" onclick="event.stopPropagation(); this.classList.toggle('active')">★</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 6. JAPAN ACCORDION -->
+                            <div class="country-group-card" id="jpGroupCard" data-region="asia">
+                                <div class="country-group-header" onclick="toggleCountryAccordion('jpGroupCard')">
+                                    <div class="country-left-info">
+                                        <div class="country-flag-wrapper">
+                                            <img class="country-flag-img-sm" src="flags/jp.png" alt="Japan">
+                                        </div>
+                                        <div class="country-text-box">
+                                            <div class="country-name-title">Japan (JP)</div>
+                                            <div class="country-meta-subtitle">Tokyo Equinix & Sakura Core</div>
+                                        </div>
+                                    </div>
+                                    <div class="country-right-tools">
+                                        <span class="city-count-badge">3 Nodes</span>
+                                        <div class="accordion-chevron-box">
+                                            <svg class="accordion-chevron" viewBox="0 0 24 24"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="cities-sub-list">
+                                    <div class="city-row-item" onclick="selectCityNode('Japan (Tokyo)', '133.242.158.30:8080 • Sakura Hub', 'jp', '133.242.158.30', this, false)">
+                                        <div class="city-name-info">
+                                            <h5>📍 Tokyo - Equinix TY3 Gateway</h5>
+                                            <p>133.242.158.30:8080 • HTTPS Proxy</p>
+                                        </div>
+                                        <div class="city-right-meta">
+                                            <span class="ping-pill">58 ms</span>
+                                            <button class="star-fav-btn active" onclick="event.stopPropagation(); this.classList.toggle('active')">★</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 7. CANADA ACCORDION -->
+                            <div class="country-group-card" id="caGroupCard" data-region="us">
+                                <div class="country-group-header" onclick="toggleCountryAccordion('caGroupCard')">
+                                    <div class="country-left-info">
+                                        <div class="country-flag-wrapper">
+                                            <img class="country-flag-img-sm" src="flags/ca.png" alt="Canada">
+                                        </div>
+                                        <div class="country-text-box">
+                                            <div class="country-name-title">Canada (CA)</div>
+                                            <div class="country-meta-subtitle">Toronto & Montreal Low-Latency</div>
+                                        </div>
+                                    </div>
+                                    <div class="country-right-tools">
+                                        <span class="city-count-badge">3 Nodes</span>
+                                        <div class="accordion-chevron-box">
+                                            <svg class="accordion-chevron" viewBox="0 0 24 24"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="cities-sub-list">
+                                    <div class="city-row-item" onclick="selectCityNode('Canada (Toronto)', '198.51.100.22:1080 • SOCKS5', 'ca', '198.51.100.22', this, false)">
+                                        <div class="city-name-info">
+                                            <h5>📍 Toronto - Ontario Gateway</h5>
+                                            <p>198.51.100.22:1080 • SOCKS5 Residential</p>
+                                        </div>
+                                        <div class="city-right-meta">
+                                            <span class="ping-pill">62 ms</span>
+                                            <button class="star-fav-btn" onclick="event.stopPropagation(); this.classList.toggle('active')">★</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 8. FRANCE ACCORDION -->
+                            <div class="country-group-card" id="frGroupCard" data-region="eu">
+                                <div class="country-group-header" onclick="toggleCountryAccordion('frGroupCard')">
+                                    <div class="country-left-info">
+                                        <div class="country-flag-wrapper">
+                                            <img class="country-flag-img-sm" src="flags/fr.png" alt="France">
+                                        </div>
+                                        <div class="country-text-box">
+                                            <div class="country-name-title">France (FR)</div>
+                                            <div class="country-meta-subtitle">Paris OVHcloud Datacenter</div>
+                                        </div>
+                                    </div>
+                                    <div class="country-right-tools">
+                                        <span class="city-count-badge">2 Nodes</span>
+                                        <div class="accordion-chevron-box">
+                                            <svg class="accordion-chevron" viewBox="0 0 24 24"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="cities-sub-list">
+                                    <div class="city-row-item" onclick="selectCityNode('France (Paris)', '51.254.10.88:3128 • OVH Paris', 'fr', '51.254.10.88', this, true)">
+                                        <div class="city-name-info">
+                                            <h5>📍 Paris - OVH Cloud Datacenter</h5>
+                                            <p>51.254.10.88:3128 • HTTPS Proxy</p>
+                                        </div>
+                                        <div class="city-right-meta">
+                                            <span class="locked-vip-badge vip-tag">⭐ VIP LOCKED</span>
+                                            <span class="ping-pill mid">185 ms</span>
+                                            <button class="star-fav-btn" onclick="event.stopPropagation(); this.classList.toggle('active')">★</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 9. AUSTRALIA ACCORDION -->
+                            <div class="country-group-card" id="auGroupCard" data-region="asia">
+                                <div class="country-group-header" onclick="toggleCountryAccordion('auGroupCard')">
+                                    <div class="country-left-info">
+                                        <div class="country-flag-wrapper">
+                                            <img class="country-flag-img-sm" src="flags/au.png" alt="Australia">
+                                        </div>
+                                        <div class="country-text-box">
+                                            <div class="country-name-title">Australia (AU)</div>
+                                            <div class="country-meta-subtitle">Sydney Residential Egress</div>
+                                        </div>
+                                    </div>
+                                    <div class="country-right-tools">
+                                        <span class="city-count-badge">2 Nodes</span>
+                                        <div class="accordion-chevron-box">
+                                            <svg class="accordion-chevron" viewBox="0 0 24 24"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="cities-sub-list">
+                                    <div class="city-row-item" onclick="selectCityNode('Australia (Sydney)', '139.130.4.5:1080 • Telstra Core', 'au', '139.130.4.5', this, true)">
+                                        <div class="city-name-info">
+                                            <h5>📍 Sydney - Telstra Residential Core</h5>
+                                            <p>139.130.4.5:1080 • SOCKS5 Residential</p>
+                                        </div>
+                                        <div class="city-right-meta">
+                                            <span class="locked-vip-badge vip-tag">⭐ VIP LOCKED</span>
+                                            <span class="ping-pill mid">140 ms</span>
+                                            <button class="star-fav-btn" onclick="event.stopPropagation(); this.classList.toggle('active')">★</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 10. NETHERLANDS ACCORDION -->
+                            <div class="country-group-card" id="nlGroupCard" data-region="eu">
+                                <div class="country-group-header" onclick="toggleCountryAccordion('nlGroupCard')">
+                                    <div class="country-left-info">
+                                        <div class="country-flag-wrapper">
+                                            <img class="country-flag-img-sm" src="flags/nl.png" alt="Netherlands">
+                                        </div>
+                                        <div class="country-text-box">
+                                            <div class="country-name-title">Netherlands (NL)</div>
+                                            <div class="country-meta-subtitle">Amsterdam High-Privacy Gateway</div>
+                                        </div>
+                                    </div>
+                                    <div class="country-right-tools">
+                                        <span class="city-count-badge">3 Nodes</span>
+                                        <div class="accordion-chevron-box">
+                                            <svg class="accordion-chevron" viewBox="0 0 24 24"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="cities-sub-list">
+                                    <div class="city-row-item" onclick="selectCityNode('Netherlands (Amsterdam)', '185.220.101.5:8080 • Privacy Node', 'nl', '185.220.101.5', this, false)">
+                                        <div class="city-name-info">
+                                            <h5>📍 Amsterdam - Privacy Shield Core</h5>
+                                            <p>185.220.101.5:8080 • HTTPS Proxy</p>
+                                        </div>
+                                        <div class="city-right-meta">
+                                            <span class="ping-pill mid">180 ms</span>
+                                            <button class="star-fav-btn" onclick="event.stopPropagation(); this.classList.toggle('active')">★</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 11. SOUTH KOREA ACCORDION -->
+                            <div class="country-group-card" id="krGroupCard" data-region="asia">
+                                <div class="country-group-header" onclick="toggleCountryAccordion('krGroupCard')">
+                                    <div class="country-left-info">
+                                        <div class="country-flag-wrapper">
+                                            <img class="country-flag-img-sm" src="flags/kr.png" alt="South Korea">
+                                        </div>
+                                        <div class="country-text-box">
+                                            <div class="country-name-title">South Korea (KR)</div>
+                                            <div class="country-meta-subtitle">Seoul KT Telecom Low-Latency</div>
+                                        </div>
+                                    </div>
+                                    <div class="country-right-tools">
+                                        <span class="city-count-badge">2 Nodes</span>
+                                        <div class="accordion-chevron-box">
+                                            <svg class="accordion-chevron" viewBox="0 0 24 24"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="cities-sub-list">
+                                    <div class="city-row-item" onclick="selectCityNode('South Korea (Seoul)', '211.234.118.44:3128 • KT Core', 'kr', '211.234.118.44', this, true)">
+                                        <div class="city-name-info">
+                                            <h5>📍 Seoul - KT Telecom Core</h5>
+                                            <p>211.234.118.44:3128 • HTTPS Proxy</p>
+                                        </div>
+                                        <div class="city-right-meta">
+                                            <span class="locked-vip-badge vip-tag">⭐ VIP LOCKED</span>
+                                            <span class="ping-pill">48 ms</span>
+                                            <button class="star-fav-btn" onclick="event.stopPropagation(); this.classList.toggle('active')">★</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 12. HONG KONG ACCORDION -->
+                            <div class="country-group-card" id="hkGroupCard" data-region="asia">
+                                <div class="country-group-header" onclick="toggleCountryAccordion('hkGroupCard')">
+                                    <div class="country-left-info">
+                                        <div class="country-flag-wrapper">
+                                            <img class="country-flag-img-sm" src="flags/hk.png" alt="Hong Kong">
+                                        </div>
+                                        <div class="country-text-box">
+                                            <div class="country-name-title">Hong Kong (HK)</div>
+                                            <div class="country-meta-subtitle">HKT Central Gateway Hub</div>
+                                        </div>
+                                    </div>
+                                    <div class="country-right-tools">
+                                        <span class="city-count-badge">3 Nodes</span>
+                                        <div class="accordion-chevron-box">
+                                            <svg class="accordion-chevron" viewBox="0 0 24 24"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="cities-sub-list">
+                                    <div class="city-row-item" onclick="selectCityNode('Hong Kong (Central)', '202.64.12.90:8080 • HKT Core', 'hk', '202.64.12.90', this, false)">
+                                        <div class="city-name-info">
+                                            <h5>📍 Hong Kong - Central Gateway</h5>
+                                            <p>202.64.12.90:8080 • HTTPS Proxy</p>
+                                        </div>
+                                        <div class="city-right-meta">
+                                            <span class="ping-pill">28 ms</span>
+                                            <button class="star-fav-btn active" onclick="event.stopPropagation(); this.classList.toggle('active')">★</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- PANEL 3: RESIDENTIAL MESH -->
+                <div class="view-panel" id="view-mesh">
+                    <div class="mesh-container">
+                        
+                        <div class="mesh-banner-card">
+                            <div class="mesh-banner-title">
+                                <h3>Residential Mesh Gateway & KikiLogin Hub</h3>
+                                <p>Route Antidetect Browser profiles directly through local Gateway port 10000.</p>
+                            </div>
+                            <div class="gateway-badge-box">
+                                <span>Universal Gateway</span>
+                                <code>127.0.0.1:10000</code>
+                            </div>
+                        </div>
+
+                        <div class="mesh-devices-grid">
+                            <div class="device-card-item">
+                                <div class="device-header">
+                                    <span>Client Node: win_c0a8019b</span>
+                                    <span class="tab-badge" style="background: var(--emerald-100); color: var(--emerald-800);">ACTIVE</span>
+                                </div>
+                                <div class="copy-syntax-box">
+                                    <span>127.0.0.1:10000:node-win_c0a8019b:nextai123</span>
+                                    <button class="btn-copy-mini" onclick="copyText('127.0.0.1:10000:node-win_c0a8019b:nextai123')">Copy KikiLogin</button>
+                                </div>
+                            </div>
+
+                            <div class="device-card-item">
+                                <div class="device-header">
+                                    <span>Client Node: win_89fe121a</span>
+                                    <span class="tab-badge" style="background: var(--emerald-100); color: var(--emerald-800);">ACTIVE</span>
+                                </div>
+                                <div class="copy-syntax-box">
+                                    <span>127.0.0.1:10000:node-win_89fe121a:nextai123</span>
+                                    <button class="btn-copy-mini" onclick="copyText('127.0.0.1:10000:node-win_89fe121a:nextai123')">Copy KikiLogin</button>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- PANEL 4: SETTINGS -->
+                <div class="view-panel" id="view-settings">
+                    <div class="settings-scroll-view">
+                        
+                        <div class="settings-section-card">
+                            <h4>Protocol & Security</h4>
+                            <div class="setting-item-row">
+                                <div class="setting-text">
+                                    <h5>VPN Protocol</h5>
+                                    <p>Select preferred tunnel protocol (WireGuard NT recommended)</p>
+                                </div>
+                                <select style="padding: 4px 10px; border-radius: 6px; border: 1px solid var(--border-subtle); background: var(--bg-input); font-size: 11px; font-weight: 700;">
+                                    <option>WireGuard NT Native</option>
+                                    <option>Xray Reality VLESS</option>
+                                    <option>OpenVPN TCP/UDP</option>
+                                </select>
+                            </div>
+
+                            <div class="setting-item-row">
+                                <div class="setting-text">
+                                    <h5>Strict Country-Lock & Anti-Leak</h5>
+                                    <p>Block traffic rather than leaking to local Vietnam IP if proxy drops</p>
+                                </div>
+                                <div class="emerald-toggle on" onclick="this.classList.toggle('on')"></div>
+                            </div>
+                        </div>
+
+                        <div class="settings-section-card">
+                            <h4>Application Behavior</h4>
+                            <div class="setting-item-row">
+                                <div class="setting-text">
+                                    <h5>Minimize to System Tray on [X]</h5>
+                                    <p>Keep VPN connection protected in background</p>
+                                </div>
+                                <div class="emerald-toggle on" onclick="this.classList.toggle('on')"></div>
+                            </div>
+
+                            <div class="setting-item-row">
+                                <div class="setting-text">
+                                    <h5>Real-Time Location Auto-Sync (20s)</h5>
+                                    <p>Automatically update server list from CMS without restarting app</p>
+                                </div>
+                                <div class="emerald-toggle on" onclick="this.classList.toggle('on')"></div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- PANEL 5: ACCOUNT & LICENSING (1 PC + 1 MOBILE ENFORCEMENT) -->
+                <div class="view-panel" id="view-account">
+                    <div class="account-scroll-view">
+                        
+                        <!-- Subscription Plan Banner -->
+                        <div class="account-plan-banner">
+                            <div class="plan-info-left">
+                                <h3>
+                                    <span>👑 NextAiVPN Pro Unlimited</span>
+                                    <span class="tab-badge" style="background: var(--accent-gold-bg); color: var(--accent-gold);">Pro VIP</span>
+                                </h3>
+                                <p>Active License Key: <span class="license-key-tag">NEXTAI-PRO-8821-99A0-4421</span></p>
+                                <div style="font-size: 11px; opacity: 0.85; margin-top: 4px;">Expires: 10 Sep 2027 • Unlimited Bandwidth (10Gbps Dedicated)</div>
+                            </div>
+                            <button class="btn-change-server" style="background: rgba(255,255,255,0.2); color: #ffffff; border-color: rgba(255,255,255,0.4);" onclick="openPaywallModal()">Extend Plan</button>
+                        </div>
+
+                        <!-- Current Machine HWID Card -->
+                        <div class="account-hwid-card">
+                            <div class="hwid-header">
+                                <div class="hwid-label-title">
+                                    <svg style="width: 16px; height: 16px; fill: var(--emerald-600);" viewBox="0 0 24 24"><path d="M4 6h16v10H4zM20 18H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2h16c1.1 0 2 .9 2 2v10c0 1.1-.9 2-2 2zm-6 2H10v2h4v-2z"/></svg>
+                                    <span>Current Machine Hardware Fingerprint (HWID)</span>
+                                </div>
+                                <span class="device-status-tag current">● Verified Active</span>
+                            </div>
+                            <div class="hwid-code-box">
+                                <span>HWID-PC-WIN11-8F92-A3B1-94E2</span>
+                                <button class="btn-copy-mini" onclick="copyText('HWID-PC-WIN11-8F92-A3B1-94E2')">Copy HWID</button>
+                            </div>
+                            <div style="display: flex; gap: 14px; font-size: 11px; color: var(--text-muted); font-family: var(--font-mono);">
+                                <span>CPU: Intel Core i9-13900K</span>
+                                <span>MB: ASUS ROG Z790-E</span>
+                                <span>MAC: 04:7C:16:88:B2:10</span>
+                                <span>Heartbeat: <strong style="color: var(--emerald-700);">Live (3s ago)</strong></span>
+                            </div>
+                        </div>
+
+                        <!-- Authorized Devices (1 PC + 1 Mobile Rule) -->
+                        <div class="devices-grid-section">
+                            <div class="section-title-row">
+                                <h4>Authorized Devices (1 PC + 1 Mobile Max)</h4>
+                                <span class="rule-badge-pill">Strict 2-Device Policy (Anti-Sharing)</span>
+                            </div>
+
+                            <div class="devices-cards-grid">
+                                
+                                <!-- Slot 1: PC Device (Active this machine) -->
+                                <div class="device-slot-card active-this" id="pcSlotCard">
+                                    <div class="device-slot-header">
+                                        <div class="device-type-badge">
+                                            <svg viewBox="0 0 24 24"><path d="M20 18c1.1 0 1.99-.9 1.99-2L22 6c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2H0v2h24v-2h-4zM4 6h16v10H4V6z"/></svg>
+                                            <span>Slot 1: PC Device (1/1)</span>
+                                        </div>
+                                        <span class="device-status-tag current">● THIS COMPUTER</span>
+                                    </div>
+                                    <div class="device-detail-list">
+                                        <div><strong>Device:</strong> DESKTOP-WIN11-OFFICE</div>
+                                        <div><strong>OS:</strong> Windows 11 Pro 64-bit (23H2)</div>
+                                        <div><strong>HWID:</strong> <code>HWID-PC-WIN11-8F92-A3B1-94E2</code></div>
+                                        <div><strong>Last IP:</strong> 14.248.82.114 (Hanoi, VN)</div>
+                                        <div><strong>Session:</strong> Active (In Use)</div>
+                                    </div>
+                                    <button class="btn-ghost-secondary" style="font-size: 11px; padding: 5px; width: 100%; justify-content: center;" onclick="showToast('This device is currently authorized.')" disabled>🔒 Current Primary PC</button>
+                                </div>
+
+                                <!-- Slot 2: Mobile Device (Linked iPhone) -->
+                                <div class="device-slot-card" id="mobileSlotCard">
+                                    <div class="device-slot-header">
+                                        <div class="device-type-badge">
+                                            <svg viewBox="0 0 24 24"><path d="M17 1.01L7 1c-1.1 0-2 .9-2 2v18c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2V3c0-1.1-.9-1.99-2-1.99zM17 19H7V5h10v14z"/></svg>
+                                            <span>Slot 2: Mobile Device (1/1)</span>
+                                        </div>
+                                        <span class="device-status-tag linked" id="mobStatusTag">● LINKED PHONE</span>
+                                    </div>
+                                    <div class="device-detail-list" id="mobDetailBox">
+                                        <div><strong>Device:</strong> iPhone 15 Pro Max</div>
+                                        <div><strong>OS:</strong> iOS 17.5.1</div>
+                                        <div><strong>Device ID:</strong> <code>MOB-IOS-7E21-B890-44AA</code></div>
+                                        <div><strong>Last IP:</strong> 171.244.39.20 (Hanoi, VN)</div>
+                                        <div><strong>Last Heartbeat:</strong> 2 minutes ago</div>
+                                    </div>
+                                    <button class="btn-kick-device" id="btnKickMob" onclick="simulateKickDevice('MOB-IOS-7E21-B890-44AA')">
+                                        ⚠️ Kick / Deauthorize Mobile
+                                    </button>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <!-- Anti-Sharing Conflict Simulator -->
+                        <div style="display: flex; align-items: center; justify-content: space-between; background: #ffffff; border: 1px solid var(--border-subtle); border-radius: 10px; padding: 10px 14px; flex-shrink: 0;">
+                            <div style="font-size: 11.5px; color: var(--text-secondary);">
+                                <strong>Anti-Sharing Test:</strong> Test what happens if another PC attempts to activate your key.
+                            </div>
+                            <button class="btn-simulate-conflict" onclick="simulateDeviceLimitExceeded()">
+                                🧪 Simulate 2nd PC Conflict Alert
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+
+            </main>
+
+        </div>
+
+        <!-- 1. NOTIFICATIONS DROPDOWN -->
+        <div class="notifications-dropdown" id="notiDropdown">
+            <div class="noti-header">
+                <span>Notifications Center (2)</span>
+                <button class="btn-clear-noti" onclick="clearAllNoti()">Mark all read</button>
+            </div>
+            <div class="noti-list-items">
+                <div class="noti-item-box unread">
+                    <div class="noti-icon">
+                        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+                    </div>
+                    <div class="noti-content">
+                        <h5>Connected to US-Atlanta Node</h5>
+                        <p>Traffic encrypted via AES-256-GCM. DNS leak protection active.</p>
+                        <div class="noti-time">12 mins ago</div>
+                    </div>
+                </div>
+
+                <div class="noti-item-box unread">
+                    <div class="noti-icon alert">
+                        <svg viewBox="0 0 24 24"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg>
+                    </div>
+                    <div class="noti-content">
+                        <h5>Daily Free Quota Alert</h5>
+                        <p>You have used 185.4 MB of your daily 300.0 MB allowance.</p>
+                        <div class="noti-time">25 mins ago</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 2. LOGIN MODAL -->
+        <div class="modal-overlay" id="loginModal">
+            <div class="login-card-modal">
+                <button class="modal-close-btn" onclick="closeLoginModal()">✕</button>
+                <div class="login-header-text">
+                    <h3>Sign In to NextAiVPN</h3>
+                    <p>Access your unlimited residential proxy mesh & VIP nodes</p>
+                </div>
+                <div class="login-form-group">
+                    <label class="input-field-label">
+                        Email Address
+                        <input type="text" class="form-input" placeholder="user@nextai.vn" value="member@nextai.vn">
+                    </label>
+                    <label class="input-field-label">
+                        Password
+                        <input type="password" class="form-input" placeholder="••••••••••••" value="NextAiSecure2026">
+                    </label>
+                    <button class="btn-submit-emerald" onclick="performLogin()">Sign In</button>
+                    <div class="bypass-login-btn" onclick="performBypassLogin()">
+                        ⚡ One-Click Auto Bypass Login (No Account Required)
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. PAYWALL / UPGRADE MODAL (TRIGGERED WHEN 300MB LIMIT REACHED) -->
+        <div class="modal-overlay" id="paywallModal">
+            <div class="paywall-modal-card">
+                <button class="modal-close-btn" onclick="closePaywallModal()">✕</button>
+                <div class="paywall-header-box">
+                    <h3>⭐ Upgrade to NextAiVPN Premium</h3>
+                    <p>Unlock Unlimited 10Gbps Bandwidth, All 6 US Cities & Residential Mesh Pool</p>
+                </div>
+
+                <div class="pricing-cards-row">
+                    <div class="plan-card selected" onclick="selectPlan(this)">
+                        <div class="plan-name">
+                            <span>Monthly Plan</span>
+                            <span class="tab-badge" style="background: var(--accent-gold-bg); color: var(--accent-gold);">Popular</span>
+                        </div>
+                        <div class="plan-price">$4.99 <span>/ month</span></div>
+                        <ul class="features-list-mini">
+                            <li><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg> Unlimited Bandwidth (No 300MB Cap)</li>
+                            <li><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg> All 6 US Cities & 42 Worldwide Nodes</li>
+                        </ul>
+                    </div>
+
+                    <div class="plan-card" onclick="selectPlan(this)">
+                        <div class="plan-name">
+                            <span>Yearly Plan</span>
+                            <span class="tab-badge" style="background: var(--emerald-100); color: var(--emerald-800);">Save 35%</span>
+                        </div>
+                        <div class="plan-price">$39.99 <span>/ year</span></div>
+                        <ul class="features-list-mini">
+                            <li><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg> Everything in Monthly</li>
+                            <li><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg> Dedicated KikiLogin Mesh Port</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <button class="btn-submit-emerald" style="background: linear-gradient(135deg, var(--accent-gold), #b45309);" onclick="completeUpgrade()">
+                    🚀 Upgrade Now & Remove 300MB Cap
+                </button>
+            </div>
+        </div>
+
+        <!-- 4. DEVICE LIMIT EXCEEDED MODAL (1 PC + 1 MOBILE ENFORCEMENT) -->
+        <div class="modal-overlay" id="deviceLimitModal">
+            <div class="device-limit-modal-card">
+                <button class="modal-close-btn" onclick="closeDeviceLimitModal()">✕</button>
+                <div class="limit-header-box">
+                    <div class="limit-icon-circle">
+                        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+                    </div>
+                    <div>
+                        <h3>Device Limit Exceeded (1 PC + 1 Mobile)</h3>
+                        <p>Your subscription allows exactly 1 PC and 1 Mobile simultaneously.</p>
+                    </div>
+                </div>
+
+                <div class="conflict-device-box">
+                    <div><strong>Active PC Slot Occupied By:</strong> DESKTOP-WIN11-OFFICE</div>
+                    <div><strong>HWID:</strong> <code>HWID-PC-WIN11-8F92-A3B1-94E2</code></div>
+                    <div><strong>Last IP:</strong> 14.248.82.114 (Hanoi, Vietnam) • In-Session</div>
+                </div>
+
+                <p style="font-size: 11.5px; color: var(--text-secondary); line-height: 1.4;">
+                    To activate this new PC, you must <strong>transfer your license</strong> (deauthorizing the previous PC). The previous computer will be immediately disconnected.
+                </p>
+
+                <div style="display: flex; gap: 10px; margin-top: 6px;">
+                    <button class="btn-submit-emerald" style="flex: 1; background: linear-gradient(135deg, #dc2626, #b91c1c);" onclick="transferLicenseToThisPC()">
+                        🔄 Deauthorize Old PC & Transfer Here
+                    </button>
+                    <button class="btn-ghost-secondary" onclick="closeDeviceLimitModal()">Cancel</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Toast Notification Area -->
+        <div class="toast-container" id="toastBox"></div>
+
+    </div>
+
+    <script>
+        let currentEdition = 'free'; // 'free' or 'premium'
+        let isConnected = true;
+        let isConnecting = false;
+        let dailyQuotaUsedMb = 185.4;
+        const dailyQuotaTotalMb = 300.0;
+
+        const freeAllowedCountryIds = ['usGroupCard', 'vnGroupCard', 'ukGroupCard', 'sgGroupCard', 'deGroupCard'];
+        const allCountryCardIds = ['usGroupCard', 'vnGroupCard', 'ukGroupCard', 'sgGroupCard', 'deGroupCard', 'jpGroupCard', 'caGroupCard', 'frGroupCard', 'auGroupCard', 'nlGroupCard', 'krGroupCard', 'hkGroupCard'];
+
+        function applyCountryLocking(edition) {
+            allCountryCardIds.forEach(id => {
+                const card = document.getElementById(id);
+                if (!card) return;
+                const badge = card.querySelector('.city-count-badge');
+
+                if (edition === 'free') {
+                    if (freeAllowedCountryIds.includes(id)) {
+                        card.classList.remove('locked-country-card');
+                    } else {
+                        card.classList.add('locked-country-card');
+                        card.classList.remove('expanded');
+                        if (badge) {
+                            if (!badge.hasAttribute('data-original-count')) {
+                                badge.setAttribute('data-original-count', badge.innerText);
+                            }
+                            badge.innerText = '🔒 VIP Only';
+                        }
+                    }
+                } else {
+                    card.classList.remove('locked-country-card');
+                    if (badge) {
+                        const original = badge.getAttribute('data-original-count');
+                        const counts = {
+                            'jpGroupCard': '3 Nodes',
+                            'caGroupCard': '3 Nodes',
+                            'frGroupCard': '2 Nodes',
+                            'auGroupCard': '2 Nodes',
+                            'nlGroupCard': '3 Nodes',
+                            'krGroupCard': '2 Nodes',
+                            'hkGroupCard': '3 Nodes'
+                        };
+                        badge.innerText = original || counts[id] || 'Active';
+                    }
+                }
+            });
+        }
+
+        function switchEdition(edition) {
+            currentEdition = edition;
+            const btnFree = document.getElementById('btnModeFree');
+            const btnPrem = document.getElementById('btnModePremium');
+            const quotaBox = document.getElementById('quotaBoxSidebar');
+            const dashUpgrade = document.getElementById('dashUpgradeCard');
+            const userAvatar = document.getElementById('userAvatarBadge');
+            const userStatus = document.getElementById('userStatusText');
+            const vipTags = document.querySelectorAll('.vip-tag');
+
+            applyCountryLocking(edition);
+
+            if (edition === 'premium') {
+                btnFree.className = 'edition-btn';
+                btnPrem.className = 'edition-btn active premium';
+                userAvatar.className = 'avatar-circle premium-tag';
+                userAvatar.innerText = 'VIP';
+                userStatus.innerText = 'Premium Member';
+                
+                // Hide 300MB cap in Premium
+                quotaBox.style.background = 'linear-gradient(135deg, #ecfdf5, #d1fae5)';
+                document.getElementById('quotaTitleText').innerText = '⭐ Premium Bandwidth';
+                document.getElementById('quotaPercentText').innerText = 'UNLIMITED';
+                document.getElementById('quotaProgressFill').style.width = '100%';
+                document.getElementById('quotaProgressFill').style.background = 'var(--emerald-600)';
+                document.getElementById('quotaUsedText').innerText = 'Unlimited 10Gbps';
+                document.getElementById('quotaTotalText').innerText = 'No Daily Cap';
+                dashUpgrade.style.display = 'none';
+
+                // Unlock all VIP nodes
+                vipTags.forEach(t => {
+                    t.innerText = '⭐ UNLOCKED';
+                    t.style.background = 'var(--emerald-100)';
+                    t.style.color = 'var(--emerald-800)';
+                });
+
+                showToast('⭐ Switched to Premium: All 234 countries & 10Gbps dedicated nodes unlocked!');
+            } else {
+                btnPrem.className = 'edition-btn';
+                btnFree.className = 'edition-btn active free';
+                userAvatar.className = 'avatar-circle';
+                userAvatar.innerText = 'Free';
+                userStatus.innerText = 'Free User';
+
+                // Show 300MB quota in Free
+                quotaBox.style.background = '#ffffff';
+                document.getElementById('quotaTitleText').innerText = 'Daily Free Quota';
+                document.getElementById('quotaPercentText').innerText = '61.8%';
+                document.getElementById('quotaProgressFill').style.width = '61.8%';
+                document.getElementById('quotaProgressFill').style.background = 'linear-gradient(90deg, var(--accent-gold), var(--emerald-500))';
+                document.getElementById('quotaUsedText').innerText = '185.4 MB';
+                document.getElementById('quotaTotalText').innerText = '300.0 MB Limit';
+                dashUpgrade.style.display = 'flex';
+
+                // Lock VIP nodes
+                vipTags.forEach(t => {
+                    t.innerText = '⭐ VIP LOCKED';
+                    t.style.background = 'var(--accent-gold-bg)';
+                    t.style.color = 'var(--accent-gold)';
+                });
+
+                showToast('Switched to Free Edition: 5 Free Countries unlocked, other countries locked to VIP.');
+            }
+        }
+
+        function toggleCountryAccordion(groupId) {
+            const card = document.getElementById(groupId);
+            if (!card) return;
+
+            if (card.classList.contains('locked-country-card')) {
+                openPaywallModal();
+                showToast('🔒 This country is locked on Free Plan. Upgrade to Premium VIP to unlock all 234 countries!');
+                return;
+            }
+
+            card.classList.toggle('expanded');
+        }
+
+        function selectCityNode(countryCityName, serverDetails, flagCode, ipVal, element, isVip) {
+            if (isVip && currentEdition === 'free') {
+                openPaywallModal();
+                return;
+            }
+
+            document.querySelectorAll('.city-row-item').forEach(i => i.classList.remove('selected'));
+            if (element) {
+                element.classList.add('selected');
+            }
+
+            // Update dashboard server header
+            document.getElementById('dashCountryName').innerText = countryCityName;
+            document.getElementById('dashServerNode').innerText = serverDetails;
+            document.getElementById('dashIpText').innerText = ipVal;
+            
+            // Dynamically update flag image
+            const flagImg = document.getElementById('dashFlagImg');
+            flagImg.src = `flags/${flagCode}.png`;
+            flagImg.alt = countryCityName;
+
+            showToast(`Switched server to: ${countryCityName}`);
+        }
+
+        function setRegionFilter(region, btn) {
+            document.querySelectorAll('.region-filter-pills .pill-btn').forEach(b => b.classList.remove('active'));
+            if (btn) btn.classList.add('active');
+
+            const countryCards = document.querySelectorAll('.country-group-card');
+            countryCards.forEach(card => {
+                const r = card.getAttribute('data-region');
+                if (region === 'all') {
+                    card.style.display = 'block';
+                } else if (region === 'fast') {
+                    card.style.display = (r === 'us' || r === 'vn' || r === 'asia') ? 'block' : 'none';
+                } else if (region === 'fav') {
+                    const hasFav = card.querySelector('.star-fav-btn.active');
+                    card.style.display = hasFav ? 'block' : 'none';
+                } else {
+                    card.style.display = (r === region) ? 'block' : 'none';
+                }
+            });
+        }
+
+        function switchNav(tabName) {
+            const tabs = document.querySelectorAll('.nav-tab-item');
+            tabs.forEach(t => t.classList.remove('active'));
+            
+            const panels = document.querySelectorAll('.view-panel');
+            panels.forEach(p => p.classList.remove('active'));
+
+            const targetPanel = document.getElementById('view-' + tabName);
+            if (targetPanel) {
+                targetPanel.classList.add('active');
+            }
+
+            const map = { 'dashboard': 0, 'locations': 1, 'mesh': 2, 'settings': 3, 'account': 4 };
+            if (tabs[map[tabName]]) {
+                tabs[map[tabName]].classList.add('active');
+            }
+        }
+
+        function toggleConnect() {
+            const ring = document.getElementById('powerBtnRing');
+            const statusText = document.getElementById('powerStatusText');
+            const headerText = document.getElementById('headerStatusText');
+            const statusDot = document.getElementById('statusDot');
+
+            if (isConnected) {
+                isConnected = false;
+                ring.className = 'power-btn-ring disconnected';
+                statusText.innerText = 'DISCONNECTED (UNPROTECTED)';
+                statusText.style.color = '#dc2626';
+                headerText.innerText = 'Disconnected';
+                statusDot.className = 'status-dot disconnected';
+                showToast('VPN disconnected.');
+            } else {
+                if (currentEdition === 'free' && dailyQuotaUsedMb >= dailyQuotaTotalMb) {
+                    openPaywallModal();
+                    return;
+                }
+
+                isConnecting = true;
+                ring.className = 'power-btn-ring connecting';
+                statusText.innerText = 'SECURING ENCRYPTED TUNNEL...';
+                statusText.style.color = '#d97706';
+                headerText.innerText = 'Connecting...';
+                statusDot.className = 'status-dot connecting';
+
+                setTimeout(() => {
+                    isConnecting = false;
+                    isConnected = true;
+                    ring.className = 'power-btn-ring connected';
+                    statusText.innerText = 'PROTECTED & SECURED';
+                    statusText.style.color = '#047857';
+                    headerText.innerText = 'Protected (Connected)';
+                    statusDot.className = 'status-dot';
+                    showToast('Connected securely! Your IP is protected.');
+                }, 1000);
+            }
+        }
+
+        function toggleNotifications() {
+            const dropdown = document.getElementById('notiDropdown');
+            dropdown.classList.toggle('active');
+        }
+
+        function clearAllNoti() {
+            document.querySelectorAll('.noti-item-box').forEach(box => box.classList.remove('unread'));
+            document.querySelector('.unread-badge').style.display = 'none';
+            showToast('All notifications marked as read.');
+        }
+
+        function openLoginModal() {
+            document.getElementById('loginModal').classList.add('active');
+        }
+
+        function closeLoginModal() {
+            document.getElementById('loginModal').classList.remove('active');
+        }
+
+        function openPaywallModal() {
+            document.getElementById('paywallModal').classList.add('active');
+        }
+
+        function closePaywallModal() {
+            document.getElementById('paywallModal').classList.remove('active');
+        }
+
+        function openDeviceLimitModal() {
+            document.getElementById('deviceLimitModal').classList.add('active');
+        }
+
+        function closeDeviceLimitModal() {
+            document.getElementById('deviceLimitModal').classList.remove('active');
+        }
+
+        function simulateDeviceLimitExceeded() {
+            openDeviceLimitModal();
+        }
+
+        function simulateKickDevice(hwid) {
+            const mobTag = document.getElementById('mobStatusTag');
+            const mobBox = document.getElementById('mobDetailBox');
+            const btnKick = document.getElementById('btnKickMob');
+            
+            mobTag.className = 'device-status-tag';
+            mobTag.style.background = '#fee2e2';
+            mobTag.style.color = '#dc2626';
+            mobTag.innerText = '○ UNLINKED (KICKED)';
+            mobBox.innerHTML = `
+                <div style="color: var(--text-muted); font-style: italic;">Slot 2 (Mobile) is now empty. You can connect a new phone.</div>
+            `;
+            btnKick.style.display = 'none';
+            showToast(`Mobile device (${hwid}) successfully deauthorized!`);
+        }
+
+        function transferLicenseToThisPC() {
+            closeDeviceLimitModal();
+            showToast('✅ Old PC deauthorized. License transferred to this PC successfully!');
+        }
+
+        function selectPlan(el) {
+            document.querySelectorAll('.plan-card').forEach(p => p.classList.remove('selected'));
+            el.classList.add('selected');
+        }
+
+        function completeUpgrade() {
+            closePaywallModal();
+            switchEdition('premium');
+            showToast('🎉 Congratulations! Upgraded to Premium. Unlimited Bandwidth Activated!');
+        }
+
+        function performLogin() {
+            closeLoginModal();
+            switchEdition('premium');
+            showToast('Signed in successfully! VIP subscription active.');
+        }
+
+        function performBypassLogin() {
+            closeLoginModal();
+            showToast('Auto-Bypass activated: Direct access granted!');
+        }
+
+        function copyText(txt) {
+            navigator.clipboard.writeText(txt).then(() => {
+                showToast(`Copied to clipboard: ${txt}`);
+            });
+        }
+
+        function showToast(msg) {
+            const box = document.getElementById('toastBox');
+            const toast = document.createElement('div');
+            toast.className = 'toast-message';
+            toast.innerHTML = `
+                <svg style="width: 15px; height: 15px; fill: #059669;" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+                <span>${msg}</span>
+            `;
+            box.appendChild(toast);
+            setTimeout(() => {
+                toast.remove();
+            }, 3200);
+        }
+
+        // Close dropdown when click outside
+        window.addEventListener('click', function(e) {
+            const notiBtn = document.getElementById('notiBtn');
+            const notiDrop = document.getElementById('notiDropdown');
+            if (!notiBtn.contains(e.target) && !notiDrop.contains(e.target)) {
+                notiDrop.classList.remove('active');
+            }
+        });
+
+        // Initialize country locking for Free Edition on load
+        applyCountryLocking('free');
+    </script>
+</body>
+</html>

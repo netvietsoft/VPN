@@ -1,0 +1,46 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <AssemblyName>VpnSDK.Private.API</AssemblyName>
+    <GenerateAssemblyInfo>False</GenerateAssemblyInfo>
+    <TargetFramework>netstandard2.1</TargetFramework>
+  </PropertyGroup>
+  <PropertyGroup>
+    <LangVersion>14.0</LangVersion>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <CheckForOverflowUnderflow>False</CheckForOverflowUnderflow>
+  </PropertyGroup>
+  <PropertyGroup />
+  <ItemGroup />
+  <ItemGroup>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>extracted/PFiles64/FastVPN/Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="RestEase">
+      <HintPath>extracted/PFiles64/FastVPN/RestEase.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.Logging.Abstractions">
+      <HintPath>extracted/PFiles64/FastVPN/Microsoft.Extensions.Logging.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="Polly">
+      <HintPath>extracted/PFiles64/FastVPN/Polly.dll</HintPath>
+    </Reference>
+    <Reference Include="VpnSDK.Common">
+      <HintPath>extracted/PFiles64/FastVPN/VpnSDK.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="Serilog">
+      <HintPath>extracted/PFiles64/FastVPN/Serilog.dll</HintPath>
+    </Reference>
+    <Reference Include="Serilog.Extensions.Logging">
+      <HintPath>extracted/PFiles64/FastVPN/Serilog.Extensions.Logging.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Security.Cryptography.ProtectedData">
+      <HintPath>extracted/PFiles64/FastVPN/System.Security.Cryptography.ProtectedData.dll</HintPath>
+    </Reference>
+    <Reference Include="Serilog.Sinks.File">
+      <HintPath>extracted/PFiles64/FastVPN/Serilog.Sinks.File.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.Logging">
+      <HintPath>extracted/PFiles64/FastVPN/Microsoft.Extensions.Logging.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+</Project>

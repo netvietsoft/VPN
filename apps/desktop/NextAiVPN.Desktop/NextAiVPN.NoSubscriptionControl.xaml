@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<UserControl x:Class="NextAiVPN.NoSubscriptionControl" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:nextaivpn="clr-namespace:NextAiVPN;assembly=NextAiVPN">
+  <Grid Style="{DynamicResource NewUserControlGridForegroundStyle}">
+    <StackPanel>
+      <Image Width="40" Height="40" Margin="0,55,0,10" HorizontalAlignment="Center" Source="/Assets/warning_yellow_simple.png" />
+      <TextBlock Margin="0,0,0,20" HorizontalAlignment="Center" FontFamily="{DynamicResource MuseoSans700FontFamily}" FontSize="20" Style="{DynamicResource NewUserControlTextblockHeaderForegroundStyle}" Text="Oops!" />
+      <TextBlock Width="280" Margin="0,0,0,15" HorizontalAlignment="Center" FontFamily="{DynamicResource MuseoSans700FontFamily}" FontSize="16" LineHeight="20" Style="{DynamicResource NewUserControlTextblockForegroundStyle}" Text="Your account does not have a subscription for NextAiVPN." TextAlignment="Center" TextWrapping="Wrap" />
+      <TextBlock Width="290" FontFamily="{DynamicResource MuseoSans700FontFamily}" FontSize="16" LineHeight="20" Style="{DynamicResource NewUserControlTextblockForegroundStyle}" TextAlignment="Center" TextWrapping="Wrap">
+        <Run Text="Please visit " /> <TextBlock Margin="0,0,0,0" FontFamily="{DynamicResource MuseoSans700FontFamily}" FontSize="16" Style="{DynamicResource LinksTextBlockStyle}" Text="website" MouseLeftButtonDown="Link_OnMouseLeftButtonDown" /> <Run Text=" to purchase a subscription. When you're done, come back and click the button below." /></TextBlock>
+      <Button Width="208" Height="48" Margin="0,35,0,0" HorizontalAlignment="Center" Content="Next" FontSize="20" Style="{DynamicResource PrimaryRoundedButtonStyle}" Click="Button_Click" />
+    </StackPanel>
+  </Grid>
+</UserControl>

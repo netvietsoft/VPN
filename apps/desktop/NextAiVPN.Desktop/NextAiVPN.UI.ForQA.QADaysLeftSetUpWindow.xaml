@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Window x:Class="NextAiVPN.UI.ForQA.QADaysLeftSetUpWindow" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" Title="QADaysLeftSetUpWindow" Width="800" Height="450" xmlns:forqa="clr-namespace:NextAiVPN.UI.ForQA;assembly=NextAiVPN">
+  <Grid>
+    <Grid.RowDefinitions>
+      <RowDefinition />
+      <RowDefinition />
+      <RowDefinition />
+      <RowDefinition />
+    </Grid.RowDefinitions>
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition />
+      <ColumnDefinition />
+    </Grid.ColumnDefinitions>
+    <TextBlock FontSize="36" Text="Days left from the installation" TextWrapping="Wrap" />
+    <TextBox Name="TextBoxDays" Grid.Column="1" Width="50" Height="36" FontSize="27" Text="0" />
+    <TextBlock Grid.Row="1" VerticalAlignment="Center" FontSize="36" Text="Date when feedback was send" TextWrapping="Wrap" />
+    <StackPanel Grid.Row="1" Grid.Column="1">
+      <DatePicker Name="DatePicker" Margin="10" />
+      <CheckBox Name="CheckBox" Margin="10" Content="Consider feedback" IsChecked="False" />
+    </StackPanel>
+    <TextBlock Grid.Row="2" Grid.Column="0" FontSize="36" Text="Days left after user close feedback window" TextWrapping="Wrap" />
+    <TextBox Name="TextBoxCloseFeedbackWindowDays" Grid.Row="2" Grid.Column="1" Width="50" Height="36" FontSize="27" Text="0" />
+    <Button Grid.Row="3" Grid.ColumnSpan="2" Margin="20" Content="APPLY" FontSize="48" Click="ButtonBase_OnClick" />
+  </Grid>
+</Window>

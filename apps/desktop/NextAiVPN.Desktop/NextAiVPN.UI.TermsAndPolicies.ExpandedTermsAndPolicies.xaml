@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<UserControl x:Class="NextAiVPN.UI.TermsAndPolicies.ExpandedTermsAndPolicies" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:b="http://schemas.microsoft.com/xaml/behaviors" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:termsandpolicies="clr-namespace:NextAiVPN.UI.TermsAndPolicies;assembly=NextAiVPN">
+  <Grid Background="{DynamicResource White}">
+    <StackPanel Orientation="Vertical">
+      <TextBlock Margin="24,20,0,12" FontFamily="{DynamicResource MuseoSans700FontFamily}" FontSize="20" FontWeight="Bold" Foreground="{DynamicResource Color2A2A2C}" Text="{Binding Path=MainControlHeader, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+      <Separator Width="Auto" HorizontalAlignment="Stretch" VerticalAlignment="Top" Foreground="#E2E8F0" Opacity="0.6" />
+      <StackPanel Height="Auto">
+        <ScrollViewer Height="665" VerticalAlignment="Top" CanContentScroll="True" VerticalScrollBarVisibility="Auto">
+          <StackPanel Margin="24,0,24,0">
+            
+            <!-- Terms of Service Section -->
+            <StackPanel Margin="0,24,0,0">
+              <TextBlock HorizontalAlignment="Left" VerticalAlignment="Center" FontFamily="{DynamicResource MuseoSans700FontFamily}" FontSize="16" FontWeight="Bold" Foreground="{DynamicResource Color2A2A2C}" Text="{Binding Path=TermsOfServiceHeader, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+              <StackPanel Margin="0,6,0,0" HorizontalAlignment="Left" Orientation="Horizontal">
+                <TextBlock FontSize="13" Foreground="{DynamicResource Color6D6E70}" VerticalAlignment="Center" Text="{Binding Path=TermsOfServiceText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                <TextBlock Margin="6,0,0,0" FontSize="13" FontWeight="SemiBold" Foreground="{DynamicResource BrushEmerald700}" Cursor="Hand" TextDecorations="Underline" VerticalAlignment="Center" Text="{Binding Path=TermsOfServiceLinkText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                  <b:Interaction.Triggers>
+                    <b:EventTrigger EventName="MouseDown">
+                      <b:InvokeCommandAction Command="{Binding TermsAndPoliciesMouseDownCommand}" />
+                    </b:EventTrigger>
+                  </b:Interaction.Triggers>
+                </TextBlock>
+              </StackPanel>
+            </StackPanel>
+
+            <!-- Privacy Policy Section -->
+            <StackPanel Margin="0,24,0,0">
+              <TextBlock HorizontalAlignment="Left" VerticalAlignment="Center" FontFamily="{DynamicResource MuseoSans700FontFamily}" FontSize="16" FontWeight="Bold" Foreground="{DynamicResource Color2A2A2C}" Text="{Binding Path=PrivacyPolicyHeader, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+              <StackPanel Margin="0,6,0,0" HorizontalAlignment="Left" Orientation="Horizontal">
+                <TextBlock FontSize="13" Foreground="{DynamicResource Color6D6E70}" VerticalAlignment="Center" Text="{Binding Path=PrivacyPolicyText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                <TextBlock Margin="6,0,0,0" FontSize="13" FontWeight="SemiBold" Foreground="{DynamicResource BrushEmerald700}" Cursor="Hand" TextDecorations="Underline" VerticalAlignment="Center" Text="{Binding Path=PrivacyPolicyLinkText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                  <b:Interaction.Triggers>
+                    <b:EventTrigger EventName="MouseDown">
+                      <b:InvokeCommandAction Command="{Binding PrivacyPolicyMouseDownCommand}" />
+                    </b:EventTrigger>
+                  </b:Interaction.Triggers>
+                </TextBlock>
+                <TextBlock Margin="4,0,0,0" FontSize="13" Foreground="{DynamicResource Color6D6E70}" VerticalAlignment="Center" Text="{Binding Path=PrivacyPolicyEndText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+              </StackPanel>
+            </StackPanel>
+
+            <!-- Licenses Section -->
+            <StackPanel Margin="0,24,0,0">
+              <TextBlock HorizontalAlignment="Left" VerticalAlignment="Center" FontFamily="{DynamicResource MuseoSans700FontFamily}" FontSize="16" FontWeight="Bold" Foreground="{DynamicResource Color2A2A2C}" Text="{Binding Path=LicensesHeader, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+              <StackPanel Margin="0,6,0,0" HorizontalAlignment="Left" Orientation="Horizontal">
+                <TextBlock FontSize="13" Foreground="{DynamicResource Color6D6E70}" VerticalAlignment="Center" Text="{Binding Path=LicensesText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                <TextBlock Margin="6,0,0,0" FontSize="13" FontWeight="SemiBold" Foreground="{DynamicResource BrushEmerald700}" Cursor="Hand" TextDecorations="Underline" VerticalAlignment="Center" Text="{Binding Path=LicensesLinkText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                  <b:Interaction.Triggers>
+                    <b:EventTrigger EventName="MouseDown">
+                      <b:InvokeCommandAction Command="{Binding LicensesMouseDownCommand}" />
+                    </b:EventTrigger>
+                  </b:Interaction.Triggers>
+                </TextBlock>
+              </StackPanel>
+            </StackPanel>
+
+          </StackPanel>
+        </ScrollViewer>
+      </StackPanel>
+    </StackPanel>
+  </Grid>
+</UserControl>

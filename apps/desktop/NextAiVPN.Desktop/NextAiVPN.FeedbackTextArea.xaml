@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<UserControl x:Class="NextAiVPN.FeedbackTextArea" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:resx="clr-namespace:NextAiVPN.Properties" Style="{DynamicResource FeedbackDefaultBackgroundUserControlStyle}" xmlns:nextaivpn="clr-namespace:NextAiVPN" IsVisibleChanged="UserControl_IsVisibleChanged">
+  <Grid>
+    <Border Style="{DynamicResource FeedbackBorderBackgroundStyle}">
+      <UIElement.Effect>
+        <DropShadowEffect BlurRadius="24" Opacity="0.22" Color="Black" />
+      </UIElement.Effect>
+    </Border>
+    <StackPanel Orientation="Vertical">
+      <StackPanel Orientation="Horizontal">
+        <TextBlock Width="232" Height="24" Margin="12,12,0,0" FontFamily="{DynamicResource MuseoSans700FontFamily}" FontSize="16" Style="{DynamicResource FeedbackDefaultTextblockHeaderForegroundStyle}" Text="How are we doing?" />
+        <Image Name="btnCross" Width="25" Height="25" Margin="6,12,0,0" HorizontalAlignment="Right" Focusable="True" Style="{DynamicResource XCloseButtonWindowImageStyle}" MouseDown="BtnCross_MouseDown" />
+      </StackPanel>
+      <TextBlock Name="Description" Width="232" Height="32" Margin="12,0,0,0" HorizontalAlignment="Left" FontFamily="{DynamicResource MuseoSans500FontFamily}" FontSize="12" LineHeight="16" Style="{DynamicResource FeedbackDefaultTextblockForegroundStyle}" Text="Let us know what you think of NextAiVPN" TextWrapping="Wrap" />
+      <StackPanel>
+        <Border Name="BorderTextBox" Width="Auto" Height="105" Margin="12,12,12,0" BorderBrush="{DynamicResource Color848487}" BorderThickness="1.2">
+          <Grid Width="255" Height="85">
+            <TextBox Name="FeedbackText" Padding="0,0,0,0" AcceptsReturn="True" BorderThickness="0" Focusable="True" FontFamily="{DynamicResource MuseoSans500FontFamily}" FontSize="14" MaxLength="512" Style="{DynamicResource TextBoxBackgroundStyle}" Text="Write your message here..." TextAlignment="Left" TextWrapping="Wrap" GotFocus="FeedbackText_GotFocus" LostFocus="FeedbackText_LostFocus" TextChanged="FeedbackText_TextChanged" />
+          </Grid>
+        </Border>
+      </StackPanel>
+      <DockPanel>
+        <CheckBox Name="IncludeDialogFile" Margin="12,5" Content="{x:Static resx:Resources.IncludeDialogFileText}" Style="{DynamicResource CheckBoxStyle}" IsChecked="{Binding Path=NeedToSendDiagnosticFile, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+        <Grid Margin="0,5,0,0" HorizontalAlignment="Right">
+          <TextBlock Name="characterCount" Margin="0,0,35,0" HorizontalAlignment="Right" FontFamily="{DynamicResource MuseoSans700FontFamily}" FontSize="10" FontWeight="Bold" Style="{DynamicResource DefaultTextBlockForegroundStyle}" Text="0" />
+          <TextBlock Margin="0,0,30,0" HorizontalAlignment="Right" FontFamily="{DynamicResource MuseoSans700FontFamily}" FontSize="10" Style="{DynamicResource FeedbackTextblockForegroundStyle}" Text="/" />
+          <TextBlock Margin="0,0,12,0" HorizontalAlignment="Right" FontFamily="{DynamicResource MuseoSans700FontFamily}" FontSize="10" FontWeight="Bold" Style="{DynamicResource FeedbackTextblockForegroundStyle}" Text="512" />
+        </Grid>
+      </DockPanel>
+    </StackPanel>
+    <Grid Height="32" Margin="0,0,0,12" VerticalAlignment="Bottom">
+      <Button Name="sendFeedbackBtn" Width="259" Height="32" VerticalAlignment="Bottom" HorizontalContentAlignment="Center" Content="Send feedback" Style="{DynamicResource BtnSendFeedbackButtonStyle}" Click="SendFeedbackBtn_Click" />
+      <Image Name="sendSpinner" Width="15" Height="15" HorizontalAlignment="Center" VerticalAlignment="Center" Style="{DynamicResource ConnectButtonSpinnerImageStyle}" Visibility="Collapsed" />
+    </Grid>
+  </Grid>
+</UserControl>

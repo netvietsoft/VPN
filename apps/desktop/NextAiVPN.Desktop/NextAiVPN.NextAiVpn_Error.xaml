@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Window x:Class="NextAiVPN.NextAiVpn_Error" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:nextaitechnologyVpn="clr-namespace:NextAiVPN" Title="" Width="386" Height="336" Icon="/Assets/vpn_icon.ico" ResizeMode="NoResize" Style="{DynamicResource {x:Type Window}}" WindowStartupLocation="CenterScreen">
+  <WindowChrome.WindowChrome>
+    <WindowChrome CaptionHeight="34" />
+  </WindowChrome.WindowChrome>
+  <DockPanel>
+    <nextaitechnologyVpn:WindowHeader x:Name="WindowHeader" DockPanel.Dock="Top" />
+    <Grid>
+      <StackPanel>
+        <Image Width="40" Height="40" Margin="0,20,0,0" HorizontalAlignment="Center" Source="/Assets/error.png" />
+        <TextBlock Name="ErrorTitle" Margin="0,15,0,0" HorizontalAlignment="Center" FontFamily="{DynamicResource MuseoSans500FontFamily}" FontSize="20" FontWeight="Medium" Style="{DynamicResource NewUserControlTextblockHeaderForegroundStyle}" Text="Authentication Error" />
+        <TextBlock Name="ErrorDescription" Margin="0,3,0,0" HorizontalAlignment="Center" FontFamily="{DynamicResource MuseoSans500FontFamily}" FontSize="20" Style="{DynamicResource NewUserControlTextblockHeaderForegroundStyle}" Text="Unable to log in" />
+        <TextBlock Name="ErrorContent" Width="290" Margin="0,25,0,0" HorizontalAlignment="Stretch" FontFamily="{DynamicResource MuseoSans500FontFamily}" FontSize="16" Style="{DynamicResource NewUserControlTextblockForegroundStyle}" Text="" TextAlignment="Center" TextWrapping="Wrap" />
+        <Button Name="btnDismiss" Width="208" Height="48" Margin="0,35,0,0" HorizontalAlignment="Center" VerticalAlignment="Top" Content="Got it" FontSize="20" Style="{DynamicResource PrimaryRoundedButtonStyle}" Click="btnDismiss_Click" />
+      </StackPanel>
+    </Grid>
+  </DockPanel>
+</Window>

@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Window x:Class="NextAiVPN.UI.WebView2.InstallWebView2RuntimeWindow" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:b="http://schemas.microsoft.com/xaml/behaviors" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" Title="InstallWebView2RuntimeWindow" Width="350" Height="180" ResizeMode="NoResize" Style="{DynamicResource DeleteLogsMessageWindowBackgroundStyle}" WindowStartupLocation="CenterScreen" WindowStyle="None" xmlns:webview2="clr-namespace:NextAiVPN.UI.WebView2;assembly=NextAiVPN" Closing="InstallWebView2RuntimeWindow_OnClosing">
+  <WindowChrome.WindowChrome>
+    <WindowChrome CaptionHeight="0" />
+  </WindowChrome.WindowChrome>
+  <DockPanel>
+    <Grid>
+      <StackPanel>
+        <StackPanel Orientation="Horizontal">
+          <TextBlock Width="Auto" Height="24" Margin="24,25,0,0" HorizontalAlignment="Left" FontSize="20" Style="{DynamicResource DeleteLogsMessageWindowTextBlockHeaderForegroundStyle}" TextWrapping="Wrap" Text="{Binding TitleText, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
+          <Image Width="25" Height="25" Margin="80,10,0,10" HorizontalAlignment="Right" Style="{DynamicResource XCloseButtonWindowImageStyle}">
+            <b:Interaction.Triggers>
+              <b:EventTrigger EventName="MouseDown">
+                <b:InvokeCommandAction Command="{Binding CloseXButtonClickCommand}" />
+              </b:EventTrigger>
+            </b:Interaction.Triggers>
+          </Image>
+        </StackPanel>
+        <TextBlock Width="Auto" Height="Auto" Margin="24,7,0,0" HorizontalAlignment="Left" FontSize="14" Style="{DynamicResource DeleteLogsMessageWindowTextBlockForegroundStyle}" TextWrapping="Wrap" Text="{Binding BodyText, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
+        <StackPanel Margin="16,25,16,0" HorizontalAlignment="Center" Background="#00FFFFFF" Orientation="Horizontal">
+          <Button Width="134" Height="32" Margin="0,0,2,0" Content="Cancel" Style="{DynamicResource CancelButtonBindingTextStyle}" Command="{Binding CancelButtonClickCommand}" />
+          <Button Width="134" Height="32" Margin="2,0,0,0" Content="Install" Style="{DynamicResource OkButtonBindingTextStyle}" Command="{Binding AgreeButtonClickCommand}" />
+        </StackPanel>
+      </StackPanel>
+    </Grid>
+  </DockPanel>
+</Window>

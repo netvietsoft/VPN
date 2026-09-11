@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<UserControl x:Class="NextAiVPN.UI.Settings.ExpandedGeneralSettingsControl" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:nextaitechnologyVpn="clr-namespace:NextAiVPN" xmlns:settings="clr-namespace:NextAiVPN.UI.Settings" xmlns:update="clr-namespace:NextAiVPN.UI.Update">
+  <ScrollViewer CanContentScroll="False" VerticalScrollBarVisibility="Auto" PreviewMouseWheel="UIElement_OnPreviewMouseWheel">
+    <StackPanel Orientation="Vertical">
+      <update:UpdateControl x:Name="UpdateControl" Margin="16,16,16,16" />
+      <Separator Width="Auto" Margin="0,-1,0,0" HorizontalAlignment="Stretch" VerticalAlignment="Top" Foreground="#FFD3D3D3" Opacity="0.2" />
+      <settings:ExpandedNextAiVpnSettingsControl x:Name="AdvancedSettingsControl" />
+      <StackPanel Margin="16,24,0,0">
+        <Grid>
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="0.5*" />
+            <ColumnDefinition Width="0.5*" />
+          </Grid.ColumnDefinitions>
+          <TextBlock Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center" FontFamily="{DynamicResource MuseoSans700FontFamily}" FontSize="16" Style="{DynamicResource GeneralExpendedTextBlockStyle}" Text="Version" />
+        </Grid>
+        <StackPanel Margin="0,6,0,0">
+          <TextBlock Width="400" HorizontalAlignment="Left" FontSize="12" LineHeight="19" Style="{DynamicResource ProtocolInfoTextBlockStyle}" TextWrapping="Wrap" Text="{Binding AppVersion}" />
+        </StackPanel>
+      </StackPanel>
+    </StackPanel>
+  </ScrollViewer>
+</UserControl>

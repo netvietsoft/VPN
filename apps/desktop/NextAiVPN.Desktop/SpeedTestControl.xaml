@@ -1,0 +1,159 @@
+<UserControl x:Class="NextAiVPN.SpeedTestControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             FontFamily="{DynamicResource MuseoSans500FontFamily}"
+             FontSize="12"
+             Foreground="{DynamicResource Color2E2E33}"
+             Background="{DynamicResource BrushBgSubtle}">
+  <UserControl.Resources>
+    <!-- WCAG AAA Compliant High-Contrast Button Style -->
+    <Style x:Key="SpeedTestHighContrastButtonStyle" TargetType="{x:Type Button}">
+      <Setter Property="SnapsToDevicePixels" Value="True" />
+      <Setter Property="OverridesDefaultStyle" Value="True" />
+      <Setter Property="FontFamily" Value="{DynamicResource MuseoSans700FontFamily}" />
+      <Setter Property="FontSize" Value="13" />
+      <Setter Property="FontWeight" Value="Bold" />
+      <Setter Property="Cursor" Value="Hand" />
+      <Setter Property="Template">
+        <Setter.Value>
+          <ControlTemplate TargetType="{x:Type Button}">
+            <Border x:Name="BtnBorder" Background="#059669" BorderBrush="#047857" BorderThickness="1.5" CornerRadius="8" Padding="18,10">
+              <ContentPresenter x:Name="BtnContent" HorizontalAlignment="Center" VerticalAlignment="Center" TextElement.Foreground="#FFFFFF" TextElement.FontWeight="Bold" TextElement.FontSize="13" />
+            </Border>
+            <ControlTemplate.Triggers>
+              <Trigger Property="IsMouseOver" Value="True">
+                <Setter TargetName="BtnBorder" Property="Background" Value="#047857" />
+                <Setter TargetName="BtnBorder" Property="BorderBrush" Value="#10B981" />
+              </Trigger>
+              <Trigger Property="IsPressed" Value="True">
+                <Setter TargetName="BtnBorder" Property="Background" Value="#064E3B" />
+              </Trigger>
+              <Trigger Property="IsEnabled" Value="False">
+                <!-- High Contrast Running/Testing State: Deep Emerald 900 Background with pure White text (Contrast 8.5:1 > WCAG AAA) -->
+                <Setter TargetName="BtnBorder" Property="Background" Value="#064E3B" />
+                <Setter TargetName="BtnBorder" Property="BorderBrush" Value="#34D399" />
+                <Setter TargetName="BtnBorder" Property="BorderThickness" Value="2" />
+                <Setter TargetName="BtnContent" Property="TextElement.Foreground" Value="#FFFFFF" />
+              </Trigger>
+            </ControlTemplate.Triggers>
+          </ControlTemplate>
+        </Setter.Value>
+      </Setter>
+    </Style>
+  </UserControl.Resources>
+
+  <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Padding="20">
+    <StackPanel Orientation="Vertical" MaxWidth="800" HorizontalAlignment="Left">
+      
+      <!-- HEADER BANNER -->
+      <Border Background="#FFFFFF" BorderBrush="{DynamicResource BrushBorderEmerald}" BorderThickness="1.5" CornerRadius="12" Padding="18" Margin="0,0,0,16">
+        <Grid>
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
+          </Grid.ColumnDefinitions>
+          
+          <StackPanel Grid.Column="0">
+            <StackPanel Orientation="Horizontal" Margin="0,0,0,6">
+              <TextBlock Text="⚡ Network Speed Test &amp; Latency Benchmark" FontFamily="{DynamicResource MuseoSans700FontFamily}" FontSize="18" FontWeight="Bold" Foreground="{DynamicResource BrushEmerald900}" />
+              <Border Margin="10,0,0,0" Padding="6,2" Background="{DynamicResource BrushEmerald100}" CornerRadius="6" VerticalAlignment="Center">
+                <TextBlock Text="10GBPS EGRESS CORE" FontFamily="{DynamicResource MuseoSans700FontFamily}" FontSize="10" FontWeight="Bold" Foreground="{DynamicResource BrushEmerald700}" />
+              </Border>
+            </StackPanel>
+            <TextBlock Text="Real-time bandwidth throughput, jitter, and round-trip ping measurement over active VPN tunnel." FontSize="12" Foreground="{DynamicResource Color6D6E70}" TextWrapping="Wrap" />
+          </StackPanel>
+
+          <!-- Current Server Pill -->
+          <Border Grid.Column="1" Background="{DynamicResource BrushEmerald50}" BorderBrush="{DynamicResource BrushBorderEmerald}" BorderThickness="1" CornerRadius="8" Padding="12,8" Margin="16,0,0,0" VerticalAlignment="Center">
+            <StackPanel HorizontalAlignment="Center">
+              <TextBlock Text="CURRENT TEST SERVER" FontSize="9.5" FontWeight="Bold" Foreground="{DynamicResource BrushEmerald700}" HorizontalAlignment="Center" Margin="0,0,0,2" />
+              <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                <Border Width="16" Height="16" CornerRadius="8" ClipToBounds="True" BorderBrush="#20000000" BorderThickness="1" Margin="0,0,6,0" VerticalAlignment="Center">
+                  <Image RenderOptions.BitmapScalingMode="HighQuality" Stretch="UniformToFill" Source="/Resources/Flags/us.png" />
+                </Border>
+                <TextBlock Text="US-Atlanta (192.111.130.5)" FontSize="12" FontWeight="Bold" Foreground="{DynamicResource BrushEmerald900}" VerticalAlignment="Center" />
+              </StackPanel>
+            </StackPanel>
+          </Border>
+        </Grid>
+      </Border>
+
+      <!-- SPEEDOMETER HERO CARD -->
+      <Border Background="#FFFFFF" BorderBrush="{DynamicResource BrushBorderSubtle}" BorderThickness="1" CornerRadius="12" Padding="24" Margin="0,0,0,16">
+        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+          
+          <!-- Big Circular Gauge Graphic -->
+          <Grid Width="160" Height="160" Margin="0,0,0,14">
+            <Ellipse Stroke="{DynamicResource BrushEmerald100}" StrokeThickness="10" />
+            <Ellipse Stroke="{DynamicResource BrushEmerald600}" StrokeThickness="10" StrokeDashArray="65 35" StrokeDashOffset="25" />
+            
+            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+              <TextBlock x:Name="TxtLiveSpeed" Text="184.5" FontFamily="{DynamicResource MuseoSans700FontFamily}" FontSize="32" FontWeight="Bold" Foreground="{DynamicResource BrushEmerald900}" HorizontalAlignment="Center" />
+              <TextBlock Text="Mbps (Download)" FontSize="11" FontWeight="SemiBold" Foreground="{DynamicResource BrushEmerald700}" HorizontalAlignment="Center" />
+            </StackPanel>
+          </Grid>
+
+          <!-- Speed status pill -->
+          <Border Background="{DynamicResource BrushEmerald100}" CornerRadius="20" Padding="14,4" HorizontalAlignment="Center" Margin="0,0,0,14">
+            <TextBlock x:Name="TxtSpeedStatus" Text="● BENCHMARK IDLE • READY FOR TEST" FontSize="11" FontWeight="Bold" Foreground="{DynamicResource BrushEmerald700}" />
+          </Border>
+
+          <!-- Run Speed Test Button (High Contrast WCAG AAA) -->
+          <Button x:Name="BtnRunSpeedTest" Width="240" Height="42" Style="{StaticResource SpeedTestHighContrastButtonStyle}" Click="BtnRunSpeedTest_Click" Content="🚀 Run Speed Test" />
+
+        </StackPanel>
+      </Border>
+
+      <!-- METRICS BREAKDOWN GRID -->
+      <TextBlock Text="BENCHMARK RESULTS &amp; TELEMETRY" FontFamily="{DynamicResource MuseoSans700FontFamily}" FontSize="13" FontWeight="Bold" Foreground="{DynamicResource BrushEmerald900}" Margin="0,4,0,10" />
+
+      <Grid Margin="0,0,0,16">
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="*" />
+          <ColumnDefinition Width="*" />
+          <ColumnDefinition Width="*" />
+          <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <!-- Metric 1: Download -->
+        <Border Grid.Column="0" Margin="0,0,6,0" Background="#FFFFFF" BorderBrush="{DynamicResource BrushBorderSubtle}" BorderThickness="1" CornerRadius="10" Padding="14">
+          <StackPanel>
+            <TextBlock Text="⬇️ Download" FontSize="11" FontWeight="SemiBold" Foreground="{DynamicResource Color6D6E70}" Margin="0,0,0,4" />
+            <TextBlock x:Name="TxtDownloadResult" Text="184.5 Mbps" FontFamily="{DynamicResource MuseoSans700FontFamily}" FontSize="16" FontWeight="Bold" Foreground="{DynamicResource BrushEmerald900}" Margin="0,0,0,2" />
+            <TextBlock Text="Fast (4K Stream Ready)" FontSize="9.5" Foreground="{DynamicResource BrushEmerald700}" />
+          </StackPanel>
+        </Border>
+
+        <!-- Metric 2: Upload -->
+        <Border Grid.Column="1" Margin="3,0,3,0" Background="#FFFFFF" BorderBrush="{DynamicResource BrushBorderSubtle}" BorderThickness="1" CornerRadius="10" Padding="14">
+          <StackPanel>
+            <TextBlock Text="⬆️ Upload" FontSize="11" FontWeight="SemiBold" Foreground="{DynamicResource Color6D6E70}" Margin="0,0,0,4" />
+            <TextBlock x:Name="TxtUploadResult" Text="92.4 Mbps" FontFamily="{DynamicResource MuseoSans700FontFamily}" FontSize="16" FontWeight="Bold" Foreground="{DynamicResource BrushEmerald900}" Margin="0,0,0,2" />
+            <TextBlock Text="High Throughput" FontSize="9.5" Foreground="{DynamicResource BrushEmerald700}" />
+          </StackPanel>
+        </Border>
+
+        <!-- Metric 3: Ping / Latency -->
+        <Border Grid.Column="2" Margin="3,0,3,0" Background="#FFFFFF" BorderBrush="{DynamicResource BrushBorderSubtle}" BorderThickness="1" CornerRadius="10" Padding="14">
+          <StackPanel>
+            <TextBlock Text="📶 Latency (Ping)" FontSize="11" FontWeight="SemiBold" Foreground="{DynamicResource Color6D6E70}" Margin="0,0,0,4" />
+            <TextBlock x:Name="TxtPingResult" Text="38 ms" FontFamily="{DynamicResource MuseoSans700FontFamily}" FontSize="16" FontWeight="Bold" Foreground="{DynamicResource BrushEmerald900}" Margin="0,0,0,2" />
+            <TextBlock Text="Jitter: 1.2 ms (Stable)" FontSize="9.5" Foreground="{DynamicResource BrushEmerald700}" />
+          </StackPanel>
+        </Border>
+
+        <!-- Metric 4: Loss -->
+        <Border Grid.Column="3" Margin="6,0,0,0" Background="#FFFFFF" BorderBrush="{DynamicResource BrushBorderSubtle}" BorderThickness="1" CornerRadius="10" Padding="14">
+          <StackPanel>
+            <TextBlock Text="🛡️ Packet Loss" FontSize="11" FontWeight="SemiBold" Foreground="{DynamicResource Color6D6E70}" Margin="0,0,0,4" />
+            <TextBlock x:Name="TxtLossResult" Text="0.0 %" FontFamily="{DynamicResource MuseoSans700FontFamily}" FontSize="16" FontWeight="Bold" Foreground="{DynamicResource BrushEmerald900}" Margin="0,0,0,2" />
+            <TextBlock Text="Zero Loss Tunnel" FontSize="9.5" Foreground="{DynamicResource BrushEmerald700}" />
+          </StackPanel>
+        </Border>
+      </Grid>
+
+    </StackPanel>
+  </ScrollViewer>
+</UserControl>

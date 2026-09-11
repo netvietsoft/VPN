@@ -1,0 +1,40 @@
+agents:
+  - id: agent-0-orchestrator
+    name: Orchestrator
+    role: "Chỉ huy toàn dự án, phân rã task graph, giám sát tiến độ"
+  - id: agent-1-architect
+    name: Architect
+    role: "Kiến trúc hệ thống, API/DB design, ADRs"
+  - id: agent-2-backend
+    name: Backend
+    role: "Triển khai backend API, CMS, proxy gateway trên cổng 6033/10000"
+  - id: agent-3-frontend
+    name: Frontend / Desktop
+    role: "Triển khai WPF .NET 10 desktop client, 113 màn hình XAML, viewmodels"
+  - id: agent-4-integration
+    name: Integration / API
+    role: "External contracts, gateway bridges, webhooks"
+  - id: agent-5-payment
+    name: Payment
+    role: "Paywall, gói thuê bao, cổng thanh toán"
+  - id: agent-6-tester
+    name: Tester
+    role: "Kiểm thử tự động, unit tests, integration tests"
+  - id: agent-7-fixer
+    name: Fixer
+    role: "Sửa lỗi theo bug report"
+  - id: agent-8-reviewer
+    name: Reviewer
+    role: "Đánh giá chất lượng mã nguồn, quy chuẩn song ngữ"
+  - id: agent-9-security
+    name: Security
+    role: "Kiểm toán an ninh mạng, chống rò rỉ VPN/DNS, rà soát lỗ hổng"
+  - id: agent-10-devops
+    name: DevOps
+    role: "Build scripts, Docker, kịch bản triển khai service"
+  - id: agent-11-designer
+    name: Designer
+    role: "Chủ sở hữu Design Gate, tokens màu sắc, wireframe, layout"
+  - id: agent-12-documentation
+    name: Documentation
+    role: "Tài liệu kỹ thuật, 12 báo cáo trong Report/, handoff docs"

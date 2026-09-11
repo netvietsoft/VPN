@@ -1,0 +1,57 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Window x:Class="NextAiVPN.UI.TrustedNetwork.TrustedNetworksWindow" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:b="http://schemas.microsoft.com/xaml/behaviors" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:nextaitechnologyVpn="clr-namespace:NextAiVPN" Title="TrustedNetworksWindow" Width="360" Height="432" ResizeMode="NoResize" Style="{DynamicResource TrustedNetworkWindowStyle}" WindowStartupLocation="CenterScreen" xmlns:trustednetwork="clr-namespace:NextAiVPN.UI.TrustedNetwork">
+  <WindowChrome.WindowChrome>
+    <WindowChrome CaptionHeight="34" />
+  </WindowChrome.WindowChrome>
+  <DockPanel>
+    <Border DockPanel.Dock="Top" Style="{DynamicResource WindowHeaderBorderStyle}">
+      <nextaitechnologyVpn:WindowHeader x:Name="WindowHeader" />
+    </Border>
+    <StackPanel Margin="15">
+      <StackPanel Margin="0,0,0,0" Visibility="{Binding CurrentTrustedNetworkStackPanelVisibility, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+        <TextBlock Style="{DynamicResource TrustedNetworkTextBlockStyle}" Text="ADD CURRENT NETWORK TO YOUR TRUSTED LIST" />
+        <Grid Width="340" Margin="0,5,0,0" HorizontalAlignment="Left">
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="30" />
+            <ColumnDefinition />
+            <ColumnDefinition Width="50" />
+          </Grid.ColumnDefinitions>
+          <Image Grid.Column="0" Width="10" Height="10" Style="{DynamicResource WiFiLogoImageStyle}" />
+          <TextBlock Grid.Column="1" Margin="-3,5,0,0" FontSize="12" Style="{DynamicResource TrustedNetworkTextBlockStyle}" Text="{Binding Path=ConnectedNetwork, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+          <TextBlock Grid.Column="2" Style="{DynamicResource LinksTextBlockStyle}" Text="Add">
+            <b:Interaction.Triggers>
+              <b:EventTrigger EventName="MouseDown">
+                <b:InvokeCommandAction Command="{Binding AddTrustedNetworkClickCommand}" CommandParameter="{Binding ElementName=TrustedNetworkControl}" />
+              </b:EventTrigger>
+            </b:Interaction.Triggers>
+          </TextBlock>
+        </Grid>
+      </StackPanel>
+      <StackPanel>
+        <TextBlock Width="Auto" Style="{DynamicResource TrustedNetworkTextBlockStyle}" Text="To approve a trusted network you must connect to a Wi-Fi network." TextWrapping="Wrap" Visibility="{Binding NoWiFiNetworkVisibility, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+      </StackPanel>
+      <TextBlock Margin="0,10,0,0" FontFamily="{DynamicResource MuseoSans700FontFamily}" FontSize="16" Style="{DynamicResource TrustedNetworkTextBlockStyle}" Text="Trusted Wi-Fi networks" />
+      <TextBlock Name="NoneTrustedNetworks" Width="400" Margin="0,10,0,0" HorizontalAlignment="Left" FontSize="12" LineHeight="19" Style="{DynamicResource TrustedNetworkTextBlockStyle}" Text="None" TextWrapping="Wrap" Visibility="{Binding NoneTrustedNetworksVisibility, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+      <ScrollViewer HorizontalScrollBarVisibility="Hidden" Height="{Binding ScrollViewHeight, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Visibility="{Binding TrustedNetworksScrollViewerVisibility, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" PreviewMouseWheel="Scroll_OnPreviewMouseWheel">
+        <ListBox Name="TrustedNetworks" Width="Auto" Height="Auto" BorderThickness="0" Style="{DynamicResource TrustedNetworkListboxStyle}" ItemsSource="{Binding Path=TrustedNetworksCollection, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+          <ItemsControl.ItemTemplate>
+            <DataTemplate>
+              <Grid>
+                <Grid.ColumnDefinitions>
+                  <ColumnDefinition Width="270" />
+                  <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <StackPanel Orientation="Horizontal">
+                  <Image Width="10" Height="10" Margin="3,-5,0,0" Style="{DynamicResource WiFiLogoImageStyle}" Visibility="{Binding IsConnected, Converter={StaticResource BoolToVisibilityValueConverter}}" />
+                  <TextBlock Margin="7,12,0,0" FontSize="12" Style="{DynamicResource TrustedNetworkTextBlockStyle}" Text="{Binding NetworkName}" />
+                </StackPanel>
+                <Image Name="RemoveNetwork" Grid.Column="1" Style="{DynamicResource DeleteTrustedNetworkImageStyle}" MouseDown="RemoveNetwork_OnMouseDown" />
+                <Separator Grid.ColumnSpan="2" Width="300" Margin="3,35,0,3" />
+              </Grid>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ListBox>
+      </ScrollViewer>
+    </StackPanel>
+  </DockPanel>
+</Window>

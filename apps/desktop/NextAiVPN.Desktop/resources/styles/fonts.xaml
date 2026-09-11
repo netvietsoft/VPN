@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <FontFamily x:Key="MuseoSans300FontFamily">/Fonts/#Museo Sans 300</FontFamily>
+  <FontFamily x:Key="MuseoSans400FontFamily">/Fonts/#Museo Sans 400</FontFamily>
+  <FontFamily x:Key="MuseoSans500FontFamily">/Fonts/#Museo Sans 500</FontFamily>
+  <FontFamily x:Key="MuseoSans600FontFamily">/Fonts/#Museo Sans 600</FontFamily>
+  <FontFamily x:Key="MuseoSans700FontFamily">/Fonts/#Museo Sans 700</FontFamily>
+  <FontFamily x:Key="SegoeMdl2AssetsFontFamily">Segoe MDL2 Assets</FontFamily>
+</ResourceDictionary>

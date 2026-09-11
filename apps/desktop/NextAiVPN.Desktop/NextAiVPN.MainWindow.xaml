@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Window x:Class="NextAiVPN.MainWindow" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:nextaitechnologyVpn="clr-namespace:NextAiVPN" xmlns:toolsContextMenu="clr-namespace:NextAiVPN.UI.ToolsContextMenu" Title="NextAiVPN" Width="370" Height="575" FontFamily="{DynamicResource MuseoSans500FontFamily}" FontSize="12" Icon="/Assets/NextAiVPN/vpn_icon.ico" ResizeMode="CanMinimize" Style="{DynamicResource MainWindowWindowStyle}" WindowStartupLocation="CenterScreen" Visibility="Hidden" ShowInTaskbar="False" Closed="MainWindow_OnClosed" Closing="Window_Closing" Loaded="MainWindow_OnLoaded">
+  <WindowChrome.WindowChrome>
+    <WindowChrome CaptionHeight="34" />
+  </WindowChrome.WindowChrome>
+  <Grid>
+    <DockPanel>
+      <nextaitechnologyVpn:WindowHeader x:Name="WindowHeader" DockPanel.Dock="Top" />
+      <Grid Background="#00FFFFFF">
+        <Grid.RowDefinitions>
+          <RowDefinition Height="350" />
+          <RowDefinition Height="225" />
+        </Grid.RowDefinitions>
+        <Border Name="GearBorder" Grid.Row="0" Width="38" Height="38" Margin="0,13,15,0" HorizontalAlignment="Right" VerticalAlignment="Top" Background="{DynamicResource Black}" CornerRadius="19" Opacity="0.12" Visibility="Collapsed" />
+        <toolsContextMenu:ToolsControl x:Name="ToolsControl" Grid.Row="0" Width="25" Height="25" Margin="0,23,26,0" HorizontalAlignment="Right" VerticalAlignment="Top" />
+        <Image Grid.Row="0" Width="150" Height="138" HorizontalAlignment="Center" VerticalAlignment="Center" RenderOptions.BitmapScalingMode="HighQuality" Source="/Assets/NextAiVPN/nextaivpn_loginlogo.png" Stretch="Uniform" />
+        <StackPanel Grid.Row="1" Orientation="Vertical">
+          <TextBlock HorizontalAlignment="Center" FontFamily="{DynamicResource MuseoSans500FontFamily}" FontSize="16" Foreground="{DynamicResource ColorBrushB1B1B2}" Text="Start with:" />
+          <Button Name="NextAiGlobalButton" Width="320" Height="60" Margin="0,12,0,0" HorizontalAlignment="Center" VerticalAlignment="Center" Background="#1E1E20" BorderThickness="0" IsEnabled="False" Click="NextAiGlobalButton_OnClick" MouseEnter="NextAiGlobalButton_OnMouseEnter" MouseLeave="NextAiGlobalButton_OnMouseLeave">
+            <Control.Template>
+              <ControlTemplate TargetType="{x:Type Button}">
+                <Border Background="{TemplateBinding Control.Background}" BorderBrush="#59595F" BorderThickness="1" CornerRadius="30">
+                  <Grid>
+                    <Grid.ColumnDefinitions>
+                      <ColumnDefinition />
+                      <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <Image Width="26" Height="26" Margin="-50,0,0,0" RenderOptions.BitmapScalingMode="HighQuality" Source="/Assets/NextAiGlobalLogo.png" Stretch="Uniform" />
+                    <TextBlock Grid.Column="1" Margin="-35,0,0,0" VerticalAlignment="Center" FontFamily="{DynamicResource MuseoSans500FontFamily}" FontSize="16" Foreground="#FFFFFFFF" Text="NextAiGlobal" />
+                  </Grid>
+                </Border>
+              </ControlTemplate>
+            </Control.Template>
+          </Button>
+          <Button Name="NextAiTechnologyButton" Width="320" Height="60" Margin="0,8,0,0" HorizontalAlignment="Center" VerticalAlignment="Center" Background="#1E1E20" BorderThickness="0" IsEnabled="False" Click="NextAiTechnologyButton_OnClick" MouseEnter="NextAiTechnologyButton_OnMouseEnter" MouseLeave="NextAiTechnologyButton_OnMouseLeave">
+            <Control.Template>
+              <ControlTemplate TargetType="{x:Type Button}">
+                <Border Background="{TemplateBinding Control.Background}" BorderBrush="#59595F" BorderThickness="1" CornerRadius="30">
+                  <Grid>
+                    <Grid.ColumnDefinitions>
+                      <ColumnDefinition />
+                      <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <Image Width="26" Height="26" Margin="-50,0,0,0" RenderOptions.BitmapScalingMode="HighQuality" Source="/Assets/NextAiTechnologyLogo.png" Stretch="Uniform" />
+                    <TextBlock Grid.Column="1" Margin="-40,0,0,0" VerticalAlignment="Center" FontFamily="{DynamicResource MuseoSans500FontFamily}" FontSize="16" Foreground="#FFFFFFFF" Text="NextAiTechnology" />
+                  </Grid>
+                </Border>
+              </ControlTemplate>
+            </Control.Template>
+          </Button>
+        </StackPanel>
+        <Grid Visibility="Collapsed">
+          <Button Name="SignIn" Grid.RowSpan="2" Height="64" Margin="40,125,40,0" Panel.ZIndex="99" Content="Sign in" Style="{DynamicResource BtnSignInButtonStyle}" Click="SignIn_Click" />
+          <Rectangle Grid.Row="0" Height="0.5" Margin="0,355,0,0" Style="{DynamicResource MainWindowSeparatorRectangleStyle}" />
+          <Grid Row="2">
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition />
+              <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+              <RowDefinition Height="54" />
+              <RowDefinition Height="150" />
+            </Grid.RowDefinitions>
+            <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Margin="108,21,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" FontFamily="{DynamicResource MuseoSans500FontFamily}" FontSize="21" Style="{DynamicResource MainWindowTextBlockStyle}" Text="New User?" />
+            <TextBlock Name="SignUp" Grid.Row="0" Grid.Column="1" Margin="0,21,129.5,0" HorizontalAlignment="Right" VerticalAlignment="Top" FontSize="21" Style="{DynamicResource SignUpTextBlockStyle}" Text="Sign up" MouseEnter="SignUp_OnMouseEnter" MouseLeave="SignUp_OnMouseLeave" PreviewMouseDown="TextBlock_PreviewMouseDown" />
+            <Grid Row="1" Column="0" ColumnSpan="2">
+              <TextBlock Name="ToS" Height="22" Margin="82,0,0,41" HorizontalAlignment="Left" VerticalAlignment="Bottom" Style="{DynamicResource TosAndPrivacyTextBlockStyle}" Text="Terms of Service" MouseEnter="ToS_OnMouseEnter" MouseLeave="ToS_OnMouseLeave" PreviewMouseDown="ToS_PreviewMouseDown" />
+              <TextBlock Name="PrivacyPolicyFooter" Height="25" Margin="0,0,99,38" HorizontalAlignment="Right" VerticalAlignment="Bottom" Style="{DynamicResource TosAndPrivacyTextBlockStyle}" Text="Privacy Policy" MouseEnter="PrivacyPolicyFooter_OnMouseEnter" MouseLeave="PrivacyPolicyFooter_OnMouseLeave" PreviewMouseDown="PrivacyPolicy_PreviewMouseDown" />
+              <TextBlock Margin="208,0,208,46" HorizontalAlignment="Center" VerticalAlignment="Bottom" FontSize="16" Style="{DynamicResource SeparatorTextBlockStyle}" Text="|" />
+            </Grid>
+          </Grid>
+        </Grid>
+      </Grid>
+    </DockPanel>
+    <Panel.Background>
+      <ImageBrush ImageSource="/Assets/SignInBackground.png" Opacity="0.08" Stretch="UniformToFill" />
+    </Panel.Background>
+  </Grid>
+</Window>
